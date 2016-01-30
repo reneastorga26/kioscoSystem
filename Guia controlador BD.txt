@@ -1,0 +1,182 @@
+package controller;
+
+import java.awt.Color;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import model.Entidad;
+import supermercado.Main;
+import view.Formulario;
+import view.Gestion;
+
+
+public class Controlador {
+
+    private static String tabla;
+    private static Gestion gestion;
+    private static String valor= new String();
+    private String entidad;
+
+
+    public Controlador(String entidad){
+        this.entidad=entidad;
+    }
+
+    public String getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(String entidad) {
+        this.entidad = entidad;
+    }
+
+    public static Gestion getGestion() {
+        return gestion;
+    }
+
+    public static void setGestion(Gestion gestion) {
+        Controlador.gestion = gestion;
+    }
+
+    public static void setTabla(String tabla) {
+        Controlador.tabla = tabla;
+    }
+
+    public static String getTabla() {
+        return tabla;
+    }
+
+    public static void autocompletar(int opcion,JTextField textField, int i){
+         if(opcion!=1){
+                int index=gestion.getTabla().getSelectedRow();
+                valor= String.valueOf(gestion.getTabla().getValueAt(index, i));
+                textField.setText(valor);
+        }
+         if(opcion == 2 || (opcion==3 && i==0)){
+                textField.setEditable(false);
+                textField.setBackground(Color.LIGHT_GRAY);
+         }
+         if(opcion == 1 && i==0){
+             int valornumerico=1;
+             for(int j=0; j<gestion.getTabla().getRowCount();j++){
+                 if(j == gestion.getTabla().getRowCount() - 1){
+                     valor=String.valueOf(gestion.getTabla().getValueAt(j,0));//La clave primmaria de la Base de Datos siempre estara en la primera columna en la base de datos, columna 0 en la tabla(Segun mi consideracion).
+                     valornumerico=Integer.parseInt(valor)+1;
+                 }
+             }
+              textField.setText(String.valueOf(valornumerico));
+              textField.setBackground(Color.LIGHT_GRAY);
+         }
+    }
+
+    public static void aniadir(ArrayList<JTextField> txts){
+        String values = new String();
+        String campos = new String();
+        values = "";
+        campos= "";
+        Controlador controlador = new Controlador(tabla);
+        ResultSet rs = controlador.leer();
+        try {
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                String tipo= rs.getMetaData().getColumnTypeName(i+1);
+                campos = campos + rs.getMetaData().getColumnName(i+1);
+                if(tipo.equals("INT") || tipo.equals("FLOAT")){
+                    values = values +  txts.get(i).getText();
+                }
+            else{
+                    values = values + "'" + txts.get(i).getText() + "'";
+            }
+                if(i!=rs.getMetaData().getColumnCount() -1){
+                    values=values+",";
+                    campos=campos+",";
+                }
+            }
+        values = "(" + values + ")";
+        campos= "(" + campos + ")";
+        String query = "INSERT INTO " + tabla + campos + " values " + values;
+        Main.getConexion().getStatement().execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public static void eliminar(ArrayList<JTextField> txts){
+        Controlador controlador = new Controlador(tabla);
+        ResultSet rs = controlador.leer();
+        int i = Integer.parseInt(txts.get(0).getText());
+        try {
+            String query = "DELETE FROM " + tabla + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
+            Main.getConexion().getStatement().execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void modificar(ArrayList<JTextField> txts){
+        Controlador controlador = new Controlador(tabla);
+        ResultSet rs = controlador.leer();
+        String set = "";
+        try {
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                if(i!=0){
+                set = set + " " + rs.getMetaData().getColumnName(i+1) + " = '" + txts.get(i).getText() + "'";
+                if(i!= rs.getMetaData().getColumnCount() - 1)
+                    set=set + ",";
+            }
+            }
+            int i = Integer.parseInt(txts.get(0).getText());
+            String query = "UPDATE " + tabla + " SET " + set + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
+            Main.getConexion().getStatement().execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public static void refrescar(String tabla) {
+        Controlador controlador = new Controlador(tabla);
+        ResultSet rs = controlador.leer();
+        gestion.getLabel().setText("Gestion de " + tabla);
+        DefaultTableModel modelo = new DefaultTableModel();
+        try {
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                modelo.addColumn(rs.getMetaData().getColumnName(i + 1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            while (rs.next()) {
+                Object[] fila = new Object [rs.getMetaData().getColumnCount()];
+                for (int j = 0; j <rs.getMetaData().getColumnCount(); j++) {
+                    fila[j] = rs.getObject(j+1);
+                  
+                    //modelo.setValueAt(rs.getObject(j+1), i, j);
+                }
+                modelo.addRow(fila);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        gestion.getTabla().setModel(modelo);
+}
+     public ResultSet leer() {
+        ResultSet rs = null;
+        String query = "SELECT * FROM " + entidad + " ";
+        try {
+            rs = Main.getConexion().getStatement().executeQuery(query);
+        } catch (SQLException ex) {
+            System.out.println("Problemas en el Select sobre la Tabla de " + entidad + " .");
+            Logger.getLogger(Entidad.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+     
+     
+
+}
