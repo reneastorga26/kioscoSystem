@@ -553,7 +553,7 @@ public class BCMCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
     private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
-        NDCorreoElectronico dCorreo= new NDCorreoElectronico(this,
+        NDObraSocial dCorreo= new NDObraSocial(this,
                 true,(DefaultTableModel) tablaCorreoElectronico.getModel());
         dCorreo.setVisible(true);
     }//GEN-LAST:event_btnNuevoCorreoActionPerformed
