@@ -225,9 +225,6 @@
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="FECHA DE INGRESO:"/>
               </Properties>
             </Component>
@@ -277,9 +274,6 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="APELLIDO Y NOMBRE:"/>
               </Properties>
             </Component>
@@ -661,7 +655,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="TOTAL BRUTO:"/>
+                <Property name="text" type="java.lang.String" value="TOTAL BRUTO ($):"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel15">
@@ -669,7 +663,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="TOTAL RETENCIONES:"/>
+                <Property name="text" type="java.lang.String" value="TOTAL RETENCIONES ($):"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">

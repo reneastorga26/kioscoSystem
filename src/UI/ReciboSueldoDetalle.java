@@ -4,17 +4,21 @@
  */
 package UI;
 
+import Controller.ControladorDate;
+
 /**
  *
  * @author Administrador
  */
 public class ReciboSueldoDetalle extends javax.swing.JFrame {
 
+    private ControladorDate controladorDate = new ControladorDate();
     /**
      * Creates new form ReciboSueldoDetalle
      */
     public ReciboSueldoDetalle() {
         initComponents();
+        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
     }
 
     /**
@@ -37,20 +41,20 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
         jTextField15 = new javax.swing.JTextField();
         jTextField16 = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
+        comboDia = new javax.swing.JComboBox<>();
+        jLabel19 = new javax.swing.JLabel();
+        comboMes = new javax.swing.JComboBox<>();
+        jLabel20 = new javax.swing.JLabel();
+        comboAnio = new javax.swing.JComboBox<>();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox3 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -102,9 +106,6 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
         jTextField2.setBackground(new java.awt.Color(0, 0, 51));
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
 
-        jTextField5.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
-
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("NRO DE RECIBO:");
 
@@ -114,26 +115,8 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("FUNCION:");
 
-        jTextField7.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField7.setForeground(new java.awt.Color(255, 255, 255));
-
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("FECHA: ");
-
-        jTextField12.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField12.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("/");
-
-        jTextField13.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField13.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("/");
-
-        jTextField14.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField14.setForeground(new java.awt.Color(255, 255, 255));
 
         jTextField15.setBackground(new java.awt.Color(0, 0, 51));
         jTextField15.setForeground(new java.awt.Color(255, 255, 255));
@@ -147,6 +130,36 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
         });
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        comboDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboDiaActionPerformed(evt);
+            }
+        });
+
+        jLabel19.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setText("/");
+
+        comboMes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboMesActionPerformed(evt);
+            }
+        });
+
+        jLabel20.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("/");
+
+        comboAnio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboAnioActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empleado", "Cajero" }));
+
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01/2016", "02/2016", "03/2016", "04/2016" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -181,28 +194,30 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
                             .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(141, 141, 141)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel19)
+                                .addGap(6, 6, 6)
+                                .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12)
+                        .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTextField7)
-                    .addComponent(jTextField5))
-                .addGap(61, 61, 61))
+                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,25 +245,27 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11)
-                            .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12)
-                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13)
-                            .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel20)
+                                .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel19)
+                                .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel11))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel7)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(38, 38, 38)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel5)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(12, Short.MAX_VALUE))
             .addComponent(jSeparator2)
         );
 
@@ -462,6 +479,19 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField16ActionPerformed
 
+    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
+
+    }//GEN-LAST:event_comboDiaActionPerformed
+
+    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
+        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboMesActionPerformed
+
+    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
+
+        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboAnioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -497,18 +527,23 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> comboAnio;
+    private javax.swing.JComboBox<String> comboDia;
+    private javax.swing.JComboBox<String> comboMes;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton6;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -529,16 +564,11 @@ public class ReciboSueldoDetalle extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField16;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables

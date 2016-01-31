@@ -34,9 +34,6 @@ public class ReciboSueldo extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
-        jTextField14 = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
         jRadioButton1 = new javax.swing.JRadioButton();
         jButton5 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -50,6 +47,9 @@ public class ReciboSueldo extends javax.swing.JFrame {
         jRadioButton2 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
+        jTextField5 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -73,25 +73,6 @@ public class ReciboSueldo extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
         jLabel3.setText("Filtros :");
-
-        jTextField14.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField14.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField14.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField14ActionPerformed(evt);
-            }
-        });
-
-        jLabel20.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel20.setText("/");
-
-        jTextField15.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField15.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField15.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField15ActionPerformed(evt);
-            }
-        });
 
         jRadioButton1.setBackground(new java.awt.Color(204, 204, 204));
         jRadioButton1.setText("Activar Filtro");
@@ -126,6 +107,19 @@ public class ReciboSueldo extends javax.swing.JFrame {
         jRadioButton5.setBackground(new java.awt.Color(204, 204, 204));
         jRadioButton5.setText("Activar Filtro");
 
+        jTextField5.setBackground(new java.awt.Color(0, 0, 51));
+        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("/");
+
+        jTextField6.setBackground(new java.awt.Color(0, 0, 51));
+        jTextField6.setForeground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -154,12 +148,12 @@ public class ReciboSueldo extends javax.swing.JFrame {
                                 .addGap(56, 56, 56)
                                 .addComponent(jLabel14)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel20)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextField5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jRadioButton1))
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGap(77, 77, 77)
@@ -205,10 +199,10 @@ public class ReciboSueldo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel20)
-                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1))
+                    .addComponent(jRadioButton1)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
@@ -356,14 +350,6 @@ public class ReciboSueldo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField15ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField15ActionPerformed
-
-    private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField14ActionPerformed
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         ReciboSueldoDetalle reciboSueldoDetalle = new ReciboSueldoDetalle();
@@ -375,6 +361,10 @@ public class ReciboSueldo extends javax.swing.JFrame {
         ReciboSueldoMultiples reciboSueldoMultiples = new ReciboSueldoMultiples();
         reciboSueldoMultiples.setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -419,8 +409,8 @@ public class ReciboSueldo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -438,9 +428,9 @@ public class ReciboSueldo extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }

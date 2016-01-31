@@ -89,7 +89,6 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel14.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setText("FECHA DE INGRESO:");
 
         jLabel7.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
@@ -114,7 +113,6 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
             }
         });
 
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("APELLIDO Y NOMBRE:");
 
         jTextField5.setBackground(new java.awt.Color(0, 0, 51));
@@ -375,10 +373,10 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("TOTAL BRUTO:");
+        jLabel10.setText("TOTAL BRUTO ($):");
 
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("TOTAL RETENCIONES:");
+        jLabel15.setText("TOTAL RETENCIONES ($):");
 
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("TOTAL NETO ($):");
@@ -634,18 +632,12 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JComboBox jComboBox4;
-    private javax.swing.JComboBox jComboBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -661,7 +653,6 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -669,7 +660,6 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator3;
@@ -679,8 +669,6 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField2;

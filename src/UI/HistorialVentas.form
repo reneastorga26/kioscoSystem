@@ -248,8 +248,8 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="comboDia" min="-2" pref="33" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                              <Component id="comboDia" min="-2" pref="43" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="comboMes" min="-2" pref="95" max="-2" attributes="0"/>
@@ -287,8 +287,8 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="comboDia2" min="-2" pref="33" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                              <Component id="comboDia2" min="-2" pref="44" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel30" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="comboMes2" min="-2" pref="95" max="-2" attributes="0"/>
@@ -299,8 +299,8 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jLabel25" min="-2" pref="15" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="comboDia1" min="-2" pref="33" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                              <Component id="comboDia1" min="-2" pref="46" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="comboMes1" min="-2" pref="95" max="-2" attributes="0"/>
@@ -324,37 +324,41 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jSeparator4" min="-2" pref="10" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jRadioButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel20" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboDia" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboMes" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboAnio" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jRadioButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jRadioButton2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="jLabel30" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="comboDia2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="comboMes2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="comboAnio2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel28" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel29" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboDia1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboMes1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboAnio1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="3" groupAlignment="3" attributes="0">
-                                  <Component id="jLabel30" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="comboDia2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="comboMes2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="comboAnio2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
                               <Component id="jLabel25" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jRadioButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
