@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableModel;
  * @author IgnacioMatias
  */
 public class MainMenu extends javax.swing.JFrame {
+    
+    
     /**
      * Creates new form MainMenu
      */
@@ -678,6 +680,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProveedor.jRadioButton1.setText("CUIT");
         buscarProveedor.jRadioButton1.setSelected(true);
         buscarProveedor.jRadioButton2.setText("RAZÓN SOCIAL");
+        buscarProveedor.evaluar(3);
         buscarProveedor.setVisible(true);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
@@ -698,7 +701,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarCliente.jRadioButton1.setText("DNI");
         buscarCliente.jRadioButton1.setSelected(true);
         buscarCliente.jRadioButton2.setText("APELLIDO Y NOMBRE");
-        
+        buscarCliente.evaluar(1);
         buscarCliente.setVisible(true);
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 

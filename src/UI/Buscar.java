@@ -5,9 +5,16 @@
  */
 package UI;
 
+import Controller.ClaseControl;
+import Controller.ControladorBD;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.Cliente;
 import sistemakiosco.sismain;
 
@@ -17,30 +24,61 @@ import sistemakiosco.sismain;
  */
 public class Buscar extends javax.swing.JFrame {
 
-    private String snombre="nombre";
+    private String snombre="none";
     private ArrayList<String> columnas = new ArrayList<>();
     private ArrayList<String> indices = new ArrayList<>();
     private Cliente cliente = new Cliente();
     public DefaultTableModel modeloTabla = new DefaultTableModel();
+    private TableRowSorter trsFiltro;
     
+
     /**
      * Creates new form BuscarCliente
      */
     public Buscar() {
         initComponents();
         this.setLocationRelativeTo(null);
-        columnas.add("DNI");
-        columnas.add("NOMBRE_APELLIDO");
+        //columnas.add("DNI");
+        //columnas.add("NOMBRE_APELLIDO");
         modeloTabla = (DefaultTableModel) tablaBuscar.getModel();
-        
+                
         //this.setResizable(false);
-        
+       
     }
     
+    public void evaluar(int opcion){
+        ControladorBD control = new ControladorBD();
+        switch(opcion){
+            case 1:
+                control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
+                break;
+            
+            case 2: 
+                control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
+                break;
+            
+            case 3: 
+                control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
+                break;
+            
+            
+        }}
     public void limpiarTabla(){
              for(int i=modeloTabla.getRowCount(); i>0;i--){
              modeloTabla.removeRow(i-1);
         }
+    }
+    
+    public void filtro() {
+        int columnaABuscar = 0;
+        if (jRadioButton1.isSelected()) {
+            columnaABuscar = 0;
+        }
+        if (jRadioButton2.isSelected()) {
+            columnaABuscar = 1;
+        }
+        
+        trsFiltro.setRowFilter(RowFilter.regexFilter(txtBuscar.getText(), columnaABuscar));
     }
 
     /**
@@ -113,6 +151,9 @@ public class Buscar extends javax.swing.JFrame {
         txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtBuscarKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
             }
         });
 
@@ -222,10 +263,12 @@ public class Buscar extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
-        limpiarTabla();
+        /*limpiarTabla();
         indices.clear();
         String criterioBusqueda = txtBuscar.getText() + evt.getKeyChar();
         System.out.println("Criterio de Busqueda : "+ criterioBusqueda);
+        
+        
         if(txtBuscar.getText().length()>1){
             cliente.setDni(criterioBusqueda);
             indices = cliente.buscarBD("DNI",
@@ -235,9 +278,25 @@ public class Buscar extends javax.swing.JFrame {
             for(int i = 0 ; i<indices.size(); i++){
                 System.out.println(indices.get(i));
             }
-        }
+        }*/
         
     }//GEN-LAST:event_txtBuscarKeyPressed
+
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        // TODO add your handling code here:
+        txtBuscar.addKeyListener(new KeyAdapter() {
+            public void keyReleased(final KeyEvent e) {
+                String cadena = (txtBuscar.getText());
+                txtBuscar.setText(cadena);
+                String criterioBusqueda = txtBuscar.getText();
+                System.out.println("Criterio de Busqueda : "+ criterioBusqueda);
+                filtro();
+            }
+        });
+        trsFiltro = new TableRowSorter(tablaBuscar.getModel());
+        tablaBuscar.setRowSorter(trsFiltro);
+
+    }//GEN-LAST:event_txtBuscarKeyTyped
 
     /**
      * @param args the command line arguments

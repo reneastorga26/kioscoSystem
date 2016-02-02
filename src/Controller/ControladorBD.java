@@ -20,6 +20,7 @@ import sistemakiosco.sismain;
  */
 public class ControladorBD {
     
+    
     public ControladorBD(){
         
     }
@@ -103,8 +104,8 @@ public class ControladorBD {
         }
     }
      
-     public ArrayList buscar (String tablas, 
-                         String columnas,
+     public ArrayList buscar (String columnas, 
+                         String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla
                          ){
@@ -123,17 +124,21 @@ public class ControladorBD {
      }
      System.out.println(query);
         try {
+            
             rs=sismain.getConexion().getStatement().executeQuery(query);
+            System.out.println("Buscando...");
             while(rs.next()){
-                j=0;
+                
                 indices.add(rs.getObject(1).toString());
-                Object[] fila = new Object[rs.getMetaData().getColumnCount()-numIndice]; 
-                for(int i = numIndice; i<rs.getMetaData().getColumnCount(); i++){
-                    fila[j]=rs.getObject(i+1);
-                    j++;
+                Object[] fila = new Object[rs.getMetaData().getColumnCount()]; 
+                
+                for(int i = 0; i<rs.getMetaData().getColumnCount(); i++){
+                    fila[i]=rs.getObject(i+1);
+                    System.out.println(fila[i]);
                 }
                 modeloTabla.addRow(fila);
             }
+            
             /*
             column id_persona format a10
 column persona_id_persona format a10
