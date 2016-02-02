@@ -5,7 +5,7 @@
  */
 package UI;
 
-import Controller.ClaseControl;
+
 import Controller.ControladorBD;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
