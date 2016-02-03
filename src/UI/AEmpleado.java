@@ -772,14 +772,14 @@ public class AEmpleado extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         Buscar buscarEmpleado = new Buscar();
-        buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"CUIT","RAZÓN SOCIAL"});
+        buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
         buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
         buscarEmpleado.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
         buscarEmpleado.setTitle("Búsqueda de Proveedor");
         buscarEmpleado.lblTitulo.setText("Búsqueda de Proveedor");
-        buscarEmpleado.jRadioButton1.setText("CUIT");
+        buscarEmpleado.jRadioButton1.setText("DNI");
         buscarEmpleado.jRadioButton1.setSelected(true);
-        buscarEmpleado.jRadioButton2.setText("RAZÓN SOCIAL");
+        buscarEmpleado.jRadioButton2.setText("NOMBRE Y APELLIDO");
         buscarEmpleado.evaluar(2);
         buscarEmpleado.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed

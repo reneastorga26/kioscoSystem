@@ -30,6 +30,7 @@ public class ControladorBD {
         String query = "SELECT * FROM " + tabla;
         try {
             rs = sismain.getConexion().getStatement().executeQuery(query);
+            
         } catch (SQLException ex) {
             System.out.println("Error al leer");
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,14 +160,30 @@ column nombre_apellido format a10
      
      return indices;
      }
-        
-        
-        
-        
-        
      
+    
+     public ResultSet buscarRegistrosSinTabla (String columnas, 
+                         String tablas,
+                         String condicion
+                         ){
+    
+     ResultSet rs = null;
+     String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
      
-     public long obtenerUltimoIndice(String tabla){
+     System.out.println(query);
+        try {
+            
+            rs=sismain.getConexion().getStatement().executeQuery(query);
+            System.out.println("Buscando...");
+                      
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     
+     return rs;
+     } 
+    public long obtenerUltimoIndice(String tabla){
         long index=0;
         ResultSet rs = leer(tabla);
         try {
@@ -182,5 +199,23 @@ column nombre_apellido format a10
         return index;
      }
     
+    public long obtenerUltimoRegistro(String tabla, String id){
+        long reg = 0;
+        ResultSet rs = null;
+        String query = "SELECT * FROM " + tabla + " ORDER BY " + id + " DESC" ;
+        try {
+            rs = sismain.getConexion().getStatement().executeQuery(query);
+            while(rs.next()){
+                if(reg<Long.parseLong(rs.getObject(1).toString())){
+                    reg=Long.parseLong(rs.getObject(1).toString());
+                    
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al leer");
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return reg;
+    }
     
 }

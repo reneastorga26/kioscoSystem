@@ -693,14 +693,14 @@ public class MainMenu extends javax.swing.JFrame {
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
         // TODO add your handling code here:
         Buscar buscarCliente = new Buscar();
-        buscarCliente.modeloTabla.setColumnIdentifiers(new String[]{"DNI","APELLIDO Y NOMBRE"});
+        buscarCliente.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
         buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
         buscarCliente.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
         buscarCliente.setTitle("Búsqueda de Cliente");
         buscarCliente.lblTitulo.setText("Búsqueda de Cliente");
         buscarCliente.jRadioButton1.setText("DNI");
         buscarCliente.jRadioButton1.setSelected(true);
-        buscarCliente.jRadioButton2.setText("APELLIDO Y NOMBRE");
+        buscarCliente.jRadioButton2.setText("NOMBRE Y APELLIDO");
         buscarCliente.evaluar(1);
         buscarCliente.setVisible(true);
     }//GEN-LAST:event_jMenuItem15ActionPerformed

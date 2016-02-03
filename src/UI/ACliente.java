@@ -6,9 +6,16 @@
 package UI;
 
 
+import Controller.ControladorBD;
 import Controller.ControladorDate;
+import java.awt.Color;
 import java.awt.image.ImageObserver;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 //import java.util.Calendar;
 import javax.swing.JTextField;
@@ -17,6 +24,7 @@ import model.Cliente;
 import model.CorreoElectronico;
 import model.Domicilio;
 import model.Telefono;
+import sistemakiosco.sismain;
 /**
  *
  * @author IgnacioMatias
@@ -29,7 +37,7 @@ public class ACliente extends javax.swing.JFrame {
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private ControladorDate controladorDate = new ControladorDate();
     private DefaultTableModel model;
-   
+    private ControladorBD control = new ControladorBD();
     
     /**
      * Creates new form ABMProducto
@@ -45,6 +53,7 @@ public class ACliente extends javax.swing.JFrame {
     public JTable getTablaTelefono() {
         return tablaTelefono;
     }
+    
     
     
 
@@ -101,7 +110,7 @@ public class ACliente extends javax.swing.JFrame {
         txtObservaciones = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
         btnEliminarEmails = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnComprobar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         jLabel7.setText("jLabel7");
@@ -132,7 +141,7 @@ public class ACliente extends javax.swing.JFrame {
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("APELLIDO Y NOMBRE:");
+        jLabel2.setText("NOMBRE Y APELLIDO:");
 
         btnNuevoTelefono.setBackground(new java.awt.Color(51, 51, 255));
         btnNuevoTelefono.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -308,9 +317,14 @@ public class ACliente extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(51, 0, 51));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Comprobar");
+        btnComprobar.setBackground(new java.awt.Color(51, 0, 51));
+        btnComprobar.setForeground(new java.awt.Color(255, 255, 255));
+        btnComprobar.setText("Comprobar");
+        btnComprobar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComprobarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -348,7 +362,7 @@ public class ACliente extends javax.swing.JFrame {
                                             .addGroup(jPanel3Layout.createSequentialGroup()
                                                 .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                .addComponent(btnComprobar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                         .addGap(18, 18, 18))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -417,7 +431,7 @@ public class ACliente extends javax.swing.JFrame {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel3)
-                                    .addComponent(jButton2))
+                                    .addComponent(btnComprobar))
                                 .addGap(15, 15, 15)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -560,7 +574,7 @@ public class ACliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
     private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
-        NDObraSocial dCorreo= new NDObraSocial(this,
+        NDCorreoElectronico dCorreo= new NDCorreoElectronico(this,
                 true,(DefaultTableModel) tablaCorreoElectronico.getModel());
         dCorreo.setVisible(true);
     }//GEN-LAST:event_btnNuevoCorreoActionPerformed
@@ -630,6 +644,31 @@ public class ACliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboSexoActionPerformed
 
+    private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
+        // TODO add your handling code here:
+        ResultSet res;
+        String cadena = txtDni.getText();
+        try {
+             
+            res = control.buscarRegistrosSinTabla("p.DNI", "persona p, cliente c","p.ID_PERSONA = c.PERSONA_ID_PERSONA");
+            while(res.next()){
+                if(cadena.equals(res.getString("DNI"))){
+                JOptionPane.showMessageDialog(null, "EL DNI INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                JTextField txtDni = new JTextField(), txtNombre = new JTextField();
+                txtDni.setNextFocusableComponent(txtNombre);
+            }else{
+                JTextField txtDni = new JTextField(), txtNombre = new JTextField();
+                txtDni.setNextFocusableComponent(txtNombre);
+                }
+            }
+            res.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+    }//GEN-LAST:event_btnComprobarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -682,6 +721,7 @@ public class ACliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelarSalir2;
+    private javax.swing.JButton btnComprobar;
     private javax.swing.JButton btnEliminarEmails;
     private javax.swing.JButton btnEliminarTels;
     private javax.swing.JButton btnGuardar;
@@ -695,7 +735,6 @@ public class ACliente extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboMes;
     private javax.swing.JComboBox<String> comboSexo;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
