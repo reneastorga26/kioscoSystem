@@ -5,6 +5,10 @@
  */
 package model;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author CX
@@ -15,18 +19,19 @@ public class Precio {
     private double numero;
     private String fechaHoraInicio;
     private String fechaHoraFin;
-    private Producto idProducto;
+    private long idProducto;
     
     public Precio(){
         
     }
     
     public Precio(int idPrecio, double numero, String fechaHoraInicio, 
-            String fechaHoraFin, Producto idProducto){
+            String fechaHoraFin, long idProducto){
         this.idPrecio = idPrecio;
         this.numero = numero;
         this.fechaHoraInicio = fechaHoraInicio;
         this.fechaHoraFin = fechaHoraFin;
+        this.idProducto = idProducto;
     }
 
     public int getIdPrecio() {
@@ -61,13 +66,56 @@ public class Precio {
         this.fechaHoraFin = fechaHoraFin;
     }
 
-    public Producto getIdProducto() {
+    public long getIdProducto() {
         return idProducto;
     }
 
-    public void setIdProducto(Producto idProducto) {
+    public void setIdProducto(long idProducto) {
         this.idProducto = idProducto;
     }
+
+    public long guardarBD(){
+        long idPrecio=-1;
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(String.valueOf(getNumero()));
+        valores.add(getFechaHoraInicio());
+        valores.add(getFechaHoraFin());
+        valores.add(String.valueOf(getIdProducto()));
+        idPrecio = sismain.getControladorBD().aniadirBD(valores, "PRECIO",false);
+        valores.clear();
+        valores.add(String.valueOf(idPrecio));
+        sismain.getControladorBD().aniadirBD(valores,"PRECIO",false);
+        return idPrecio;
+    }
+    
+    /*public ArrayList buscarBD(String columnaBusqueda, 
+                         DefaultTableModel modeloTabla,
+                         boolean preBuscar){
+        ArrayList<String> indices = new ArrayList<>();
+
+        String criterioBusqueda;
+        String criterioPreBusqueda;
+        if(columnaBusqueda.equals("ID_PRODUCTO")){
+            criterioBusqueda=String.valueOf(getIdProducto());
+            criterioPreBusqueda="'"+String.valueOf(getIdProducto())+"%'";
+        }
+        else{
+            criterioBusqueda="'"+getDescripcion()+"'";
+            criterioPreBusqueda="'"+getDescripcion()+"%'";
+        }
+        String tablas = "PRODUCTO";
+        String columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
+        String condicion;
+        if(preBuscar){
+            condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
+        }
+        else{
+            condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
+        }
+        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+        return indices;
+    }*/
+
 
     
     

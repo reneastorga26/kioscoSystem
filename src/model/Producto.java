@@ -5,21 +5,25 @@
  */
 package model;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author CX
  */
 public class Producto {
 
-    private int idProducto;
+    private long idProducto;
     private String descripcion;
     private int stockActual;
     private int stockCriticoMinimo;
     private int puntoPedido;
     private char tipoCompraProveedor;
     private int unidadesPackMayorista;
-    private TipoProducto idTipoProducto;
-    private Fabricante idFabricante;
+    private long idTipoProducto;
+    private long idFabricante;
     
     public Producto(){
         
@@ -27,7 +31,7 @@ public class Producto {
     
     public Producto(int idProducto, String descripcion, int stockActual,
             int stockCriticoMinimo, int puntoPedido, char tipoCompraProveedor, 
-            int unidadesPackMayorista, TipoProducto idTipoProducto, Fabricante idFabricante){
+            int unidadesPackMayorista, long idTipoProducto, long idFabricante){
         this.idProducto = idProducto;
         this.descripcion = descripcion;
         this.stockActual = stockActual;
@@ -37,11 +41,11 @@ public class Producto {
         this.unidadesPackMayorista = unidadesPackMayorista;
     }
 
-    public int getIdProducto() {
+    public long getIdProducto() {
         return idProducto;
     }
 
-    public void setIdProducto(int idProducto) {
+    public void setIdProducto(long idProducto) {
         this.idProducto = idProducto;
     }
 
@@ -93,23 +97,69 @@ public class Producto {
         this.unidadesPackMayorista = unidadesPackMayorista;
     }
 
-    public TipoProducto getIdTipoProducto() {
+    public long getIdTipoProducto() {
         return idTipoProducto;
     }
 
-    public void setIdTipoProducto(TipoProducto idTipoProducto) {
+    public void setIdTipoProducto(long idTipoProducto) {
         this.idTipoProducto = idTipoProducto;
     }
 
-    public Fabricante getIdFabricante() {
+    public long getIdFabricante() {
         return idFabricante;
     }
 
-    public void setIdFabricante(Fabricante idFabricante) {
+    public void setIdFabricante(long idFabricante) {
         this.idFabricante = idFabricante;
     }
 
     
+
+    public long guardarBD(){
+        long idProducto=-1;
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(String.valueOf(getIdProducto()));
+        valores.add(getDescripcion());
+        valores.add(String.valueOf(getStockActual()));
+        valores.add(String.valueOf(getStockCriticoMinimo()));
+        valores.add(String.valueOf(getPuntoPedido()));
+        valores.add(String.valueOf(getIdProducto()));
+        valores.add(String.valueOf(getIdFabricante()));
+        idProducto = sismain.getControladorBD().aniadirBD(valores, "PRODUCTO",false);
+        valores.clear();
+        valores.add(String.valueOf(idProducto));
+        sismain.getControladorBD().aniadirBD(valores,"PRODUCTO",false);
+        return idProducto;
+    }
+    
+    public ArrayList buscarBD(String columnaBusqueda, 
+                         DefaultTableModel modeloTabla,
+                         boolean preBuscar){
+        ArrayList<String> indices = new ArrayList<>();
+
+        String criterioBusqueda;
+        String criterioPreBusqueda;
+        if(columnaBusqueda.equals("ID_PRODUCTO")){
+            criterioBusqueda=String.valueOf(getIdProducto());
+            criterioPreBusqueda="'"+String.valueOf(getIdProducto())+"%'";
+        }
+        else{
+            criterioBusqueda="'"+getDescripcion()+"'";
+            criterioPreBusqueda="'"+getDescripcion()+"%'";
+        }
+        String tablas = "PRODUCTO";
+        String columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
+        String condicion;
+        if(preBuscar){
+            condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
+        }
+        else{
+            condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
+        }
+        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+        return indices;
+    }
+
     
     
 }

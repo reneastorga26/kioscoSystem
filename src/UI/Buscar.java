@@ -31,7 +31,6 @@ public class Buscar extends javax.swing.JFrame {
     public DefaultTableModel modeloTabla = new DefaultTableModel();
     private TableRowSorter trsFiltro;
     
-
     /**
      * Creates new form BuscarCliente
      */
@@ -45,6 +44,8 @@ public class Buscar extends javax.swing.JFrame {
         //this.setResizable(false);
        
     }
+
+     
     
     public void evaluar(int opcion){
         ControladorBD control = new ControladorBD();
@@ -60,9 +61,9 @@ public class Buscar extends javax.swing.JFrame {
             case 3: 
                 control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
                 break;
-            
-            
         }}
+    
+    
     public void limpiarTabla(){
              for(int i=modeloTabla.getRowCount(); i>0;i--){
              modeloTabla.removeRow(i-1);
@@ -80,7 +81,8 @@ public class Buscar extends javax.swing.JFrame {
         
         trsFiltro.setRowFilter(RowFilter.regexFilter(txtBuscar.getText(), columnaABuscar));
     }
-
+    
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -96,7 +98,7 @@ public class Buscar extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaBuscar = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        btnAmpliarInfo = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -123,10 +125,15 @@ public class Buscar extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tablaBuscar);
 
-        jButton2.setBackground(new java.awt.Color(51, 0, 51));
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Ampliar Informacion y Opciones sobre Cliente seleccionado");
+        btnAmpliarInfo.setBackground(new java.awt.Color(51, 0, 51));
+        btnAmpliarInfo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnAmpliarInfo.setForeground(new java.awt.Color(255, 255, 255));
+        btnAmpliarInfo.setText("Ampliar Informacion y Opciones sobre Cliente seleccionado");
+        btnAmpliarInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAmpliarInfoActionPerformed(evt);
+            }
+        });
 
         jButton7.setBackground(new java.awt.Color(153, 0, 0));
         jButton7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -212,7 +219,7 @@ public class Buscar extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnAmpliarInfo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -234,7 +241,7 @@ public class Buscar extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAmpliarInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
         );
 
@@ -298,6 +305,29 @@ public class Buscar extends javax.swing.JFrame {
 
     }//GEN-LAST:event_txtBuscarKeyTyped
 
+    private void btnAmpliarInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmpliarInfoActionPerformed
+        // TODO add your handling code here:
+        
+        if(this.lblTitulo.getText()=="Búsqueda de Empleado"){
+        BCMEmpleado adminEmpleado = new BCMEmpleado();
+        //Tomar el DNI de la fila seleccionada y ampliar la informacion
+        //en el frame BCMEmpleado
+        String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        System.out.println(datoEmpleado);
+        adminEmpleado.setVisible(true);
+        adminEmpleado.txtDni.setText(datoEmpleado);
+        this.dispose();
+        }
+        if(this.lblTitulo.getText()=="Búsqueda de Cliente"){
+        BCMCliente adminCliente = new BCMCliente();
+        adminCliente.setVisible(true);
+        }
+        if(this.lblTitulo.getText()=="Búsqueda de Proveedor"){
+        BCMProveedor adminProveedor = new BCMProveedor();
+        adminProveedor.setVisible(true);
+        }
+    }//GEN-LAST:event_btnAmpliarInfoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -335,8 +365,8 @@ public class Buscar extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAmpliarInfo;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;

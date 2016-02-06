@@ -88,7 +88,7 @@ public class BCMCliente extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         btnNuevoDomicilio = new javax.swing.JButton();
-        btnCancelarSalir2 = new javax.swing.JButton();
+        btnEliminarDomicilio = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -235,13 +235,13 @@ public class BCMCliente extends javax.swing.JFrame {
             }
         });
 
-        btnCancelarSalir2.setBackground(new java.awt.Color(255, 102, 0));
-        btnCancelarSalir2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnCancelarSalir2.setForeground(java.awt.Color.white);
-        btnCancelarSalir2.setText("Eliminar Domicilios Seleccionados");
-        btnCancelarSalir2.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminarDomicilio.setBackground(new java.awt.Color(255, 102, 0));
+        btnEliminarDomicilio.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminarDomicilio.setForeground(java.awt.Color.white);
+        btnEliminarDomicilio.setText("Eliminar Domicilios Seleccionados");
+        btnEliminarDomicilio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarSalir2ActionPerformed(evt);
+                btnEliminarDomicilioActionPerformed(evt);
             }
         });
 
@@ -391,7 +391,7 @@ public class BCMCliente extends javax.swing.JFrame {
                         .addGap(49, 49, 49)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(btnCancelarSalir2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEliminarDomicilio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel11)
@@ -474,7 +474,7 @@ public class BCMCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNuevoDomicilio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCancelarSalir2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEliminarDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -527,9 +527,10 @@ public class BCMCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelarSalir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarSalir2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCancelarSalir2ActionPerformed
+    private void btnEliminarDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomicilioActionPerformed
+        model = (DefaultTableModel)tablaDomicilio.getModel();
+        model.removeRow(tablaDomicilio.getSelectedRow()); 
+    }//GEN-LAST:event_btnEliminarDomicilioActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
         NDDomicilio dDomicilio= new NDDomicilio(this,
@@ -559,11 +560,13 @@ public class BCMCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoCorreoActionPerformed
 
     private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
-        
+        model = (DefaultTableModel)tablaCorreoElectronico.getModel();
+        model.removeRow(tablaCorreoElectronico.getSelectedRow()); 
     }//GEN-LAST:event_btnEliminarEmailsActionPerformed
 
     private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
-        
+        model = (DefaultTableModel)tablaTelefono.getModel();
+        model.removeRow(tablaTelefono.getSelectedRow()); 
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -690,7 +693,7 @@ public class BCMCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelarSalir2;
+    private javax.swing.JButton btnEliminarDomicilio;
     private javax.swing.JButton btnEliminarEmails;
     private javax.swing.JButton btnEliminarTels;
     private javax.swing.JButton btnGuardar;

@@ -5,6 +5,10 @@
  */
 package model;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author CX
@@ -60,6 +64,47 @@ public class Proveedor {
         this.observaciones = observaciones;
     }
     
+    public long guardarBD(){
+        long idProveedor=-1;
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(getRazonSocial());
+        valores.add(getCuit());
+        //valores.add(String.valueOf(super.getSexo()));
+        //valores.add(super.getFechaNacimiento());
+        valores.add(getObservaciones());
+        idProveedor = sismain.getControladorBD().aniadirBD(valores, "PROVEEDOR",false);
+        valores.clear();
+        valores.add(String.valueOf(idProveedor));
+        sismain.getControladorBD().aniadirBD(valores,"PROVEEDOR",false);
+        return idProveedor;
+    }
     
+    public ArrayList buscarBD(String columnaBusqueda, 
+                         DefaultTableModel modeloTabla,
+                         boolean preBuscar){
+        ArrayList<String> indices = new ArrayList<>();
+
+        String criterioBusqueda;
+        String criterioPreBusqueda;
+        if(columnaBusqueda.equals("CUIT")){
+            criterioBusqueda=getCuit();
+            criterioPreBusqueda="'"+getCuit()+"%'";
+        }
+        else{
+            criterioBusqueda="'"+getRazonSocial()+"'";
+            criterioPreBusqueda="'"+getRazonSocial()+"%'";
+        }
+        String tablas = "PROVEEDOR";
+        String columnas = "ID_PROVEEDOR , CUIT , RAZON_SOCIAL";
+        String condicion;
+        if(preBuscar){
+            condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
+        }
+        else{
+            condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
+        }
+        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+        return indices;
+    }
     
 }

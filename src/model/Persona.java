@@ -83,6 +83,8 @@ public abstract class Persona {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+
+    
     
     
 }

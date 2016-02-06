@@ -399,7 +399,7 @@ public class MainMenu extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem4.setText("Administrador de  Perfiles");
+        jMenuItem4.setText("Administrador de Empleados y Perfiles");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -750,8 +750,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
-        AEmpleado adminPerfil = new AEmpleado();
+        /*AEmpleado adminPerfil = new AEmpleado();
         adminPerfil.lblTitulo.setText("Información del Empleado");
+        adminPerfil.btnComprobar.setVisible(false);
         adminPerfil.btnAgregar.setEnabled(false);
         adminPerfil.btnConformarBoleta.setEnabled(false);
         adminPerfil.btnEliminar.setEnabled(false);
@@ -759,6 +760,19 @@ public class MainMenu extends javax.swing.JFrame {
         adminPerfil.btnModificar.setEnabled(false);
         adminPerfil.btnBuscar.setEnabled(true);
         adminPerfil.setVisible(true);
+        */
+        Buscar buscarEmpleado = new Buscar();
+        buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
+        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
+        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
+        buscarEmpleado.setTitle("Búsqueda de Empleado");
+        buscarEmpleado.lblTitulo.setText("Búsqueda de Empleado");
+        buscarEmpleado.jRadioButton1.setText("DNI");
+        buscarEmpleado.jRadioButton1.setSelected(true);
+        buscarEmpleado.jRadioButton2.setText("NOMBRE Y APELLIDO");
+        buscarEmpleado.evaluar(2);
+        buscarEmpleado.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
