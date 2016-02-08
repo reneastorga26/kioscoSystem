@@ -5,6 +5,7 @@ import UI.Login;
 import UI.MainMenu;
 import Conexion.Conexion;
 import Controller.ControladorBD;
+import javax.swing.JOptionPane;
 
 public class sismain {
     
@@ -38,6 +39,7 @@ public class sismain {
             }
             else{
                 System.out.println("error al conectarse");
+                JOptionPane.showMessageDialog(null, "EL USUARIO Y/O PASSWORD NO SON CORRECTOS","Mensaje",JOptionPane.INFORMATION_MESSAGE);
             }
      
 

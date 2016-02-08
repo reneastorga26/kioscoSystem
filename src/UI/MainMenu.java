@@ -653,8 +653,8 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling code here:
-        BuscarProducto buscarProducto = new BuscarProducto();
-        buscarProducto.setVisible(true);
+        BCMProducto adminProducto = new BCMProducto();
+        adminProducto.setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed

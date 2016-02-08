@@ -5,19 +5,175 @@
  */
 package UI;
 
+import Controller.ControladorBD;
+import Controller.ControladorDate;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import model.CorreoElectronico;
+import model.Domicilio;
+import model.Proveedor;
+import model.Telefono;
+
 /**
  *
  * @author IgnacioMatias
  */
 public class BCMProveedor extends javax.swing.JFrame {
 
+    private Proveedor proveedor = new Proveedor();
+    private Telefono telefono = new Telefono();
+    private Domicilio domicilio = new Domicilio();
+    private CorreoElectronico correoElectronico = new CorreoElectronico();
+    private ControladorDate controladorDate = new ControladorDate();
+    private DefaultTableModel model;
+    private String cadenaIdProveedor;
     /**
      * Creates new form ABMProducto
      */
     public BCMProveedor() {
         initComponents();
+        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.txtCuit.setEnabled(false);
+        this.txtRazonSocial.setEnabled(false);
+        this.comboDia.setEnabled(false);
+        this.comboMes.setEnabled(false);
+        this.comboAnio.setEnabled(false);
+        this.tablaDomicilio.setEnabled(false);
+        this.tablaCorreoElectronico.setEnabled(false);
+        this.btnGuardar.setEnabled(false);
+        this.btnNuevoDomicilio.setEnabled(false);
+        this.btnNuevoTelefono.setEnabled(false);
+        this.btnNuevoCorreo.setEnabled(false);
+        this.btnEliminarEmails.setEnabled(false);
+        this.btnEliminarDomicilio.setEnabled(false);
+        this.btnEliminarTels.setEnabled(false);
     }
 
+    public void dato(long idProveedor){
+        ControladorBD control = new ControladorBD(); 
+        ResultSet rs;
+        cadenaIdProveedor = String.valueOf(idProveedor);
+        try{
+            rs = control.buscarRegistrosSinTabla("CUIT", "PROVEEDOR", "ID_PROVEEDOR = " + cadenaIdProveedor);
+            while(rs.next()){
+                txtCuit.setText(rs.getString("CUIT"));
+                completarRazonSocial();
+                completarDomicilios();
+                completarCorreosElectronicos();
+                completarTelefonos();
+            }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    } 
+    
+    
+    public void completarRazonSocial(){
+        ControladorBD controlador = new ControladorBD();
+        ResultSet res;
+        String cuit = txtCuit.getText();
+        String condicion = "CUIT = " + cuit;
+        String razonSocial;
+        try{
+        res = controlador.buscarRegistrosSinTabla("RAZON_SOCIAL", "PROVEEDOR", condicion);
+        while(res.next()){
+                    razonSocial = res.getString("RAZON_SOCIAL");
+                    txtRazonSocial.setText(razonSocial);
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+    }
+    
+    public void completarDomicilios(){
+        ControladorBD controlador = new ControladorBD();
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
+        ResultSet res;
+        String direccion;
+        String localidad;
+        String provincia;
+        try{
+        res = controlador.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PROVEEDOR_ID_PROVEEDOR = " + cadenaIdProveedor);
+        while(res.next()){
+                    direccion = res.getString("DIRECCION");
+                    localidad = res.getString("LOCALIDAD");
+                    provincia = res.getString("PROVINCIA");
+                    Object [] fila = new Object[3];
+                    fila[0] = direccion;
+                    fila[1] = localidad;
+                    fila[2] = provincia;
+                    modeloTabla.addRow(fila);
+                    tablaDomicilio.setModel(modeloTabla);
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public void completarCorreosElectronicos(){
+        ControladorBD controlador = new ControladorBD();
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
+        ResultSet res;
+        String direccion;
+        try{
+        res = controlador.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        while(res.next()){
+                    direccion = res.getString("DIRECCION");
+                    Object [] fila = new Object[1];
+                    fila[0] = direccion;
+                    modeloTabla.addRow(fila);
+                    tablaCorreoElectronico.setModel(modeloTabla);
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    
+    
+    public void completarTelefonos(){
+        ControladorBD controlador = new ControladorBD();
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
+        ResultSet res;
+        String telefono;
+        try{
+        res = controlador.buscarRegistrosSinTabla("NUMERO", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        while(res.next()){
+                    telefono = res.getString("NUMERO");
+                    Object [] fila = new Object[1];
+                    fila[0] = telefono;
+                    modeloTabla.addRow(fila);
+                    tablaCorreoElectronico.setModel(modeloTabla);
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public void completarObservaciones(){
+        ControladorBD controlador = new ControladorBD();
+        ResultSet res;
+        String cuit = txtCuit.getText();
+        String condicion = "CUIT = " + cuit;
+        String observaciones;
+        try{
+        res = controlador.buscarRegistrosSinTabla("OBSERVACIONES", "PROVEEDOR", condicion);
+        while(res.next()){
+                    observaciones = res.getString("RAZON_SOCIAL");
+                    txaObservaciones.setText(observaciones);
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,41 +189,47 @@ public class BCMProveedor extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnModificarDatos = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtCuit = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtRazonSocial = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txaObservaciones = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaDomicilio = new javax.swing.JTable();
         jScrollPane6 = new javax.swing.JScrollPane();
-        tablaTelefonos = new javax.swing.JTable();
+        tablaTelefono = new javax.swing.JTable();
         jScrollPane7 = new javax.swing.JScrollPane();
-        tablaCorreoElectronico1 = new javax.swing.JTable();
+        tablaCorreoElectronico = new javax.swing.JTable();
+        btnNuevoDomicilio = new javax.swing.JButton();
+        btnEliminarDomicilio = new javax.swing.JButton();
+        btnNuevoTelefono = new javax.swing.JButton();
+        btnEliminarTels = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        btnNuevoCorreo = new javax.swing.JButton();
+        btnEliminarEmails = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaCompra = new javax.swing.JTable();
         jButton14 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txtIdCompra = new javax.swing.JTextField();
+        btnBuscarIdCompra = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jLabel17 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
-        jLabel21 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
+        btnBuscarFechaEmision = new javax.swing.JButton();
+        comboDia = new javax.swing.JComboBox<>();
+        jLabel20 = new javax.swing.JLabel();
+        comboMes = new javax.swing.JComboBox<>();
+        jLabel22 = new javax.swing.JLabel();
+        comboAnio = new javax.swing.JComboBox<>();
         jButton7 = new javax.swing.JButton();
         jButton16 = new javax.swing.JButton();
 
@@ -86,15 +248,20 @@ public class BCMProveedor extends javax.swing.JFrame {
         jLabel18.setForeground(java.awt.Color.white);
         jLabel18.setText("Datos Generales del Proveedor");
 
-        jButton3.setBackground(new java.awt.Color(51, 0, 51));
-        jButton3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton3.setForeground(java.awt.Color.white);
-        jButton3.setText("Modificar Datos");
+        btnModificarDatos.setBackground(new java.awt.Color(51, 0, 51));
+        btnModificarDatos.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnModificarDatos.setForeground(java.awt.Color.white);
+        btnModificarDatos.setText("Modificar Datos");
+        btnModificarDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarDatosActionPerformed(evt);
+            }
+        });
 
-        jButton4.setBackground(new java.awt.Color(51, 0, 51));
-        jButton4.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton4.setForeground(java.awt.Color.white);
-        jButton4.setText("Guardar Modificacion");
+        btnGuardar.setBackground(new java.awt.Color(51, 0, 51));
+        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnGuardar.setForeground(java.awt.Color.white);
+        btnGuardar.setText("Guardar Modificacion");
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("CUIT:");
@@ -103,20 +270,14 @@ public class BCMProveedor extends javax.swing.JFrame {
         jLabel3.setText("RAZON SOCIAL:");
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("DIRECCIONES:");
-
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("TELEFONOS:");
-
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("EMAILS:");
+        jLabel4.setText("DOMICILIOS:");
 
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("OBSERVACIONES:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txaObservaciones.setColumns(20);
+        txaObservaciones.setRows(5);
+        jScrollPane2.setViewportView(txaObservaciones);
 
         tablaDomicilio.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -128,7 +289,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(tablaDomicilio);
 
-        tablaTelefonos.setModel(new javax.swing.table.DefaultTableModel(
+        tablaTelefono.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -136,9 +297,9 @@ public class BCMProveedor extends javax.swing.JFrame {
                 "..."
             }
         ));
-        jScrollPane6.setViewportView(tablaTelefonos);
+        jScrollPane6.setViewportView(tablaTelefono);
 
-        tablaCorreoElectronico1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCorreoElectronico.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -146,7 +307,73 @@ public class BCMProveedor extends javax.swing.JFrame {
                 "..."
             }
         ));
-        jScrollPane7.setViewportView(tablaCorreoElectronico1);
+        jScrollPane7.setViewportView(tablaCorreoElectronico);
+
+        btnNuevoDomicilio.setBackground(new java.awt.Color(51, 51, 255));
+        btnNuevoDomicilio.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnNuevoDomicilio.setForeground(java.awt.Color.white);
+        btnNuevoDomicilio.setText("Nuevo Domicilio");
+        btnNuevoDomicilio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoDomicilioActionPerformed(evt);
+            }
+        });
+
+        btnEliminarDomicilio.setBackground(new java.awt.Color(255, 102, 0));
+        btnEliminarDomicilio.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminarDomicilio.setForeground(java.awt.Color.white);
+        btnEliminarDomicilio.setText("Eliminar Domicilio");
+        btnEliminarDomicilio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarDomicilioActionPerformed(evt);
+            }
+        });
+
+        btnNuevoTelefono.setBackground(new java.awt.Color(51, 51, 255));
+        btnNuevoTelefono.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnNuevoTelefono.setForeground(java.awt.Color.white);
+        btnNuevoTelefono.setText("Nuevo Telefono");
+        btnNuevoTelefono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoTelefonoActionPerformed(evt);
+            }
+        });
+
+        btnEliminarTels.setBackground(new java.awt.Color(255, 102, 0));
+        btnEliminarTels.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminarTels.setForeground(java.awt.Color.white);
+        btnEliminarTels.setText("Eliminar Telefono");
+        btnEliminarTels.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarTelsActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("CORREOS ELECTRONICOS");
+
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("TELEFONOS:");
+
+        btnNuevoCorreo.setBackground(new java.awt.Color(51, 51, 255));
+        btnNuevoCorreo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnNuevoCorreo.setForeground(java.awt.Color.white);
+        btnNuevoCorreo.setText("Nuevo Correo");
+        btnNuevoCorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoCorreoActionPerformed(evt);
+            }
+        });
+
+        btnEliminarEmails.setBackground(new java.awt.Color(255, 102, 0));
+        btnEliminarEmails.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminarEmails.setForeground(java.awt.Color.white);
+        btnEliminarEmails.setText("Eliminar Correo");
+        btnEliminarEmails.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarEmailsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -157,79 +384,108 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator5)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel18)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEliminarDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel6)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jLabel3)
-                                            .addGap(26, 26, 26)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                             .addComponent(jLabel15)
-                                            .addGap(284, 284, 284)))
-                                    .addComponent(jLabel8))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                                            .addGap(284, 284, 284))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(jLabel2)
+                                                .addComponent(jLabel3))
+                                            .addGap(26, 26, 26)
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txtCuit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jLabel4))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(btnNuevoTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnEliminarTels, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel5))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btnModificarDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEliminarEmails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addComponent(jLabel18)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(4, 4, 4)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNuevoDomicilio)
+                    .addComponent(btnEliminarDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNuevoTelefono)
+                    .addComponent(btnEliminarTels, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNuevoCorreo)
+                    .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnModificarDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23))
         );
 
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
@@ -238,7 +494,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         jLabel19.setForeground(java.awt.Color.white);
         jLabel19.setText("Ordenes de Compra al Proveedor");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCompra.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -246,7 +502,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                 "IDCOMPRA", "FECHA DE EMISION", "TOTAL"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaCompra);
 
         jButton14.setBackground(new java.awt.Color(51, 0, 51));
         jButton14.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -258,54 +514,50 @@ public class BCMProveedor extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("IDCOMPRA");
 
-        jTextField12.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField12.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField12.addActionListener(new java.awt.event.ActionListener() {
+        txtIdCompra.setBackground(new java.awt.Color(0, 0, 51));
+        txtIdCompra.setForeground(new java.awt.Color(255, 255, 255));
+        txtIdCompra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField12ActionPerformed(evt);
+                txtIdCompraActionPerformed(evt);
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(51, 0, 51));
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Buscar");
+        btnBuscarIdCompra.setBackground(new java.awt.Color(51, 0, 51));
+        btnBuscarIdCompra.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnBuscarIdCompra.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarIdCompra.setText("Buscar");
 
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("FECHA DE EMISION:");
 
-        jTextField13.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField13.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField13.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarFechaEmision.setBackground(new java.awt.Color(51, 0, 51));
+        btnBuscarFechaEmision.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnBuscarFechaEmision.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarFechaEmision.setText("Buscar");
+
+        comboDia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField13ActionPerformed(evt);
+                comboDiaActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(51, 0, 51));
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Buscar");
+        jLabel20.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("/");
 
-        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel17.setText("/");
-
-        jTextField14.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField14.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField14.addActionListener(new java.awt.event.ActionListener() {
+        comboMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField14ActionPerformed(evt);
+                comboMesActionPerformed(evt);
             }
         });
 
-        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel21.setText("/");
+        jLabel22.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel22.setText("/");
 
-        jTextField15.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField15.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField15.addActionListener(new java.awt.event.ActionListener() {
+        comboAnio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField15ActionPerformed(evt);
+                comboAnioActionPerformed(evt);
             }
         });
 
@@ -315,26 +567,26 @@ public class BCMProveedor extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel14)
                     .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel20)
+                        .addGap(6, 6, 6)
+                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel17)
+                        .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField15)))
-                .addGap(14, 14, 14)
+                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscarIdCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36))
         );
         jPanel5Layout.setVerticalGroup(
@@ -343,21 +595,19 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIdCompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarIdCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(btnBuscarFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel21))
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel17))
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel14)
-                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel20)
+                        .addComponent(jLabel22)
+                        .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -381,11 +631,11 @@ public class BCMProveedor extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap()
                 .addComponent(jLabel19)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(22, 22, 22)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -434,7 +684,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 16, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -449,9 +699,9 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -462,10 +712,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -479,21 +726,73 @@ public class BCMProveedor extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton16ActionPerformed
 
-    private void jTextField12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField12ActionPerformed
+    private void txtIdCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdCompraActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField12ActionPerformed
+    }//GEN-LAST:event_txtIdCompraActionPerformed
 
-    private void jTextField13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField13ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField13ActionPerformed
+    private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
+        model = (DefaultTableModel)tablaTelefono.getModel();
+        model.removeRow(tablaTelefono.getSelectedRow());
+    }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
-    private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField14ActionPerformed
+    private void btnNuevoTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTelefonoActionPerformed
+        NDTelefono dTelefono= new NDTelefono(this,
+            true,(DefaultTableModel) tablaTelefono.getModel());
+        dTelefono.setVisible(true);
+    }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
-    private void jTextField15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField15ActionPerformed
+    private void btnEliminarDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomicilioActionPerformed
+        model = (DefaultTableModel)tablaDomicilio.getModel();
+        model.removeRow(tablaDomicilio.getSelectedRow());
+    }//GEN-LAST:event_btnEliminarDomicilioActionPerformed
+
+    private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
+        NDDomicilio dDomicilio= new NDDomicilio(this,
+            true, (DefaultTableModel) tablaDomicilio.getModel());
+        dDomicilio.setVisible(true);
+    }//GEN-LAST:event_btnNuevoDomicilioActionPerformed
+
+    private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
+        NDObraSocial dCorreo= new NDObraSocial(this,
+            true,(DefaultTableModel) tablaCorreoElectronico.getModel());
+        dCorreo.setVisible(true);
+    }//GEN-LAST:event_btnNuevoCorreoActionPerformed
+
+    private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
+        model = (DefaultTableModel)tablaCorreoElectronico.getModel();
+        model.removeRow(tablaCorreoElectronico.getSelectedRow());
+    }//GEN-LAST:event_btnEliminarEmailsActionPerformed
+
+    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
+
+    }//GEN-LAST:event_comboDiaActionPerformed
+
+    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
+        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboMesActionPerformed
+
+    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
+
+        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboAnioActionPerformed
+
+    private void btnModificarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarDatosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField15ActionPerformed
+        this.txtCuit.setEnabled(true);
+        this.txtRazonSocial.setEnabled(true);
+        this.comboDia.setEnabled(true);
+        this.comboMes.setEnabled(true);
+        this.comboAnio.setEnabled(true);
+        this.tablaDomicilio.setEnabled(true);
+        this.tablaCorreoElectronico.setEnabled(true);
+        this.btnGuardar.setEnabled(true);
+        this.btnNuevoDomicilio.setEnabled(true);
+        this.btnNuevoTelefono.setEnabled(true);
+        this.btnNuevoCorreo.setEnabled(true);
+        this.btnEliminarEmails.setEnabled(true);
+        this.btnEliminarDomicilio.setEnabled(true);
+        this.btnEliminarTels.setEnabled(true);
+    }//GEN-LAST:event_btnModificarDatosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -594,26 +893,35 @@ public class BCMProveedor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnBuscarFechaEmision;
+    private javax.swing.JButton btnBuscarIdCompra;
+    private javax.swing.JButton btnEliminarDomicilio;
+    private javax.swing.JButton btnEliminarEmails;
+    private javax.swing.JButton btnEliminarTels;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnModificarDatos;
+    private javax.swing.JButton btnNuevoCorreo;
+    private javax.swing.JButton btnNuevoDomicilio;
+    private javax.swing.JButton btnNuevoTelefono;
+    private javax.swing.JComboBox<String> comboAnio;
+    private javax.swing.JComboBox<String> comboDia;
+    private javax.swing.JComboBox<String> comboMes;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -626,16 +934,13 @@ public class BCMProveedor extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTable tablaCorreoElectronico1;
+    private javax.swing.JTable tablaCompra;
+    private javax.swing.JTable tablaCorreoElectronico;
     private javax.swing.JTable tablaDomicilio;
-    private javax.swing.JTable tablaTelefonos;
+    private javax.swing.JTable tablaTelefono;
+    private javax.swing.JTextArea txaObservaciones;
+    private javax.swing.JTextField txtCuit;
+    private javax.swing.JTextField txtIdCompra;
+    private javax.swing.JTextField txtRazonSocial;
     // End of variables declaration//GEN-END:variables
 }

@@ -129,9 +129,6 @@ public class ControladorDate {
         String anio4 = String.valueOf(cadenaFecha.charAt(3));
         String anio = anio1 + anio2 + anio3 + anio4;
         
-        System.out.println(dia);
-        System.out.println(mes);
-        System.out.println(anio);
         
         comboDia.setSelectedItem(dia);
         if(mes.equals("01")){

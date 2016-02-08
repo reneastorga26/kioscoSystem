@@ -83,7 +83,9 @@
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="330" max="-2" attributes="0"/>
+                          <Component id="btnGuardarModificacion" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
@@ -99,6 +101,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnGuardarModificacion" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
@@ -213,7 +216,7 @@
                                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                           <Group type="103" groupAlignment="0" attributes="0">
                                                               <Component id="btnSalir" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                                              <Component id="btnGuardar" min="-2" pref="170" max="-2" attributes="0"/>
+                                                              <Component id="btnModificar" min="-2" pref="170" max="-2" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                   </Group>
@@ -315,7 +318,7 @@
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                   <Group type="102" attributes="0">
-                                                      <Component id="btnGuardar" min="-2" pref="44" max="-2" attributes="0"/>
+                                                      <Component id="btnModificar" min="-2" pref="44" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
                                                       <Component id="btnSalir" min="-2" pref="44" max="-2" attributes="0"/>
                                                   </Group>
@@ -701,10 +704,10 @@
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator5">
             </Component>
-            <Component class="javax.swing.JButton" name="btnGuardar">
+            <Component class="javax.swing.JButton" name="btnModificar">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="98" red="0" type="rgb"/>
+                  <Color blue="33" green="0" red="33" type="rgb"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="12" style="1"/>
@@ -712,10 +715,10 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Guardar Nuevo Cliente"/>
+                <Property name="text" type="java.lang.String" value="Modificar Datos"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnSalir">
@@ -790,6 +793,23 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Habilitar un cliente eliminado"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnGuardarModificacion">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="33" green="0" red="33" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Guardar Modificacion"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarModificacionActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

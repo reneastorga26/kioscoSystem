@@ -23,7 +23,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private ControladorDate controladorDate1 = new ControladorDate();
     private ControladorDate controladorDate2 = new ControladorDate();
     private DefaultTableModel model;
-    
+    private String cadenaIdPersona;
     /**
      * Creates new form ABMProducto
      */
@@ -50,28 +50,49 @@ public class BCMEmpleado extends javax.swing.JFrame {
         this.comboAnio1.setEnabled(false);
         this.tablaObraSocial.setEnabled(false);
         this.tablaFamiliares.setEnabled(false);
-        this.btnGuardarModificacion.setVisible(false);
+        this.btnGuardarModificacion.setEnabled(false);
+        this.btnNuevoDomicilio.setEnabled(false);
+        this.btnNuevoTelefono.setEnabled(false);
+        this.btnNuevoCorreo.setEnabled(false);
+        this.btnNuevaObraSocial.setEnabled(false);
+        this.btnEliminarCorreos.setEnabled(false);
+        this.btnEliminarDomicilios.setEnabled(false);
+        this.btnEliminarObrasSociales.setEnabled(false);
+        this.btnEliminarTelefono.setEnabled(false);
         
-        //AUTOCOMPLETAR FRAME
-        completarCuil();
-        completarNombre();
-        completarFechaNac();
-        completarDomicilios();
-        completarCorreosElectronicos();
-        completarInicioLaboral();
     }
+    
+       
+    public void dato(long idPersona){
+        ControladorBD control = new ControladorBD(); 
+        ResultSet rs;
+        cadenaIdPersona = String.valueOf(idPersona);
+        try{
+            rs = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
+            while(rs.next()){
+                txtDni.setText(rs.getString("DNI"));
+                completarCuil();
+                completarNombre();
+                completarFechaNac();
+                completarDomicilios();
+                completarCorreosElectronicos();
+                completarInicioLaboral();
+                completarTelefonos();
+            }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    } 
+    
     
     public void completarCuil(){
         ControladorBD controlador = new ControladorBD();
         ResultSet res;
-        String dni = txtDni.getText();
-        System.out.printf("DNI: %s\n",dni);
-        String paramDni = "DNI = 35908643" ;
-        System.out.println(paramDni);
-        String paramCuil = "PERSONA_ID_PERSONA = 1";
+        String condicion = "PERSONA_ID_PERSONA = " + cadenaIdPersona;
         String cuil;
         try{
-        res = controlador.buscarRegistrosSinTabla("CUIL", "EMPLEADO", paramCuil);
+        res = controlador.buscarRegistrosSinTabla("CUIL", "EMPLEADO", condicion);
         while(res.next()){
                     cuil = res.getString("CUIL");
                     txtCuil.setText(cuil);
@@ -87,12 +108,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
         ControladorBD controlador = new ControladorBD();
         ResultSet res;
         String dni = txtDni.getText();
-        System.out.printf("DNI: %s\n",dni);
-        String paramDni = "DNI = 35908643" ;
-        System.out.println(paramDni);
+        String condicion = "DNI = " + dni;
         String nombre;
         try{
-        res = controlador.buscarRegistrosSinTabla("NOMBRE_APELLIDO", "persona", paramDni);
+        res = controlador.buscarRegistrosSinTabla("NOMBRE_APELLIDO", "PERSONA", condicion);
         while(res.next()){
                     nombre = res.getString("NOMBRE_APELLIDO");
                     txtNombre.setText(nombre);
@@ -109,16 +128,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
         ControladorBD controlador = new ControladorBD();
         ResultSet res;
         String dni = txtDni.getText();
-        System.out.printf("DNI: %s\n",dni);
-        String paramDni = "DNI = 35908643" ;
-        System.out.println(paramDni);
+        String condicion = "DNI = " + dni;
         String fechaNac;
         try{
-        res = controlador.buscarRegistrosSinTabla("FECHA_NAC", "persona", paramDni);
+        res = controlador.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
         while(res.next()){
                     fechaNac = res.getString("FECHA_NAC");
-                    System.out.printf("Fecha nac : ");
-                    System.out.println(fechaNac);
                     controladorDate2.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
         }
         }catch (SQLException ex) {
@@ -131,23 +146,15 @@ public class BCMEmpleado extends javax.swing.JFrame {
         ControladorBD controlador = new ControladorBD();
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
         ResultSet res;
-        String dni = txtDni.getText();
-        System.out.printf("DNI: %s\n",dni);
-        //String paramDni = "DNI = 35908643" ;
-        //System.out.println(paramDni);
-        String paramIdPersona = "1";
         String direccion;
         String localidad;
         String provincia;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "domicilio d", "d.PERSONA_ID_PERSONA = " + paramIdPersona);
+        res = controlador.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
-                    System.out.println(direccion);
                     localidad = res.getString("LOCALIDAD");
-                    System.out.println(localidad);
                     provincia = res.getString("PROVINCIA");
-                    System.out.println(provincia);
                     Object [] fila = new Object[3];
                     fila[0] = direccion;
                     fila[1] = localidad;
@@ -164,18 +171,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
         ControladorBD controlador = new ControladorBD();
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
         ResultSet res;
-        String dni = txtDni.getText();
-        System.out.printf("DNI: %s\n",dni);
-        //String paramDni = "DNI = 35908643" ;
-        //System.out.println(paramDni);
-        String paramIdPersona = "1";
         String direccion;
         try{
-        res = controlador.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + paramIdPersona);
+        res = controlador.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
-                    System.out.println(direccion);
-                    
                     Object [] fila = new Object[1];
                     fila[0] = direccion;
                     modeloTabla.addRow(fila);
@@ -190,24 +190,36 @@ public class BCMEmpleado extends javax.swing.JFrame {
     public void completarInicioLaboral(){
         ControladorBD controlador = new ControladorBD();
         ResultSet res;
-        String dni = txtDni.getText();
-        System.out.printf("DNI: %s\n",dni);
-        String paramDni = "DNI = 35908643" ;
-        System.out.println(paramDni);
-        String paramIdPersona = "1";
         String fechaInicioLaboral;
         try{
-        res = controlador.buscarRegistrosSinTabla("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + paramIdPersona);
+        res = controlador.buscarRegistrosSinTabla("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     fechaInicioLaboral = res.getString("FECHA_INICIO_RELACION_LABORAL");
-                    System.out.printf("Fecha inicio : ");
-                    System.out.println(fechaInicioLaboral);
                     controladorDate2.darFormatoaComboBox(fechaInicioLaboral,comboDia1,comboMes1,comboAnio1);
         }
         }catch (SQLException ex) {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
+    }
+    
+    public void completarTelefonos(){
+        ControladorBD controlador = new ControladorBD();
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
+        ResultSet res;
+        String telefono;
+        try{
+        res = controlador.buscarRegistrosSinTabla("NUMERO", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        while(res.next()){
+                    telefono = res.getString("NUMERO");
+                    Object [] fila = new Object[1];
+                    fila[0] = telefono;
+                    modeloTabla.addRow(fila);
+                    tablaCorreoElectronico.setModel(modeloTabla);
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     
     /**
@@ -1073,7 +1085,15 @@ public class BCMEmpleado extends javax.swing.JFrame {
         this.btnNuevoFamiliar.setEnabled(true);
         this.btnModificarFamiliar.setEnabled(true);
         this.btnEliminarFamiliar.setEnabled(true);
-        this.btnGuardarModificacion.setVisible(true);
+        this.btnGuardarModificacion.setEnabled(true);
+        this.btnNuevoDomicilio.setEnabled(true);
+        this.btnNuevoTelefono.setEnabled(true);
+        this.btnNuevoCorreo.setEnabled(true);
+        this.btnNuevaObraSocial.setEnabled(true);
+        this.btnEliminarCorreos.setEnabled(true);
+        this.btnEliminarDomicilios.setEnabled(true);
+        this.btnEliminarObrasSociales.setEnabled(true);
+        this.btnEliminarTelefono.setEnabled(true);
     }//GEN-LAST:event_btnModificarDatosActionPerformed
 
     private void btnNuevoTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTelefonoActionPerformed
@@ -1261,7 +1281,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private javax.swing.JTable tablaObraSocial;
     private javax.swing.JTable tablaTelefono;
     private javax.swing.JTextField txtCuil;
-    public javax.swing.JTextField txtDni;
+    private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,12 +11,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import model.Cliente;
-import sistemakiosco.sismain;
 
 /**
  *
@@ -61,7 +62,8 @@ public class Buscar extends javax.swing.JFrame {
             case 3: 
                 control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
                 break;
-        }}
+            }
+    }
     
     
     public void limpiarTabla(){
@@ -82,7 +84,7 @@ public class Buscar extends javax.swing.JFrame {
         trsFiltro.setRowFilter(RowFilter.regexFilter(txtBuscar.getText(), columnaABuscar));
     }
     
-        
+       
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -307,25 +309,70 @@ public class Buscar extends javax.swing.JFrame {
 
     private void btnAmpliarInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmpliarInfoActionPerformed
         // TODO add your handling code here:
-        
-        if(this.lblTitulo.getText()=="Búsqueda de Empleado"){
+        //BUSCAR EMPLEADO
+        if(lblTitulo.getText().equals("Búsqueda de Empleado")){
         BCMEmpleado adminEmpleado = new BCMEmpleado();
-        //Tomar el DNI de la fila seleccionada y ampliar la informacion
+        ControladorBD control = new ControladorBD();
+        ResultSet res;
+        //Tomar el ID de la fila seleccionada y ampliar la informacion
         //en el frame BCMEmpleado
+        try{
         String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        System.out.println(datoEmpleado);
-        adminEmpleado.setVisible(true);
-        adminEmpleado.txtDni.setText(datoEmpleado);
-        this.dispose();
+        res = control.buscarRegistrosSinTabla("ID_PERSONA", "PERSONA", "DNI = " + datoEmpleado);
+        while(res.next()){
+            long idPersona = Long.valueOf(res.getString("ID_PERSONA"));
+            adminEmpleado.dato(idPersona);
+            adminEmpleado.setVisible(true);
+            
         }
-        if(this.lblTitulo.getText()=="Búsqueda de Cliente"){
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        //this.dispose();
+        }
+        
+        //BUSCAR CLIENTE
+        if(lblTitulo.getText().equals("Búsqueda de Cliente")){
         BCMCliente adminCliente = new BCMCliente();
-        adminCliente.setVisible(true);
+        ControladorBD control = new ControladorBD();
+        ResultSet res1;
+        
+        try{
+        String datoCliente = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        res1 = control.buscarRegistrosSinTabla("ID_PERSONA", "PERSONA", "DNI = " + datoCliente);
+        while(res1.next()){
+            long idPersona = Long.valueOf(res1.getString("ID_PERSONA"));
+            adminCliente.dato(idPersona);
+            adminCliente.setVisible(true);
+            
         }
-        if(this.lblTitulo.getText()=="Búsqueda de Proveedor"){
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        }
+        
+        //BUSCAR PROVEEDOR
+        if(lblTitulo.getText().equals("Búsqueda de Proveedor")){
         BCMProveedor adminProveedor = new BCMProveedor();
-        adminProveedor.setVisible(true);
+        ControladorBD control = new ControladorBD();
+        ResultSet res2;
+        
+        try{
+        String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        res2 = control.buscarRegistrosSinTabla("ID_PROVEEDOR", "PROVEEDOR", "CUIT = " + datoProveedor);
+        while(res2.next()){
+            long idProveedor = Long.valueOf(res2.getString("ID_PROVEEDOR"));
+            adminProveedor.dato(idProveedor);
+            adminProveedor.setVisible(true);
+            
         }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        
+        
     }//GEN-LAST:event_btnAmpliarInfoActionPerformed
 
     /**
