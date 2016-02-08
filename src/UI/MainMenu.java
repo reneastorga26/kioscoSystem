@@ -497,7 +497,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu6);
 
-        jMenu7.setText("Clientes Registrados");
+        jMenu7.setText("Clientes");
 
         jMenuItem14.setText("Nuevo Cliente");
         jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
@@ -595,7 +595,16 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-        BuscarProducto buscarProducto = new BuscarProducto();
+        Buscar buscarProducto = new Buscar();
+        buscarProducto.modeloTabla.setColumnIdentifiers(new String[]{"CODIGO","DESCRIPCION"});
+        buscarProducto.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
+        buscarProducto.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
+        buscarProducto.setTitle("Búsqueda de Producto");
+        buscarProducto.lblTitulo.setText("Búsqueda de Producto");
+        buscarProducto.jRadioButton1.setText("CODIGO");
+        buscarProducto.jRadioButton1.setSelected(true);
+        buscarProducto.jRadioButton2.setText("DESCRIPCION");
+        buscarProducto.evaluar(4);
         buscarProducto.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -653,8 +662,17 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling code here:
-        BCMProducto adminProducto = new BCMProducto();
-        adminProducto.setVisible(true);
+        Buscar buscarProducto = new Buscar();
+        buscarProducto.modeloTabla.setColumnIdentifiers(new String[]{"CODIGO","DESCRIPCION"});
+        buscarProducto.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
+        buscarProducto.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
+        buscarProducto.setTitle("Búsqueda de Producto");
+        buscarProducto.lblTitulo.setText("Búsqueda de Producto");
+        buscarProducto.jRadioButton1.setText("CODIGO");
+        buscarProducto.jRadioButton1.setSelected(true);
+        buscarProducto.jRadioButton2.setText("DESCRIPCION");
+        buscarProducto.evaluar(4);
+        buscarProducto.setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed

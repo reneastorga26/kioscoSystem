@@ -145,7 +145,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu7">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Clientes Registrados"/>
+            <Property name="text" type="java.lang.String" value="Clientes"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem14">

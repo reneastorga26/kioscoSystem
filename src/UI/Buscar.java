@@ -62,6 +62,10 @@ public class Buscar extends javax.swing.JFrame {
             case 3: 
                 control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
                 break;
+            
+            case 4:
+                control.buscar("ID_PRODUCTO,DESCRIPCION","producto", "ID_PRODUCTO > 0", modeloTabla);
+                break;
             }
     }
     
@@ -372,6 +376,25 @@ public class Buscar extends javax.swing.JFrame {
         }
         }
         
+        //BUSCAR PRODUCTO
+        if(lblTitulo.getText().equals("Búsqueda de Producto")){
+        BCMProducto adminProducto = new BCMProducto();
+        ControladorBD control = new ControladorBD();
+        ResultSet res3;
+        
+        try{
+        String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        res3 = control.buscarRegistrosSinTabla("ID_PRODUCTO", "PRODUCTO", "ID_PRODUCTO = " + datoProveedor);
+        while(res3.next()){
+            long idProducto = Long.valueOf(res3.getString("ID_PRODUCTO"));
+            adminProducto.dato(idProducto);
+            adminProducto.setVisible(true);
+            
+        }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
         
     }//GEN-LAST:event_btnAmpliarInfoActionPerformed
 
