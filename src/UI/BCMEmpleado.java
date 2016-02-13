@@ -83,6 +83,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             rs = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
             while(rs.next()){
                 txtDni.setText(rs.getString("DNI"));
+            }
                 completarCuil();
                 completarNombre();
                 completarFechaNac();
@@ -90,9 +91,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 completarCorreosElectronicos();
                 completarInicioLaboral();
                 completarTelefonos();
-            }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     } 
@@ -112,7 +112,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
@@ -131,7 +131,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
@@ -149,7 +149,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     controladorDate2.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
@@ -175,7 +175,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     tablaDomicilio.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
@@ -194,7 +194,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     tablaCorreoElectronico.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
@@ -210,7 +210,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     controladorDate2.darFormatoaComboBox(fechaInicioLaboral,comboDia1,comboMes1,comboAnio1);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
@@ -227,10 +227,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     Object [] fila = new Object[1];
                     fila[0] = telefono;
                     modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
+                    tablaTelefono.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     

@@ -62,11 +62,11 @@ public class BCMProveedor extends javax.swing.JFrame {
             rs = control.buscarRegistrosSinTabla("CUIT", "PROVEEDOR", "ID_PROVEEDOR = " + cadenaIdProveedor);
             while(rs.next()){
                 txtCuit.setText(rs.getString("CUIT"));
+            }
                 completarRazonSocial();
                 completarDomicilios();
                 completarCorreosElectronicos();
                 completarTelefonos();
-            }
         }catch (SQLException ex) {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -150,7 +150,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                     Object [] fila = new Object[1];
                     fila[0] = telefono;
                     modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
+                    tablaTelefono.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
