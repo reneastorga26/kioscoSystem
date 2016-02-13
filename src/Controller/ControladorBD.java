@@ -104,8 +104,9 @@ public class ControladorBD {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
-     public ArrayList buscar (String columnas, 
+         
+    
+         public ArrayList buscar (String columnas, 
                          String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla

@@ -379,7 +379,7 @@ public class AEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "DESCRIPCION", "BANCO", "CUENTA BANCARIA"
             }
         ));
         jScrollPane5.setViewportView(tablaObraSocial);

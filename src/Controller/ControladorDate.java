@@ -25,7 +25,7 @@ public class ControladorDate {
                                JComboBox comboAnio){
 
         String sdia;
-        comboAnio.addItem("Anio");
+        comboAnio.addItem("Año");
 
         for(int i=calendar.get(Calendar.YEAR); i>=1900; i--){
             comboAnio.addItem(String.valueOf(i));
@@ -112,6 +112,18 @@ public class ControladorDate {
         if(comboMes.getSelectedIndex()<10) mes = "0" + mes;  
         
         resultado = "'"+dia +"/"+mes+"/"+anio +"' , 'dd/mm/yyyy'";
+        return resultado;
+    }
+    
+    public String darFormatoFecha(JComboBox comboDia, JComboBox comboMes, JComboBox comboAnio){
+        String resultado;
+        String dia= String.valueOf(comboDia.getSelectedIndex());
+        String mes=String.valueOf(comboMes.getSelectedIndex());
+        String anio= String.valueOf(correctorAnio(comboAnio.getSelectedIndex()));
+        
+        if(comboMes.getSelectedIndex()<10) mes = "0" + mes;  
+        
+        resultado = "'"+dia +"/"+mes+"/"+anio +"'";
         return resultado;
     }
     

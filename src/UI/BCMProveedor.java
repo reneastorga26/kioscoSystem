@@ -54,10 +54,10 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarTels.setEnabled(false);
     }
 
-    public void dato(long idProveedor){
+    public void dato(String idProveedor){
         ControladorBD control = new ControladorBD(); 
         ResultSet rs;
-        cadenaIdProveedor = String.valueOf(idProveedor);
+        cadenaIdProveedor = idProveedor;
         try{
             rs = control.buscarRegistrosSinTabla("CUIT", "PROVEEDOR", "ID_PROVEEDOR = " + cadenaIdProveedor);
             while(rs.next()){

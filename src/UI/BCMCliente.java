@@ -14,14 +14,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
-//import java.util.Calendar;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
 import model.CorreoElectronico;
 import model.Domicilio;
+import model.Persona;
 import model.Telefono;
+import sistemakiosco.sismain;
 /**
  *
  * @author IgnacioMatias
@@ -60,30 +61,32 @@ public class BCMCliente extends javax.swing.JFrame {
         this.btnEliminarEmails.setEnabled(false);
         this.btnEliminarDomicilio.setEnabled(false);
         this.btnEliminarTels.setEnabled(false);
+        this.txtObservaciones.setEnabled(false);
     }
 
     public JTable getTablaTelefono() {
         return tablaTelefono;
     }
     
-    public void dato(long idPersona){
+    public void dato(String idPersona){
         ControladorBD control = new ControladorBD(); 
-        ResultSet rs;
-        cadenaIdPersona = String.valueOf(idPersona);
+        ResultSet res;
+        cadenaIdPersona = idPersona;
         try{
-            rs = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
-            while(rs.next()){
-                txtDni.setText(rs.getString("DNI"));
+            res = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
+                while(res.next()){
+                txtDni.setText(res.getString("DNI"));
+                
+                System.out.printf("\nFUNCIONA HASTA AQUI BCMCLIENTE...\n");
+                }
                 completarNombre();
                 completarFechaNac();
                 completarDomicilios();
                 completarCorreosElectronicos();
-                completarTelefonos();
-            }
+                completarTelefonos(); 
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     } 
     
     public void completarNombre(){
@@ -92,16 +95,17 @@ public class BCMCliente extends javax.swing.JFrame {
         String dni = txtDni.getText();
         String condicion = "DNI = " + dni;
         String nombre;
+        String observaciones;
         try{
-        res = controlador.buscarRegistrosSinTabla("NOMBRE_APELLIDO", "PERSONA", condicion);
+        res = controlador.buscarRegistrosSinTabla("*", "PERSONA", condicion);
         while(res.next()){
                     nombre = res.getString("NOMBRE_APELLIDO");
                     txtNombre.setText(nombre);
-                    System.out.println(nombre);
-                    
+                    observaciones = res.getString("OBSERVACIONES");
+                    txtObservaciones.setText(observaciones);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
@@ -119,7 +123,7 @@ public class BCMCliente extends javax.swing.JFrame {
                     controladorDate1.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
@@ -145,7 +149,7 @@ public class BCMCliente extends javax.swing.JFrame {
                     tablaDomicilio.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
@@ -164,7 +168,7 @@ public class BCMCliente extends javax.swing.JFrame {
                     tablaCorreoElectronico.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     
@@ -173,17 +177,20 @@ public class BCMCliente extends javax.swing.JFrame {
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         ResultSet res;
         String telefono;
+        String tipo;
         try{
-        res = controlador.buscarRegistrosSinTabla("NUMERO", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = controlador.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[1];
+                    Object [] fila = new Object[2];
                     fila[0] = telefono;
+                    tipo = res.getString("MOVIL");
+                    fila[1] = tipo;
                     modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
+                    tablaTelefono.setModel(modeloTabla);
         }
         }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
 
@@ -707,7 +714,7 @@ public class BCMCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
     private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
-        NDObraSocial dCorreo= new NDObraSocial(this,
+        NDCorreoElectronico dCorreo= new NDCorreoElectronico(this,
                 true,(DefaultTableModel) tablaCorreoElectronico.getModel());
         dCorreo.setVisible(true);
     }//GEN-LAST:event_btnNuevoCorreoActionPerformed
@@ -737,7 +744,7 @@ public class BCMCliente extends javax.swing.JFrame {
         this.btnEliminarEmails.setEnabled(true);
         this.btnEliminarDomicilio.setEnabled(true);
         this.btnEliminarTels.setEnabled(true);   
-        
+        this.txtObservaciones.setEnabled(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -754,6 +761,65 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
         // TODO add your handling code here:
+        
+        cliente.setDni(txtDni.getText());
+        cliente.setNombreApellido(txtNombre.getText());
+        cliente.setFechaNacimiento(controladorDate.darFormatoStringOracle(comboDia,comboMes,
+                        comboAnio));
+        if(comboSexo.getSelectedIndex()==0) 
+            cliente.setSexo('M');
+        else
+            cliente.setSexo('F');
+        cliente.setObservaciones(txtObservaciones.getText());
+        
+        ArrayList<String> valoresPersona = new ArrayList<>();
+        valoresPersona.add(cliente.getDni());
+        valoresPersona.add(cliente.getNombreApellido());
+        valoresPersona.add(cliente.getFechaNacimiento());
+        valoresPersona.add(String.valueOf(cliente.getSexo()));
+        valoresPersona.add(cliente.getObservaciones());
+        cliente.update(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        
+        ArrayList<String> valoresDomicilio = new ArrayList<>();
+        for(int i = 0; i<tablaDomicilio.getRowCount();i++){
+            domicilio.setDireccion(
+                    String.valueOf(tablaDomicilio.getValueAt(i,0)));
+            domicilio.setLocalidad(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 1)));
+            domicilio.setProvincia(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 2)));
+            domicilio.setIdPersona(Long.valueOf(cadenaIdPersona));
+            valoresDomicilio.add(domicilio.getDireccion());
+            valoresDomicilio.add(domicilio.getLocalidad());
+            valoresDomicilio.add(domicilio.getProvincia());
+            domicilio.update(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            valoresDomicilio.clear();
+        }
+        
+        ArrayList<String> valoresTelefono = new ArrayList<>();
+        for(int i = 0; i<tablaTelefono.getRowCount();i++){
+            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
+            telefono.setMovil(
+                    String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
+            telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
+            valoresTelefono.add(telefono.getNumero());
+            valoresTelefono.add(String.valueOf(telefono.getMovil()));
+            telefono.update(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            valoresTelefono.clear();
+        }
+        
+        ArrayList<String> valoresEmail = new ArrayList<>();
+        for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
+            correoElectronico.setDireccion(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
+            correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
+            valoresEmail.add(correoElectronico.getDireccion());
+            correoElectronico.update(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            valoresEmail.clear();
+        }
+        
+        
+        JOptionPane.showMessageDialog(null, "EL CLIENTE SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed
 
     /**

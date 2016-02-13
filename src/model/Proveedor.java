@@ -5,7 +5,11 @@
  */
 package model;
 
+import Controller.ControladorBD;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
@@ -107,4 +111,17 @@ public class Proveedor {
         return indices;
     }
     
+    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+             
+             String set = "CUIT = " + txt.get(0) + ", RAZON_SOCIAL = '" + txt.get(1) + 
+                          "', OBSERVACIONES = '" + txt.get(2) + "'";
+             try{
+
+                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
+                 System.out.println(query);
+                 sismain.getConexion().getStatement().execute(query);
+             }catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
 }

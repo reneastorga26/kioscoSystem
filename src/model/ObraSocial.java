@@ -5,6 +5,13 @@
  */
 package model;
 
+import Controller.ControladorBD;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author CX
@@ -60,5 +67,17 @@ public class ObraSocial {
         this.cuentaBancaria = cuentaBancaria;
     }
      
+    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+             
+             String set = "CUIL = " + txt.get(0) + ", FECHA_INICIO_LABORAL = " + txt.get(1);
+             try{
+
+                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
+                 System.out.println(query);
+                 sismain.getConexion().getStatement().execute(query);
+             }catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
      
 }

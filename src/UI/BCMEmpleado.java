@@ -9,9 +9,16 @@ import Controller.ControladorBD;
 import Controller.ControladorDate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.CorreoElectronico;
+import model.Domicilio;
+import model.Empleado;
+import model.ObraSocial;
+import model.Telefono;
 
 /**
  *
@@ -22,6 +29,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private ControladorDate controladorDate = new ControladorDate();
     private ControladorDate controladorDate1 = new ControladorDate();
     private ControladorDate controladorDate2 = new ControladorDate();
+    private Empleado empleado = new Empleado();
+    private Domicilio domicilio = new Domicilio();
+    private Telefono telefono = new Telefono();
+    private ObraSocial obraSocial = new ObraSocial();
+    private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
     private String cadenaIdPersona;
     /**
@@ -63,10 +75,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
     }
     
        
-    public void dato(long idPersona){
+    public void dato(String idPersona){
         ControladorBD control = new ControladorBD(); 
         ResultSet rs;
-        cadenaIdPersona = String.valueOf(idPersona);
+        cadenaIdPersona = idPersona;
         try{
             rs = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
             while(rs.next()){
@@ -569,7 +581,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "DESCRIPCION", "BANCO", "CUENTA BANCARIA"
             }
         ));
         jScrollPane5.setViewportView(tablaObraSocial);
@@ -1141,6 +1153,76 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
         // TODO add your handling code here:
+        empleado.setDni(txtDni.getText());
+        empleado.setCuil(txtCuil.getText());
+        empleado.setNombreApellido(txtNombre.getText());
+        empleado.setFechaNacimiento(controladorDate.darFormatoStringOracle(comboDia,comboMes,
+                        comboAnio));
+        empleado.setFechaInicioRelacionLaboral(controladorDate.darFormatoStringOracle(comboDia1,comboMes1,
+                        comboAnio1));
+        
+        ArrayList<String> valoresPersona = new ArrayList<>();
+        valoresPersona.add(empleado.getDni());
+        valoresPersona.add(empleado.getCuil());
+        valoresPersona.add(empleado.getNombreApellido());
+        valoresPersona.add(empleado.getFechaNacimiento());
+        valoresPersona.add(empleado.getFechaInicioRelacionLaboral());
+        valoresPersona.add("M");
+        valoresPersona.add("");
+        empleado.update(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        
+        ArrayList<String> valoresDomicilio = new ArrayList<>();
+        for(int i = 0; i<tablaDomicilio.getRowCount();i++){
+            domicilio.setDireccion(
+                    String.valueOf(tablaDomicilio.getValueAt(i,0)));
+            domicilio.setLocalidad(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 1)));
+            domicilio.setProvincia(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 2)));
+            domicilio.setIdPersona(Long.valueOf(cadenaIdPersona));
+            valoresDomicilio.add(domicilio.getDireccion());
+            valoresDomicilio.add(domicilio.getLocalidad());
+            valoresDomicilio.add(domicilio.getProvincia());
+            domicilio.update(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            valoresDomicilio.clear();
+        }
+        
+        ArrayList<String> valoresTelefono = new ArrayList<>();
+        for(int i = 0; i<tablaTelefono.getRowCount();i++){
+            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
+            telefono.setMovil(
+                    String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
+            telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
+            valoresTelefono.add(telefono.getNumero());
+            valoresTelefono.add(String.valueOf(telefono.getMovil()));
+            telefono.update(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            valoresTelefono.clear();
+        }
+        
+        ArrayList<String> valoresEmail = new ArrayList<>();
+        for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
+            correoElectronico.setDireccion(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
+            correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
+            valoresEmail.add(correoElectronico.getDireccion());
+            correoElectronico.update(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            valoresEmail.clear();
+        }
+        
+        ArrayList<String> valoresObraSocial = new ArrayList<>();
+        for(int i = 0; i<tablaObraSocial.getRowCount();i++){
+            obraSocial.setDescripcion(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
+            obraSocial.setBanco(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
+            obraSocial.setCuentaBancaria(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
+            valoresObraSocial.add(correoElectronico.getDireccion());
+            obraSocial.update(valoresObraSocial, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaIdPersona);
+            valoresObraSocial.clear();
+        }
+        
+        JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed
 
     /**

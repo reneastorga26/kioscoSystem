@@ -5,7 +5,11 @@
  */
 package model;
 
+import Controller.ControladorBD;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sistemakiosco.sismain;
 
 /**
@@ -73,7 +77,18 @@ public class CorreoElectronico {
         return idCorreoElectronico;
     }
 
-    
+    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+             
+             String set = "DIRECCION = '" + txt.get(0) + "'";
+             try{
+
+                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
+                 System.out.println(query);
+                 sismain.getConexion().getStatement().execute(query);
+             }catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
     
     
 }
