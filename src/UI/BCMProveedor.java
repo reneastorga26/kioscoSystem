@@ -9,8 +9,10 @@ import Controller.ControladorBD;
 import Controller.ControladorDate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.CorreoElectronico;
 import model.Domicilio;
@@ -67,6 +69,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                 completarDomicilios();
                 completarCorreosElectronicos();
                 completarTelefonos();
+                completarObservaciones();
         }catch (SQLException ex) {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -143,12 +146,19 @@ public class BCMProveedor extends javax.swing.JFrame {
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         ResultSet res;
         String telefono;
+        String tipo;
         try{
-        res = controlador.buscarRegistrosSinTabla("NUMERO", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        res = controlador.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
         while(res.next()){
                     telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[1];
+                    Object [] fila = new Object[2];
                     fila[0] = telefono;
+                    tipo = res.getString("MOVIL");
+                    if(tipo.equals("F")){
+                      fila[1] = "Fijo";  
+                    }else{
+                    fila[1] = "Movil";
+                    }
                     modeloTabla.addRow(fila);
                     tablaTelefono.setModel(modeloTabla);
         }
@@ -166,7 +176,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         try{
         res = controlador.buscarRegistrosSinTabla("OBSERVACIONES", "PROVEEDOR", condicion);
         while(res.next()){
-                    observaciones = res.getString("RAZON_SOCIAL");
+                    observaciones = res.getString("OBSERVACIONES");
                     txaObservaciones.setText(observaciones);
         }
         }catch (SQLException ex) {
@@ -230,7 +240,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         comboMes = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
         comboAnio = new javax.swing.JComboBox<>();
-        jButton7 = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
         jButton16 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -262,6 +272,11 @@ public class BCMProveedor extends javax.swing.JFrame {
         btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnGuardar.setForeground(java.awt.Color.white);
         btnGuardar.setText("Guardar Modificacion");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("CUIT:");
@@ -294,7 +309,7 @@ public class BCMProveedor extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "Numero", "Tipo"
             }
         ));
         jScrollPane6.setViewportView(tablaTelefono);
@@ -645,13 +660,13 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton7.setBackground(new java.awt.Color(153, 0, 0));
-        jButton7.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton7.setForeground(java.awt.Color.white);
-        jButton7.setText("Salir");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnSalir.setForeground(java.awt.Color.white);
+        btnSalir.setText("Cancelar y Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnSalirActionPerformed(evt);
             }
         });
 
@@ -669,13 +684,13 @@ public class BCMProveedor extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -693,7 +708,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton7)
+                        .addComponent(btnSalir)
                         .addComponent(jButton16))
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -719,9 +734,9 @@ public class BCMProveedor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
         // TODO add your handling code here:
@@ -794,6 +809,64 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarDomicilio.setEnabled(true);
         this.btnEliminarTels.setEnabled(true);
     }//GEN-LAST:event_btnModificarDatosActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        //cliente.setDni(txtDni.getText());
+        //cliente.setNombreApellido(txtNombre.getText());
+        proveedor.setCuit(txtCuit.getText());
+        proveedor.setRazonSocial(txtRazonSocial.getText());
+        proveedor.setObservaciones(txaObservaciones.getText());
+        
+        ArrayList<String> valoresProveedor = new ArrayList<>();
+        valoresProveedor.add(proveedor.getCuit());
+        valoresProveedor.add(proveedor.getRazonSocial());
+        valoresProveedor.add(proveedor.getObservaciones());
+        
+        proveedor.update(valoresProveedor, "PROVEEDOR", "ID_PROVEEDOR", cadenaIdProveedor);
+        
+        ArrayList<String> valoresDomicilio = new ArrayList<>();
+        for(int i = 0; i<tablaDomicilio.getRowCount();i++){
+            domicilio.setDireccion(
+                    String.valueOf(tablaDomicilio.getValueAt(i,0)));
+            domicilio.setLocalidad(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 1)));
+            domicilio.setProvincia(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 2)));
+            domicilio.setIdPersona(Long.valueOf(cadenaIdProveedor));
+            valoresDomicilio.add(domicilio.getDireccion());
+            valoresDomicilio.add(domicilio.getLocalidad());
+            valoresDomicilio.add(domicilio.getProvincia());
+            domicilio.update(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            valoresDomicilio.clear();
+        }
+        
+        ArrayList<String> valoresTelefono = new ArrayList<>();
+        for(int i = 0; i<tablaTelefono.getRowCount();i++){
+            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
+            telefono.setMovil(
+                    String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
+            telefono.setIdPersona(Long.valueOf(cadenaIdProveedor));
+            valoresTelefono.add(telefono.getNumero());
+            valoresTelefono.add(String.valueOf(telefono.getMovil()));
+            telefono.update(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            valoresTelefono.clear();
+        }
+        
+        ArrayList<String> valoresEmail = new ArrayList<>();
+        for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
+            correoElectronico.setDireccion(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
+            correoElectronico.setIdPersona(Long.valueOf(cadenaIdProveedor));
+            valoresEmail.add(correoElectronico.getDireccion());
+            correoElectronico.update(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            valoresEmail.clear();
+        }
+        
+        
+        JOptionPane.showMessageDialog(null, "EL PROVEEDOR SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        this.btnSalir.setText("Salir");
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -904,12 +977,12 @@ public class BCMProveedor extends javax.swing.JFrame {
     private javax.swing.JButton btnNuevoCorreo;
     private javax.swing.JButton btnNuevoDomicilio;
     private javax.swing.JButton btnNuevoTelefono;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> comboAnio;
     private javax.swing.JComboBox<String> comboDia;
     private javax.swing.JComboBox<String> comboMes;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton16;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;

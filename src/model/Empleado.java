@@ -104,13 +104,21 @@ public class Empleado extends Persona{
     }   
     
     public void update(ArrayList<String> txt, String tabla, String columna, String id){
-             
-             String set = "CUIL = " + txt.get(0) + ", FECHA_INICIO_LABORAL = " + txt.get(1);
+             String set;
+             if(tabla.equals("PERSONA")){
+                 set = "DNI = '" + txt.get(0) + "', NOMBRE_APELLIDO = '" + txt.get(1) + 
+                          "', FECHA_NAC = TO_DATE(" + txt.get(2) + "), SEXO = '" + txt.get(3) + 
+                        "', OBSERVACIONES = '" + txt.get(4) + "'";
+             }else{
+                 set = "CUIL = '" + txt.get(0) + 
+                        "', FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + txt.get(1) + ")";
+             }
              try{
 
                  String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
                  System.out.println(query);
                  sismain.getConexion().getStatement().execute(query);
+                 set = "";
              }catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
             }

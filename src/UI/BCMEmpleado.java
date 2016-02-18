@@ -220,12 +220,19 @@ public class BCMEmpleado extends javax.swing.JFrame {
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         ResultSet res;
         String telefono;
+        String tipo;
         try{
-        res = controlador.buscarRegistrosSinTabla("NUMERO", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = controlador.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[1];
+                    Object [] fila = new Object[2];
                     fila[0] = telefono;
+                    tipo = res.getString("MOVIL");
+                    if(tipo.equals("F")){
+                      fila[1] = "Fijo";  
+                    }else{
+                    fila[1] = "Movil";
+                    }
                     modeloTabla.addRow(fila);
                     tablaTelefono.setModel(modeloTabla);
         }
@@ -860,7 +867,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "Numero", "Tipo"
             }
         ));
         jScrollPane7.setViewportView(tablaTelefono);
@@ -1163,13 +1170,16 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
         ArrayList<String> valoresPersona = new ArrayList<>();
         valoresPersona.add(empleado.getDni());
-        valoresPersona.add(empleado.getCuil());
         valoresPersona.add(empleado.getNombreApellido());
         valoresPersona.add(empleado.getFechaNacimiento());
-        valoresPersona.add(empleado.getFechaInicioRelacionLaboral());
         valoresPersona.add("M");
         valoresPersona.add("");
         empleado.update(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        
+        ArrayList<String> valoresEmpleado = new ArrayList<>();
+        valoresEmpleado.add(empleado.getCuil());
+        valoresEmpleado.add(empleado.getFechaInicioRelacionLaboral());
+        empleado.update(valoresEmpleado, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaIdPersona);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){

@@ -8,10 +8,14 @@ package UI;
 import Controller.ControladorBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.Fabricante;
 import model.Producto;
+import model.TipoProducto;
 
 /**
  *
@@ -20,9 +24,11 @@ import model.Producto;
 public class BCMProducto extends javax.swing.JFrame {
 
     private Producto producto = new Producto();
+    private TipoProducto tipoProducto = new TipoProducto();
+    private Fabricante fabricante = new Fabricante();
     private String cadenaIdProducto;
-    private long tipoProducto;
-    private long fabricante;
+    private long idTipoProducto;
+    private long idFabricante;
     /**
      * Creates new form BCMProducto
      */
@@ -63,8 +69,8 @@ public class BCMProducto extends javax.swing.JFrame {
             txtStockActual.setText(rs.getString("STOCK_ACTUAL"));
             txtStockMinimo.setText(rs.getString("STOCK_CRITICO_MINIMO"));
             txtPuntoPedido.setText(rs.getString("PUNTO_PEDIDO"));
-            tipoProducto = Long.valueOf(rs.getString("TIPO_PRODUCTO_ID_TIPO_PRODUCTO"));
-            fabricante = Long.valueOf(rs.getString("FABRICANTE_ID_FABRICANTE"));
+            idTipoProducto = Long.valueOf(rs.getString("TIPO_PRODUCTO_ID_TIPO_PRODUCTO"));
+            idFabricante = Long.valueOf(rs.getString("FABRICANTE_ID_FABRICANTE"));
             }
         }catch (SQLException ex) {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,7 +84,7 @@ public class BCMProducto extends javax.swing.JFrame {
         ControladorBD control = new ControladorBD();
         try{
         ResultSet res;
-        res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO = " + tipoProducto);
+        res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO = " + idTipoProducto);
         while(res.next()){
                 //cmbTipoProducto.setSelectedItem(res.getString("DESCRIPCION"));
                 cmbTipoProducto.addItem(res.getString("DESCRIPCION"));
@@ -91,7 +97,7 @@ public class BCMProducto extends javax.swing.JFrame {
         ControladorBD control = new ControladorBD();
         try{
         ResultSet res;
-        res = control.buscarRegistrosSinTabla("DESCRIPCION", "FABRICANTE", "ID_FABRICANTE = " + fabricante);
+        res = control.buscarRegistrosSinTabla("DESCRIPCION", "FABRICANTE", "ID_FABRICANTE = " + idFabricante);
         while(res.next()){
                 txtFabricante.setText(res.getString("DESCRIPCION"));
             }
@@ -430,6 +436,33 @@ public class BCMProducto extends javax.swing.JFrame {
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
         // TODO add your handling code here:
+        producto.setDescripcion(txtDescripcion.getText());
+        producto.setStockActual(Integer.valueOf(txtStockActual.getText()));
+        producto.setPuntoPedido(Integer.valueOf(txtPuntoPedido.getText()));
+        producto.setStockCriticoMinimo(Integer.valueOf(txtStockMinimo.getText()));
+        tipoProducto.setDescripcion(String.valueOf(cmbTipoProducto.getSelectedItem()));
+        fabricante.setDescripcion(txtFabricante.getText());
+        
+        
+        ArrayList<String> valoresProducto = new ArrayList<>();
+        valoresProducto.add(producto.getDescripcion());
+        valoresProducto.add(String.valueOf(producto.getStockActual()));
+        valoresProducto.add(String.valueOf(producto.getStockCriticoMinimo()));
+        valoresProducto.add(String.valueOf(producto.getPuntoPedido()));
+        
+        producto.update(valoresProducto, "PRODUCTO", "ID_PRODUCTO", cadenaIdProducto);
+        
+        ArrayList<String> valoresTipoProducto = new ArrayList<>();
+        valoresTipoProducto.add(tipoProducto.getDescripcion());
+        
+        tipoProducto.update(valoresTipoProducto, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", String.valueOf(idTipoProducto));
+        
+        ArrayList<String> valoresFabricante = new ArrayList<>();
+        valoresFabricante.add(fabricante.getDescripcion());
+        
+        fabricante.update(valoresFabricante, "FABRICANTE", "ID_FABRICANTE", String.valueOf(idFabricante));
+        
+        JOptionPane.showMessageDialog(null, "EL PRODUCTO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed

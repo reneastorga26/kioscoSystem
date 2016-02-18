@@ -113,7 +113,7 @@ public class Proveedor {
     
     public void update(ArrayList<String> txt, String tabla, String columna, String id){
              
-             String set = "CUIT = " + txt.get(0) + ", RAZON_SOCIAL = '" + txt.get(1) + 
+             String set = "CUIT = '" + txt.get(0) + "', RAZON_SOCIAL = '" + txt.get(1) + 
                           "', OBSERVACIONES = '" + txt.get(2) + "'";
              try{
 
