@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Fabricante;
@@ -93,6 +94,21 @@ public class BCMProducto extends javax.swing.JFrame {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
         }  
     }
+    
+    public void completarComboTipo(){
+        ControladorBD control = new ControladorBD();
+        try{
+        ResultSet res;
+        res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO > 0 ");
+        while(res.next()){
+                //cmbTipoProducto.setSelectedItem(res.getString("DESCRIPCION"));
+                cmbTipoProducto.addItem(res.getString("DESCRIPCION"));
+            }
+        }catch (SQLException ex) {
+            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+    }
+    
     public void completarFabricante(){
         ControladorBD control = new ControladorBD();
         try{
@@ -196,6 +212,11 @@ public class BCMProducto extends javax.swing.JFrame {
         txtStockMaximo.setForeground(new java.awt.Color(0, 0, 102));
 
         btnNuevoTipo.setText("Nuevo Tipo");
+        btnNuevoTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoTipoActionPerformed(evt);
+            }
+        });
 
         btnModificarDatos.setBackground(new java.awt.Color(51, 0, 51));
         btnModificarDatos.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -419,6 +440,8 @@ public class BCMProducto extends javax.swing.JFrame {
         txtCodigo.setEnabled(true);
         txtDescripcion.setEnabled(true);
         cmbTipoProducto.setEnabled(true);
+        cmbTipoProducto.removeAllItems();
+        completarComboTipo();
         btnNuevoTipo.setEnabled(true);
         txtFabricante.setEnabled(true);
         txtPrecioUnitarioVenta.setEnabled(true);
@@ -469,6 +492,14 @@ public class BCMProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnNuevoTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTipoActionPerformed
+        // TODO add your handling code here:
+        NDTipoProducto tipoProd = new NDTipoProducto(this,
+                true,(DefaultComboBoxModel) cmbTipoProducto.getModel());
+        tipoProd.setVisible(true);
+        tipoProd.setTitle("Nuevo Tipo de Producto");
+    }//GEN-LAST:event_btnNuevoTipoActionPerformed
 
     /**
      * @param args the command line arguments
