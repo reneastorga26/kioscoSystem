@@ -37,7 +37,7 @@ public class BCMCliente extends javax.swing.JFrame {
     private ControladorDate controladorDate1 = new ControladorDate();
     private DefaultTableModel model;
     private String cadenaIdPersona;
-    
+    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */
@@ -71,7 +71,7 @@ public class BCMCliente extends javax.swing.JFrame {
     }
     
     public void dato(String idPersona){
-        ControladorBD control = new ControladorBD(); 
+        
         ResultSet res;
         cadenaIdPersona = idPersona;
         try{
@@ -92,14 +92,14 @@ public class BCMCliente extends javax.swing.JFrame {
     } 
     
     public void completarNombre(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String dni = txtDni.getText();
         String condicion = "DNI = " + dni;
         String nombre;
         String observaciones;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "PERSONA", condicion);
+        res = control.buscarRegistrosSinTabla("*", "PERSONA", condicion);
         while(res.next()){
                     nombre = res.getString("NOMBRE_APELLIDO");
                     txtNombre.setText(nombre);
@@ -113,13 +113,13 @@ public class BCMCliente extends javax.swing.JFrame {
     }
     
     public void completarFechaNac(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String dni = txtDni.getText();
         String condicion = "DNI = " + dni;
         String fechaNac;
         try{
-        res = controlador.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
+        res = control.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
         while(res.next()){
                     fechaNac = res.getString("FECHA_NAC");
                     controladorDate1.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
@@ -131,14 +131,14 @@ public class BCMCliente extends javax.swing.JFrame {
     }
      
     public void completarDomicilios(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
         ResultSet res;
         String direccion;
         String localidad;
         String provincia;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     localidad = res.getString("LOCALIDAD");
@@ -156,12 +156,12 @@ public class BCMCliente extends javax.swing.JFrame {
     }
     
     public void completarCorreosElectronicos(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
         ResultSet res;
         String direccion;
         try{
-        res = controlador.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     Object [] fila = new Object[1];
@@ -175,13 +175,13 @@ public class BCMCliente extends javax.swing.JFrame {
     }
     
     public void completarTelefonos(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         ResultSet res;
         String telefono;
         String tipo;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     telefono = res.getString("NUMERO");
                     Object [] fila = new Object[2];
@@ -782,7 +782,7 @@ public class BCMCliente extends javax.swing.JFrame {
         valoresPersona.add(cliente.getFechaNacimiento());
         valoresPersona.add(String.valueOf(cliente.getSexo()));
         valoresPersona.add(cliente.getObservaciones());
-        cliente.update(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        cliente.modificarBD(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
@@ -796,7 +796,7 @@ public class BCMCliente extends javax.swing.JFrame {
             valoresDomicilio.add(domicilio.getDireccion());
             valoresDomicilio.add(domicilio.getLocalidad());
             valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.update(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            domicilio.modificarBD(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
             valoresDomicilio.clear();
         }
         
@@ -808,7 +808,7 @@ public class BCMCliente extends javax.swing.JFrame {
             telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresTelefono.add(telefono.getNumero());
             valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.update(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            telefono.modificarBD(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
             valoresTelefono.clear();
         }
         
@@ -818,7 +818,7 @@ public class BCMCliente extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.update(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            correoElectronico.modificarBD(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
             valoresEmail.clear();
         }
         

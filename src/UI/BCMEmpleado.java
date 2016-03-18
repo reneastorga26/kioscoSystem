@@ -19,6 +19,7 @@ import model.Domicilio;
 import model.Empleado;
 import model.ObraSocial;
 import model.Telefono;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -36,6 +37,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
     private String cadenaIdPersona;
+    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */
@@ -76,7 +78,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
        
     public void dato(String idPersona){
-        ControladorBD control = new ControladorBD(); 
+        
         ResultSet rs;
         cadenaIdPersona = idPersona;
         try{
@@ -99,12 +101,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
     
     public void completarCuil(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String condicion = "PERSONA_ID_PERSONA = " + cadenaIdPersona;
         String cuil;
         try{
-        res = controlador.buscarRegistrosSinTabla("CUIL", "EMPLEADO", condicion);
+        res = control.buscarRegistrosSinTabla("CUIL", "EMPLEADO", condicion);
         while(res.next()){
                     cuil = res.getString("CUIL");
                     txtCuil.setText(cuil);
@@ -117,13 +119,13 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
     }
     public void completarNombre(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String dni = txtDni.getText();
         String condicion = "DNI = " + dni;
         String nombre;
         try{
-        res = controlador.buscarRegistrosSinTabla("NOMBRE_APELLIDO", "PERSONA", condicion);
+        res = control.buscarRegistrosSinTabla("NOMBRE_APELLIDO", "PERSONA", condicion);
         while(res.next()){
                     nombre = res.getString("NOMBRE_APELLIDO");
                     txtNombre.setText(nombre);
@@ -137,13 +139,13 @@ public class BCMEmpleado extends javax.swing.JFrame {
     }
     
     public void completarFechaNac(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String dni = txtDni.getText();
         String condicion = "DNI = " + dni;
         String fechaNac;
         try{
-        res = controlador.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
+        res = control.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
         while(res.next()){
                     fechaNac = res.getString("FECHA_NAC");
                     controladorDate2.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
@@ -155,14 +157,14 @@ public class BCMEmpleado extends javax.swing.JFrame {
     }
      
     public void completarDomicilios(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
         ResultSet res;
         String direccion;
         String localidad;
         String provincia;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     localidad = res.getString("LOCALIDAD");
@@ -180,12 +182,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
     }
     
     public void completarCorreosElectronicos(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
         ResultSet res;
         String direccion;
         try{
-        res = controlador.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     Object [] fila = new Object[1];
@@ -200,11 +202,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
     
     public void completarInicioLaboral(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String fechaInicioLaboral;
         try{
-        res = controlador.buscarRegistrosSinTabla("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     fechaInicioLaboral = res.getString("FECHA_INICIO_RELACION_LABORAL");
                     controladorDate2.darFormatoaComboBox(fechaInicioLaboral,comboDia1,comboMes1,comboAnio1);
@@ -216,13 +218,13 @@ public class BCMEmpleado extends javax.swing.JFrame {
     }
     
     public void completarTelefonos(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         ResultSet res;
         String telefono;
         String tipo;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     telefono = res.getString("NUMERO");
                     Object [] fila = new Object[2];
@@ -1174,12 +1176,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
         valoresPersona.add(empleado.getFechaNacimiento());
         valoresPersona.add("M");
         valoresPersona.add("");
-        empleado.update(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        empleado.modificarBD(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
         
         ArrayList<String> valoresEmpleado = new ArrayList<>();
         valoresEmpleado.add(empleado.getCuil());
         valoresEmpleado.add(empleado.getFechaInicioRelacionLaboral());
-        empleado.update(valoresEmpleado, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+        empleado.modificarBD(valoresEmpleado, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaIdPersona);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
@@ -1193,7 +1195,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             valoresDomicilio.add(domicilio.getDireccion());
             valoresDomicilio.add(domicilio.getLocalidad());
             valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.update(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            domicilio.modificarBD(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
             valoresDomicilio.clear();
         }
         
@@ -1205,7 +1207,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresTelefono.add(telefono.getNumero());
             valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.update(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            telefono.modificarBD(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
             valoresTelefono.clear();
         }
         
@@ -1215,7 +1217,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.update(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            correoElectronico.modificarBD(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
             valoresEmail.clear();
         }
         
@@ -1228,7 +1230,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             obraSocial.setCuentaBancaria(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
             valoresObraSocial.add(correoElectronico.getDireccion());
-            obraSocial.update(valoresObraSocial, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaIdPersona);
+            obraSocial.modificarBD(valoresObraSocial, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaIdPersona);
             valoresObraSocial.clear();
         }
         

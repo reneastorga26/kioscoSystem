@@ -17,6 +17,7 @@ import model.CorreoElectronico;
 import model.Domicilio;
 import model.Empleado;
 import model.Telefono;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -31,7 +32,6 @@ public class AEmpleado extends javax.swing.JFrame {
     private Empleado empleado = new Empleado();
     private ControladorDate controladorDate = new ControladorDate();
     private ControladorDate controladorDate1 = new ControladorDate();
-    private ControladorBD control = new ControladorBD();
     
     /**
      * Creates new form ABMProducto
@@ -971,6 +971,7 @@ public class AEmpleado extends javax.swing.JFrame {
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
         ResultSet res;
+        ControladorBD control = sismain.getControladorBD();
         String cadena = txtDni.getText();
         try {
 

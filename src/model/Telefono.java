@@ -88,7 +88,7 @@ public class Telefono {
         return idTelefono;
     }
      
-    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              
              String set = "NUMERO = '" + txt.get(0) + "', MOVIL = '" + txt.get(1) + "'";
              try{

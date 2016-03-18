@@ -103,7 +103,7 @@ public class Empleado extends Persona{
         return indices;
     }   
     
-    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              String set;
              if(tabla.equals("PERSONA")){
                  set = "DNI = '" + txt.get(0) + "', NOMBRE_APELLIDO = '" + txt.get(1) + 

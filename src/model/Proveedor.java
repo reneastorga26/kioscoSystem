@@ -109,7 +109,7 @@ public class Proveedor {
         return indices;
     }
     
-    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              
              String set = "CUIT = '" + txt.get(0) + "', RAZON_SOCIAL = '" + txt.get(1) + 
                           "', OBSERVACIONES = '" + txt.get(2) + "'";

@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Fabricante;
 import model.Producto;
 import model.TipoProducto;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -30,6 +31,7 @@ public class BCMProducto extends javax.swing.JFrame {
     private String cadenaIdProducto;
     private long idTipoProducto;
     private long idFabricante;
+    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form BCMProducto
      */
@@ -58,7 +60,7 @@ public class BCMProducto extends javax.swing.JFrame {
     
     
     public void completarDatos(){
-        ControladorBD control = new ControladorBD(); 
+        
         try{
         ResultSet rs;
         
@@ -82,7 +84,7 @@ public class BCMProducto extends javax.swing.JFrame {
     }
     
     public void completarTipo(){
-        ControladorBD control = new ControladorBD();
+        
         try{
         ResultSet res;
         res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO = " + idTipoProducto);
@@ -96,7 +98,7 @@ public class BCMProducto extends javax.swing.JFrame {
     }
     
     public void completarComboTipo(){
-        ControladorBD control = new ControladorBD();
+        
         try{
         ResultSet res;
         res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO > 0 ");
@@ -110,7 +112,7 @@ public class BCMProducto extends javax.swing.JFrame {
     }
     
     public void completarFabricante(){
-        ControladorBD control = new ControladorBD();
+        
         try{
         ResultSet res;
         res = control.buscarRegistrosSinTabla("DESCRIPCION", "FABRICANTE", "ID_FABRICANTE = " + idFabricante);
@@ -123,7 +125,7 @@ public class BCMProducto extends javax.swing.JFrame {
     }
     
     public void completarPrecio(){
-        ControladorBD control = new ControladorBD();
+        
         try{
         ResultSet res;
         res = control.buscarRegistrosSinTabla("NUMERO", "PRECIO", "PRODUCTO_ID_PRODUCTO = " + cadenaIdProducto);
@@ -473,17 +475,17 @@ public class BCMProducto extends javax.swing.JFrame {
         valoresProducto.add(String.valueOf(producto.getStockCriticoMinimo()));
         valoresProducto.add(String.valueOf(producto.getPuntoPedido()));
         
-        producto.update(valoresProducto, "PRODUCTO", "ID_PRODUCTO", cadenaIdProducto);
+        producto.modificarBD(valoresProducto, "PRODUCTO", "ID_PRODUCTO", cadenaIdProducto);
         
         ArrayList<String> valoresTipoProducto = new ArrayList<>();
         valoresTipoProducto.add(tipoProducto.getDescripcion());
         
-        tipoProducto.update(valoresTipoProducto, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", String.valueOf(idTipoProducto));
+        tipoProducto.modificarBD(valoresTipoProducto, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", String.valueOf(idTipoProducto));
         
         ArrayList<String> valoresFabricante = new ArrayList<>();
         valoresFabricante.add(fabricante.getDescripcion());
         
-        fabricante.update(valoresFabricante, "FABRICANTE", "ID_FABRICANTE", String.valueOf(idFabricante));
+        fabricante.modificarBD(valoresFabricante, "FABRICANTE", "ID_FABRICANTE", String.valueOf(idFabricante));
         
         JOptionPane.showMessageDialog(null, "EL PRODUCTO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed

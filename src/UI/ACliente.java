@@ -647,7 +647,7 @@ public class ACliente extends javax.swing.JFrame {
 
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
-        ControladorBD control = new ControladorBD();
+        ControladorBD control = sismain.getControladorBD();
         ResultSet res;
         String cadena = txtDni.getText();
         try {

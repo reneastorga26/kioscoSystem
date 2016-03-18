@@ -67,7 +67,7 @@ public class ObraSocial {
         this.cuentaBancaria = cuentaBancaria;
     }
      
-    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              
              String set = "CUIL = " + txt.get(0) + ", FECHA_INICIO_LABORAL = " + txt.get(1);
              try{

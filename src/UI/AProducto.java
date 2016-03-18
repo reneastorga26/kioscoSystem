@@ -15,6 +15,7 @@ import model.Fabricante;
 import model.Precio;
 import model.Producto;
 import model.TipoProducto;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -22,11 +23,11 @@ import model.TipoProducto;
  */
 public class AProducto extends javax.swing.JFrame {
 
-    private ControladorBD control = new ControladorBD();
     private Producto producto = new Producto();
     private TipoProducto tipoProducto = new TipoProducto();
     private Fabricante fabricante = new Fabricante();
     private Precio precio = new Precio();
+    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */

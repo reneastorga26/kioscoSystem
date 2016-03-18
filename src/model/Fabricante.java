@@ -56,7 +56,7 @@ public class Fabricante {
         this.tipoFabricante = tipoFabricante;
     }
     
-    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              
              String set = "DESCRIPCION = '" + txt.get(0) + "'";
              try{

@@ -164,7 +164,7 @@ public class Producto {
         return indices;
     }
 
-    public void update(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              
              String set = "DESCRIPCION = '" + txt.get(0) + "', STOCK_ACTUAL = " + txt.get(1) + 
                           ", STOCK_CRITICO_MINIMO = " + txt.get(2) + ", PUNTO_PEDIDO = " + txt.get(3);

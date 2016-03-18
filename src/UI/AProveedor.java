@@ -16,6 +16,7 @@ import model.CorreoElectronico;
 import model.Domicilio;
 import model.Proveedor;
 import model.Telefono;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -23,13 +24,13 @@ import model.Telefono;
  */
 public class AProveedor extends javax.swing.JFrame {
 
-    private ControladorBD control = new ControladorBD();
+    
     private Proveedor proveedor = new Proveedor();
     private Telefono telefono = new Telefono();
     private Domicilio domicilio = new Domicilio();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
-    
+    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */

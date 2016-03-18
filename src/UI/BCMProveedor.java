@@ -18,6 +18,7 @@ import model.CorreoElectronico;
 import model.Domicilio;
 import model.Proveedor;
 import model.Telefono;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -32,6 +33,7 @@ public class BCMProveedor extends javax.swing.JFrame {
     private ControladorDate controladorDate = new ControladorDate();
     private DefaultTableModel model;
     private String cadenaIdProveedor;
+    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */
@@ -57,7 +59,7 @@ public class BCMProveedor extends javax.swing.JFrame {
     }
 
     public void dato(String idProveedor){
-        ControladorBD control = new ControladorBD(); 
+         
         ResultSet rs;
         cadenaIdProveedor = idProveedor;
         try{
@@ -78,13 +80,13 @@ public class BCMProveedor extends javax.swing.JFrame {
     
     
     public void completarRazonSocial(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String cuit = txtCuit.getText();
         String condicion = "CUIT = " + cuit;
         String razonSocial;
         try{
-        res = controlador.buscarRegistrosSinTabla("RAZON_SOCIAL", "PROVEEDOR", condicion);
+        res = control.buscarRegistrosSinTabla("RAZON_SOCIAL", "PROVEEDOR", condicion);
         while(res.next()){
                     razonSocial = res.getString("RAZON_SOCIAL");
                     txtRazonSocial.setText(razonSocial);
@@ -96,14 +98,14 @@ public class BCMProveedor extends javax.swing.JFrame {
     }
     
     public void completarDomicilios(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
         ResultSet res;
         String direccion;
         String localidad;
         String provincia;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PROVEEDOR_ID_PROVEEDOR = " + cadenaIdProveedor);
+        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PROVEEDOR_ID_PROVEEDOR = " + cadenaIdProveedor);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     localidad = res.getString("LOCALIDAD");
@@ -121,12 +123,12 @@ public class BCMProveedor extends javax.swing.JFrame {
     }
     
     public void completarCorreosElectronicos(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
         ResultSet res;
         String direccion;
         try{
-        res = controlador.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     Object [] fila = new Object[1];
@@ -142,13 +144,13 @@ public class BCMProveedor extends javax.swing.JFrame {
     
     
     public void completarTelefonos(){
-        ControladorBD controlador = new ControladorBD();
+        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         ResultSet res;
         String telefono;
         String tipo;
         try{
-        res = controlador.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
         while(res.next()){
                     telefono = res.getString("NUMERO");
                     Object [] fila = new Object[2];
@@ -168,13 +170,13 @@ public class BCMProveedor extends javax.swing.JFrame {
     }
     
     public void completarObservaciones(){
-        ControladorBD controlador = new ControladorBD();
+        
         ResultSet res;
         String cuit = txtCuit.getText();
         String condicion = "CUIT = " + cuit;
         String observaciones;
         try{
-        res = controlador.buscarRegistrosSinTabla("OBSERVACIONES", "PROVEEDOR", condicion);
+        res = control.buscarRegistrosSinTabla("OBSERVACIONES", "PROVEEDOR", condicion);
         while(res.next()){
                     observaciones = res.getString("OBSERVACIONES");
                     txaObservaciones.setText(observaciones);
@@ -823,7 +825,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         valoresProveedor.add(proveedor.getRazonSocial());
         valoresProveedor.add(proveedor.getObservaciones());
         
-        proveedor.update(valoresProveedor, "PROVEEDOR", "ID_PROVEEDOR", cadenaIdProveedor);
+        proveedor.modificarBD(valoresProveedor, "PROVEEDOR", "ID_PROVEEDOR", cadenaIdProveedor);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
@@ -837,7 +839,7 @@ public class BCMProveedor extends javax.swing.JFrame {
             valoresDomicilio.add(domicilio.getDireccion());
             valoresDomicilio.add(domicilio.getLocalidad());
             valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.update(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            domicilio.modificarBD(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
             valoresDomicilio.clear();
         }
         
@@ -849,7 +851,7 @@ public class BCMProveedor extends javax.swing.JFrame {
             telefono.setIdPersona(Long.valueOf(cadenaIdProveedor));
             valoresTelefono.add(telefono.getNumero());
             valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.update(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            telefono.modificarBD(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
             valoresTelefono.clear();
         }
         
@@ -859,7 +861,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdProveedor));
             valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.update(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            correoElectronico.modificarBD(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
             valoresEmail.clear();
         }
         
