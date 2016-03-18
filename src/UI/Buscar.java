@@ -53,16 +53,16 @@ public class Buscar extends javax.swing.JFrame {
      
     
     public void evaluar(int opcion){
-        ControladorBD control = new ControladorBD();
+        ControladorBD control = sismain.getControladorBD();
         switch(opcion){
             case 1:
                 control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
-                valorSeleccion = 2;
+                valorSeleccion = 1;
                 break;
             
             case 2: 
                 control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
-                valorSeleccion = 1;
+                valorSeleccion = 2;
                 break;
             
             case 3: 
@@ -102,28 +102,8 @@ public class Buscar extends javax.swing.JFrame {
         
         switch(opcion){
             case 1:
-        //BUSCAR EMPLEADO
-        
-        BCMEmpleado adminEmpleado = new BCMEmpleado();
-        ResultSet res;
-        //Tomar el ID de la fila seleccionada y ampliar la informacion
-        //en el frame BCMEmpleado
-        try{
-        String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        
-        res = control.buscarRegistrosSinTabla("*", "PERSONA", "DNI = " + datoEmpleado);
-        while(res.next()){
-            idPersona = res.getString("ID_PERSONA");
-        }
-            adminEmpleado.dato(idPersona);
-            adminEmpleado.setVisible(true);
-        }catch (SQLException ex) {
-            Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        break;
-        
-        
-        case 2:
+                
+                 
         //BUSCAR CLIENTE
         
         BCMCliente adminCliente = new BCMCliente();
@@ -144,8 +124,32 @@ public class Buscar extends javax.swing.JFrame {
         } 
         break;
         
+
         
-        case 3:
+            case 2:
+            
+        //BUSCAR EMPLEADO
+        
+        BCMEmpleado adminEmpleado = new BCMEmpleado();
+        ResultSet res;
+        //Tomar el ID de la fila seleccionada y ampliar la informacion
+        //en el frame BCMEmpleado
+        try{
+        String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        
+        res = control.buscarRegistrosSinTabla("*", "PERSONA", "DNI = " + datoEmpleado);
+        while(res.next()){
+            idPersona = res.getString("ID_PERSONA");
+        }
+            adminEmpleado.dato(idPersona);
+            adminEmpleado.setVisible(true);
+        }catch (SQLException ex) {
+            Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        break;
+       
+        
+            case 3:
         //BUSCAR PROVEEDOR
         
         BCMProveedor adminProveedor = new BCMProveedor();
@@ -165,7 +169,7 @@ public class Buscar extends javax.swing.JFrame {
         break;
         
         
-        case 4:
+            case 4:
         //BUSCAR PRODUCTO
         
         BCMProducto adminProducto = new BCMProducto();
