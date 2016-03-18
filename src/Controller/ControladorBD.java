@@ -20,13 +20,16 @@ import sistemakiosco.sismain;
  */
 public class ControladorBD {
     
+    private ResultSet rs;
+    
     
     public ControladorBD(){
         
     }
     
-     public ResultSet leer(String tabla) {
-        ResultSet rs = null;
+    
+    public ResultSet leer(String tabla) {
+        rs = null;
         String query = "SELECT * FROM " + tabla;
         try {
             rs = sismain.getConexion().getStatement().executeQuery(query);
@@ -38,13 +41,14 @@ public class ControladorBD {
         return rs;
     }    
      
+    
     public long aniadirBD(ArrayList<String> valores, String tabla, boolean idcargado){
         String values = new String();
         String campos = new String();
         long index = 0;
         values = "";
         campos= "";
-        ResultSet rs = leer(tabla);
+        rs = leer(tabla);
         int startField = 1;
         int j = 0;
         if(idcargado) startField = 0; 
@@ -54,7 +58,7 @@ public class ControladorBD {
                 campos = campos + rs.getMetaData().getColumnName(i+1);
                 if(tipo ==  "DATE")
                     values = values +  "TO_DATE(" +valores.get(j)+ ")";
-                    //INSERT INTO "SISKIOS"."SIQ" (COLUMN1, COLUMN2, COLUMN3, COLUMN4, COLUMN5, COLUMN6) VALUES ('121', 'Hola0', 'Hola12345', 'M', TO_DATE('2016-01-16 18:45:07', 'YYYY-MM-DD HH24:MI:SS'), '224')
+                    
                 else
                     values = values + "'" + valores.get(j)+"'";
                 if(i!=rs.getMetaData().getColumnCount() -1){
@@ -75,8 +79,9 @@ public class ControladorBD {
         return index;
     }
     
-     public void eliminar(ArrayList<JTextField> txts, String tabla){  
-        ResultSet rs = leer(tabla);
+    
+    public void eliminar(ArrayList<JTextField> txts, String tabla){  
+        rs = leer(tabla);
         int i = Integer.parseInt(txts.get(0).getText());
         try {
             String query = "DELETE FROM " + tabla + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
@@ -86,8 +91,8 @@ public class ControladorBD {
         }
     }
      
-         public void modificar(ArrayList<JTextField> txts, String tabla){
-        ResultSet rs = leer(tabla);
+    public void modificar(ArrayList<JTextField> txts, String tabla){
+        rs = leer(tabla);
         String set = "";
         try {
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
@@ -106,16 +111,15 @@ public class ControladorBD {
     }
          
     
-         public ArrayList buscar (String columnas, 
+    public ArrayList buscar (String columnas, 
                          String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla
                          ){
     
-     ResultSet rs = null;
+     rs = null;
      String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
      int numIndice=1;
-     int j;
      ArrayList<String> indices = new ArrayList<>();
      char character;
      for(int i=0; i<tablas.length(); i++){
@@ -141,20 +145,6 @@ public class ControladorBD {
                 modeloTabla.addRow(fila);
             }
             
-            /*
-            column id_persona format a10
-column persona_id_persona format a10
-column dni format a10
-column nombre_apellido format a10
-            select P.ID_PERSONA , C.PERSONA_ID_PERSONA ,P.DNI , P.NOMBRE_APELLIDO
-    from PERSONA P, CLIENTE C
-   where (P.DNI LIKE '2%' OR P.DNI = 2) AND P.ID_PERSONA = C.PERSONA_ID_PERSONA;
-     
-            ID_PERSONA PERSONA_ID DNI        NOMBRE_APE
----------- ---------- ---------- ----------
-        48         48 23132      SDAS      
-
-            */
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,12 +153,12 @@ column nombre_apellido format a10
      }
      
     
-     public ResultSet buscarRegistrosSinTabla (String columnas, 
+    public ResultSet buscarRegistrosSinTabla (String columnas, 
                          String tablas,
                          String condicion
                          ){
     
-     ResultSet rs = null;
+     rs = null;
      String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
      
      System.out.println(query);
@@ -184,9 +174,11 @@ column nombre_apellido format a10
      
      return rs;
      } 
+    
+    
     public long obtenerUltimoIndice(String tabla){
         long index=0;
-        ResultSet rs = leer(tabla);
+        rs = leer(tabla);
         try {
             while(rs.next()){
                 if(index<Long.parseLong(rs.getObject(1).toString())){
@@ -200,9 +192,10 @@ column nombre_apellido format a10
         return index;
      }
     
+    
     public long obtenerUltimoRegistro(String tabla, String id){
         long reg = 0;
-        ResultSet rs = null;
+        rs = null;
         String query = "SELECT * FROM " + tabla + " ORDER BY " + id + " DESC" ;
         try {
             rs = sismain.getConexion().getStatement().executeQuery(query);
@@ -220,3 +213,21 @@ column nombre_apellido format a10
     }
     
 }
+
+
+        /*
+
+INSERT INTO "SISKIOS"."SIQ" (COLUMN1, COLUMN2, COLUMN3, COLUMN4, COLUMN5, COLUMN6) VALUES ('121', 'Hola0', 'Hola12345', 'M', TO_DATE('2016-01-16 18:45:07', 'YYYY-MM-DD HH24:MI:SS'), '224')
+            column id_persona format a10
+column persona_id_persona format a10
+column dni format a10
+column nombre_apellido format a10
+            select P.ID_PERSONA , C.PERSONA_ID_PERSONA ,P.DNI , P.NOMBRE_APELLIDO
+    from PERSONA P, CLIENTE C
+   where (P.DNI LIKE '2%' OR P.DNI = 2) AND P.ID_PERSONA = C.PERSONA_ID_PERSONA;
+     
+            ID_PERSONA PERSONA_ID DNI        NOMBRE_APE
+---------- ---------- ---------- ----------
+        48         48 23132      SDAS      
+
+            */

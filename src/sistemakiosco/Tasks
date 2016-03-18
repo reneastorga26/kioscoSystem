@@ -1,0 +1,9 @@
+1)Modificacion de Entidades: 
+    Considerar nuevo Insert;
+    No se puede eliminar subentidades (telefono, mail, domicilio, etc);
+
+2)Eliminar todas las instanciaciones de Controlador BD fuera del sismain;
+
+3)Liquidacion de Sueldo
+
+

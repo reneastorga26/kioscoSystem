@@ -10,14 +10,11 @@ import Controller.ControladorBD;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import model.Cliente;
 import sistemakiosco.sismain;
 
 /**
@@ -26,10 +23,7 @@ import sistemakiosco.sismain;
  */
 public class Buscar extends javax.swing.JFrame {
 
-    private String snombre="none";
-    private ArrayList<String> columnas = new ArrayList<>();
-    private ArrayList<String> indices = new ArrayList<>();
-    private Cliente cliente = new Cliente();
+
     public DefaultTableModel modeloTabla = new DefaultTableModel();
     private TableRowSorter trsFiltro;
     private int valorSeleccion;
@@ -98,7 +92,7 @@ public class Buscar extends javax.swing.JFrame {
     
     public void seleccion(int opcion){
         
-        ControladorBD control = new ControladorBD();
+        ControladorBD control = sismain.getControladorBD();
         
         switch(opcion){
             case 1:

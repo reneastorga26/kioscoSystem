@@ -73,8 +73,6 @@ public class Proveedor {
         ArrayList<String> valores= new ArrayList<>();
         valores.add(getRazonSocial());
         valores.add(getCuit());
-        //valores.add(String.valueOf(super.getSexo()));
-        //valores.add(super.getFechaNacimiento());
         valores.add(getObservaciones());
         idProveedor = sismain.getControladorBD().aniadirBD(valores, "PROVEEDOR",false);
         valores.clear();
