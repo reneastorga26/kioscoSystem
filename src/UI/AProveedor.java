@@ -426,7 +426,7 @@ public class AProveedor extends javax.swing.JFrame {
             telefono.setMovil(
                     String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
             telefono.setIdProveedor(idProveedor);
-            telefono.setIdProveedor(1);
+            telefono.setIdPersona(0);
             telefono.guardarBD();
         }   
         
@@ -438,7 +438,7 @@ public class AProveedor extends javax.swing.JFrame {
             domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
             domicilio.setIdProveedor(idProveedor);
-            domicilio.setIdProveedor(1);
+            domicilio.setIdPersona(0);
             domicilio.guardarBD();
         }   
         
@@ -446,7 +446,7 @@ public class AProveedor extends javax.swing.JFrame {
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(idProveedor);
-            correoElectronico.setIdProveedor(1);
+            correoElectronico.setIdPersona(0);
             correoElectronico.guardarBD();
         }   
         JOptionPane.showMessageDialog(null, "EL PROVEEDOR SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);

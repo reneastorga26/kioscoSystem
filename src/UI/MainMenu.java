@@ -7,6 +7,8 @@ package UI;
 
 import Controller.ControladorBD;
 import Watch.Reloj;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +30,15 @@ public class MainMenu extends javax.swing.JFrame {
         
         //jMenuBar1.setVisible(false);
     }
+    
+        @Override
+    public Image getIconImage(){
+    Image rValue=Toolkit.getDefaultToolkit().
+            getImage(ClassLoader.
+            getSystemResource("Resources/SISKIOSicon.png"));
+    
+    return rValue;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,6 +104,7 @@ public class MainMenu extends javax.swing.JFrame {
         jMenuItem22 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(getIconImage());
 
         jPanel6.setBackground(new java.awt.Color(51, 51, 51));
 
