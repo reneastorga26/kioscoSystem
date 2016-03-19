@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import model.Cliente;
 import sistemakiosco.sismain;
 
 /**
@@ -30,32 +31,27 @@ public class Buscar extends javax.swing.JFrame {
     private String idPersona;
     private String idProveedor;
     private String idProducto;
+    private Cliente cliente = new Cliente();
     /**
      * Creates new form BuscarCliente
      */
     public Buscar() {
         initComponents();
         this.setLocationRelativeTo(null);
-        //columnas.add("DNI");
-        //columnas.add("NOMBRE_APELLIDO");
         modeloTabla = (DefaultTableModel) tablaBuscar.getModel();
-                
-        //this.setResizable(false);
-       
+        
     }
-
-     
     
     public void evaluar(int opcion){
         ControladorBD control = sismain.getControladorBD();
         switch(opcion){
             case 1:
-                control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
+                control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA AND p.ESTADO = 1", modeloTabla);
                 valorSeleccion = 1;
                 break;
             
             case 2: 
-                control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
+                control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA AND p.ESTADO = 1", modeloTabla);
                 valorSeleccion = 2;
                 break;
             
@@ -91,96 +87,44 @@ public class Buscar extends javax.swing.JFrame {
     }
     
     public void seleccion(int opcion){
-        
-        ControladorBD control = sismain.getControladorBD();
-        
         switch(opcion){
             case 1:
-                
                  
         //BUSCAR CLIENTE
-        
         BCMCliente adminCliente = new BCMCliente();
-        ResultSet res1;
-        
-        try{
         String datoCliente = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        System.out.println(datoCliente);
-        res1 = control.buscarRegistrosSinTabla("*", "PERSONA", "DNI = " + datoCliente);
-        while(res1.next()){
-            idPersona = res1.getString("ID_PERSONA");
-            System.out.printf("\nFUNCIONA HASTA AQUI BUSCAR...\n");
-        }
-            adminCliente.dato(idPersona);
-            adminCliente.setVisible(true);
-        }catch (SQLException ex) {
-            Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        adminCliente.buscar(datoCliente);
         break;
-        
-
         
             case 2:
             
         //BUSCAR EMPLEADO
         
         BCMEmpleado adminEmpleado = new BCMEmpleado();
-        ResultSet res;
-        //Tomar el ID de la fila seleccionada y ampliar la informacion
-        //en el frame BCMEmpleado
-        try{
         String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        
-        res = control.buscarRegistrosSinTabla("*", "PERSONA", "DNI = " + datoEmpleado);
-        while(res.next()){
-            idPersona = res.getString("ID_PERSONA");
-        }
-            adminEmpleado.dato(idPersona);
-            adminEmpleado.setVisible(true);
-        }catch (SQLException ex) {
-            Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        adminEmpleado.buscar(datoEmpleado);
         break;
-       
+        
+        
         
             case 3:
         //BUSCAR PROVEEDOR
         
         BCMProveedor adminProveedor = new BCMProveedor();
-        ResultSet res2;
-        
-        try{
         String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        res2 = control.buscarRegistrosSinTabla("*", "PROVEEDOR", "CUIT = " + datoProveedor);
-        while(res2.next()){
-            idProveedor = res2.getString("ID_PROVEEDOR");
-        }
-            adminProveedor.dato(idProveedor);
-            adminProveedor.setVisible(true);
-        }catch (SQLException ex) {
-            Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        adminProveedor.buscar(datoProveedor);
         break;
         
-        
+       
             case 4:
         //BUSCAR PRODUCTO
         
         BCMProducto adminProducto = new BCMProducto();
-        ResultSet res3;
-        
-        try{
-        String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        res3 = control.buscarRegistrosSinTabla("*", "PRODUCTO", "ID_PRODUCTO = " + datoProveedor);
-        while(res3.next()){
-            idProducto = res3.getString("ID_PRODUCTO");
-        }
-            adminProducto.dato(idProducto);
-            adminProducto.setVisible(true);
-        }catch (SQLException ex) {
-            Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String datoProducto = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        adminProducto.buscar(datoProducto);
         break;
+        
+        
     }
     }
     
@@ -372,22 +316,7 @@ public class Buscar extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
-        /*limpiarTabla();
-        indices.clear();
-        String criterioBusqueda = txtBuscar.getText() + evt.getKeyChar();
-        System.out.println("Criterio de Busqueda : "+ criterioBusqueda);
         
-        
-        if(txtBuscar.getText().length()>1){
-            cliente.setDni(criterioBusqueda);
-            indices = cliente.buscarBD("DNI",
-                              modeloTabla,
-                              true);
-            System.out.println("Id buscados");
-            for(int i = 0 ; i<indices.size(); i++){
-                System.out.println(indices.get(i));
-            }
-        }*/
         
     }//GEN-LAST:event_txtBuscarKeyPressed
 
@@ -405,7 +334,7 @@ public class Buscar extends javax.swing.JFrame {
         });
         trsFiltro = new TableRowSorter(tablaBuscar.getModel());
         tablaBuscar.setRowSorter(trsFiltro);
-
+        
     }//GEN-LAST:event_txtBuscarKeyTyped
 
     private void btnAmpliarInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmpliarInfoActionPerformed
@@ -444,11 +373,11 @@ public class Buscar extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Buscar().setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

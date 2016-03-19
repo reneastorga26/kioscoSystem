@@ -76,13 +76,16 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
     }
     
-       
+    public void buscar(String dato){
+        
+    }  
+    
     public void dato(String idPersona){
         
         ResultSet rs;
         cadenaIdPersona = idPersona;
         try{
-            rs = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
+            rs = control.buscarRegistros("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
             while(rs.next()){
                 txtDni.setText(rs.getString("DNI"));
             }
@@ -106,7 +109,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         String condicion = "PERSONA_ID_PERSONA = " + cadenaIdPersona;
         String cuil;
         try{
-        res = control.buscarRegistrosSinTabla("CUIL", "EMPLEADO", condicion);
+        res = control.buscarRegistros("CUIL", "EMPLEADO", condicion);
         while(res.next()){
                     cuil = res.getString("CUIL");
                     txtCuil.setText(cuil);
@@ -125,7 +128,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         String condicion = "DNI = " + dni;
         String nombre;
         try{
-        res = control.buscarRegistrosSinTabla("NOMBRE_APELLIDO", "PERSONA", condicion);
+        res = control.buscarRegistros("NOMBRE_APELLIDO", "PERSONA", condicion);
         while(res.next()){
                     nombre = res.getString("NOMBRE_APELLIDO");
                     txtNombre.setText(nombre);
@@ -145,7 +148,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         String condicion = "DNI = " + dni;
         String fechaNac;
         try{
-        res = control.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
+        res = control.buscarRegistros("FECHA_NAC", "PERSONA", condicion);
         while(res.next()){
                     fechaNac = res.getString("FECHA_NAC");
                     controladorDate2.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
@@ -164,7 +167,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         String localidad;
         String provincia;
         try{
-        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistros("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     localidad = res.getString("LOCALIDAD");
@@ -187,7 +190,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         ResultSet res;
         String direccion;
         try{
-        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistros("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     Object [] fila = new Object[1];
@@ -206,7 +209,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         ResultSet res;
         String fechaInicioLaboral;
         try{
-        res = control.buscarRegistrosSinTabla("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistros("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     fechaInicioLaboral = res.getString("FECHA_INICIO_RELACION_LABORAL");
                     controladorDate2.darFormatoaComboBox(fechaInicioLaboral,comboDia1,comboMes1,comboAnio1);
@@ -224,7 +227,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         String telefono;
         String tipo;
         try{
-        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
+        res = control.buscarRegistros("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
         while(res.next()){
                     telefono = res.getString("NUMERO");
                     Object [] fila = new Object[2];

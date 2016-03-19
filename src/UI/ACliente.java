@@ -607,7 +607,7 @@ public class ACliente extends javax.swing.JFrame {
             telefono.setMovil(
                     String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
             telefono.setIdPersona(idPersona);
-            telefono.setIdProveedor(1);
+            telefono.setIdProveedor(0);
             telefono.guardarBD();
         }   
         
@@ -619,7 +619,7 @@ public class ACliente extends javax.swing.JFrame {
             domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
             domicilio.setIdPersona(idPersona);
-            domicilio.setIdProveedor(1);
+            domicilio.setIdProveedor(0);
             domicilio.guardarBD();
         }   
         
@@ -627,7 +627,7 @@ public class ACliente extends javax.swing.JFrame {
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(idPersona);
-            correoElectronico.setIdProveedor(1);
+            correoElectronico.setIdProveedor(0);
             correoElectronico.guardarBD();
         }   
         JOptionPane.showMessageDialog(null, "EL CLIENTE SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
@@ -652,7 +652,7 @@ public class ACliente extends javax.swing.JFrame {
         String cadena = txtDni.getText();
         try {
              
-            res = control.buscarRegistrosSinTabla("p.DNI", "persona p, cliente c","p.ID_PERSONA = c.PERSONA_ID_PERSONA");
+            res = control.buscarRegistros("p.DNI", "persona p, cliente c","p.ID_PERSONA = c.PERSONA_ID_PERSONA");
             while(res.next()){
                 if(cadena.equals(res.getString("DNI"))){
                 JOptionPane.showMessageDialog(null, "EL DNI INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);

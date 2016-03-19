@@ -37,7 +37,6 @@ public class BCMCliente extends javax.swing.JFrame {
     private ControladorDate controladorDate1 = new ControladorDate();
     private DefaultTableModel model;
     private String cadenaIdPersona;
-    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */
@@ -70,17 +69,15 @@ public class BCMCliente extends javax.swing.JFrame {
         return tablaTelefono;
     }
     
-    public void dato(String idPersona){
+    public void buscar(String dni){
+        ArrayList<String> datos = new ArrayList<>();            
+        datos = cliente.buscarBD("DNI", null, false);
         
-        ResultSet res;
+    }
+    /*
+    public void dato(String idPersona){
         cadenaIdPersona = idPersona;
         try{
-            res = control.buscarRegistrosSinTabla("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
-                while(res.next()){
-                txtDni.setText(res.getString("DNI"));
-                
-                System.out.printf("\nFUNCIONA HASTA AQUI BCMCLIENTE...\n");
-                }
                 completarNombre();
                 completarFechaNac();
                 completarDomicilios();
@@ -198,7 +195,7 @@ public class BCMCliente extends javax.swing.JFrame {
         }catch (SQLException ex) {
             Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
-    }
+    }*/
 
     /**
      * This method is called from within the constructor to initialize the form.

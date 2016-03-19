@@ -58,12 +58,16 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarTels.setEnabled(false);
     }
 
+    public void buscar(String dato){
+        
+    }
+    
     public void dato(String idProveedor){
          
         ResultSet rs;
         cadenaIdProveedor = idProveedor;
         try{
-            rs = control.buscarRegistrosSinTabla("CUIT", "PROVEEDOR", "ID_PROVEEDOR = " + cadenaIdProveedor);
+            rs = control.buscarRegistros("CUIT", "PROVEEDOR", "ID_PROVEEDOR = " + cadenaIdProveedor);
             while(rs.next()){
                 txtCuit.setText(rs.getString("CUIT"));
             }
@@ -86,7 +90,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         String condicion = "CUIT = " + cuit;
         String razonSocial;
         try{
-        res = control.buscarRegistrosSinTabla("RAZON_SOCIAL", "PROVEEDOR", condicion);
+        res = control.buscarRegistros("RAZON_SOCIAL", "PROVEEDOR", condicion);
         while(res.next()){
                     razonSocial = res.getString("RAZON_SOCIAL");
                     txtRazonSocial.setText(razonSocial);
@@ -105,7 +109,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         String localidad;
         String provincia;
         try{
-        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PROVEEDOR_ID_PROVEEDOR = " + cadenaIdProveedor);
+        res = control.buscarRegistros("*", "DOMICILIO D", "D.PROVEEDOR_ID_PROVEEDOR = " + cadenaIdProveedor);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     localidad = res.getString("LOCALIDAD");
@@ -128,7 +132,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         ResultSet res;
         String direccion;
         try{
-        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        res = control.buscarRegistros("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
         while(res.next()){
                     direccion = res.getString("DIRECCION");
                     Object [] fila = new Object[1];
@@ -150,7 +154,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         String telefono;
         String tipo;
         try{
-        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
+        res = control.buscarRegistros("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
         while(res.next()){
                     telefono = res.getString("NUMERO");
                     Object [] fila = new Object[2];
@@ -176,7 +180,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         String condicion = "CUIT = " + cuit;
         String observaciones;
         try{
-        res = control.buscarRegistrosSinTabla("OBSERVACIONES", "PROVEEDOR", condicion);
+        res = control.buscarRegistros("OBSERVACIONES", "PROVEEDOR", condicion);
         while(res.next()){
                     observaciones = res.getString("OBSERVACIONES");
                     txaObservaciones.setText(observaciones);

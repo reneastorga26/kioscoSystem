@@ -5,6 +5,8 @@
  */
 package UI;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import sistemakiosco.sismain;
 
@@ -19,7 +21,7 @@ public class Login extends javax.swing.JFrame {
     private String password;
  
 
- 
+    
 
   public   String getUsuario() {
         return usuario;
@@ -35,6 +37,15 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
+    
+    @Override
+    public Image getIconImage(){
+    Image rValue=Toolkit.getDefaultToolkit().
+            getImage(ClassLoader.
+            getSystemResource("Resources/SISKIOSicon.png"));
+    
+    return rValue;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,13 +69,14 @@ public class Login extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(getIconImage());
 
         jPanel4.setBackground(new java.awt.Color(51, 51, 51));
         jPanel4.setForeground(new java.awt.Color(51, 51, 51));
 
         jPanel3.setBackground(new java.awt.Color(51, 51, 51));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UI/SISKIOSdrawable.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/SISKIOSdrawable.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

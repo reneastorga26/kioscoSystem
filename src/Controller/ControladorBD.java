@@ -153,7 +153,7 @@ public class ControladorBD {
      }
      
     
-    public ResultSet buscarRegistrosSinTabla (String columnas, 
+    public ResultSet buscarRegistros(String columnas, 
                          String tablas,
                          String condicion
                          ){

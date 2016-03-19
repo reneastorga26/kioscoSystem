@@ -51,6 +51,10 @@ public class BCMProducto extends javax.swing.JFrame {
         btnGuardarModificacion.setEnabled(false);
     }
 
+    public void buscar(String dato){
+        
+    }
+    
     public void dato(String idProducto){
         
         cadenaIdProducto = idProducto;
@@ -64,7 +68,7 @@ public class BCMProducto extends javax.swing.JFrame {
         try{
         ResultSet rs;
         
-        rs = control.buscarRegistrosSinTabla("*", "PRODUCTO", "ID_PRODUCTO = " + cadenaIdProducto);
+        rs = control.buscarRegistros("*", "PRODUCTO", "ID_PRODUCTO = " + cadenaIdProducto);
         while(rs.next()){
             txtDescripcion.setText(rs.getString("DESCRIPCION"));
             cmbTipoProducto.setSelectedItem(rs.getString("TIPO_PRODUCTO_ID_TIPO_PRODUCTO"));
@@ -87,7 +91,7 @@ public class BCMProducto extends javax.swing.JFrame {
         
         try{
         ResultSet res;
-        res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO = " + idTipoProducto);
+        res = control.buscarRegistros("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO = " + idTipoProducto);
         while(res.next()){
                 //cmbTipoProducto.setSelectedItem(res.getString("DESCRIPCION"));
                 cmbTipoProducto.addItem(res.getString("DESCRIPCION"));
@@ -101,7 +105,7 @@ public class BCMProducto extends javax.swing.JFrame {
         
         try{
         ResultSet res;
-        res = control.buscarRegistrosSinTabla("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO > 0 ");
+        res = control.buscarRegistros("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO > 0 ");
         while(res.next()){
                 //cmbTipoProducto.setSelectedItem(res.getString("DESCRIPCION"));
                 cmbTipoProducto.addItem(res.getString("DESCRIPCION"));
@@ -115,7 +119,7 @@ public class BCMProducto extends javax.swing.JFrame {
         
         try{
         ResultSet res;
-        res = control.buscarRegistrosSinTabla("DESCRIPCION", "FABRICANTE", "ID_FABRICANTE = " + idFabricante);
+        res = control.buscarRegistros("DESCRIPCION", "FABRICANTE", "ID_FABRICANTE = " + idFabricante);
         while(res.next()){
                 txtFabricante.setText(res.getString("DESCRIPCION"));
             }
@@ -128,7 +132,7 @@ public class BCMProducto extends javax.swing.JFrame {
         
         try{
         ResultSet res;
-        res = control.buscarRegistrosSinTabla("NUMERO", "PRECIO", "PRODUCTO_ID_PRODUCTO = " + cadenaIdProducto);
+        res = control.buscarRegistros("NUMERO", "PRECIO", "PRODUCTO_ID_PRODUCTO = " + cadenaIdProducto);
         while(res.next()){
                 txtPrecioUnitarioVenta.setText(res.getString("NUMERO"));
             }

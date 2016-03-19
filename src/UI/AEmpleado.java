@@ -975,7 +975,7 @@ public class AEmpleado extends javax.swing.JFrame {
         String cadena = txtDni.getText();
         try {
 
-            res = control.buscarRegistrosSinTabla("p.DNI", "persona p, empleado e","p.ID_PERSONA = e.PERSONA_ID_PERSONA");
+            res = control.buscarRegistros("p.DNI", "persona p, empleado e","p.ID_PERSONA = e.PERSONA_ID_PERSONA");
             while(res.next()){
                 if(cadena.equals(res.getString("DNI"))){
                     JOptionPane.showMessageDialog(null, "EL DNI INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
