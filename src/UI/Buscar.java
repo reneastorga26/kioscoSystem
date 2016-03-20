@@ -36,16 +36,10 @@ public class Buscar extends javax.swing.JFrame {
     public Buscar() {
         initComponents();
         this.setLocationRelativeTo(null);
-        //columnas.add("DNI");
-        //columnas.add("NOMBRE_APELLIDO");
         modeloTabla = (DefaultTableModel) tablaBuscar.getModel();
-                
-        //this.setResizable(false);
-       
+ 
     }
 
-     
-    
     public void evaluar(int opcion){
         ControladorBD control = sismain.getControladorBD();
         switch(opcion){
@@ -117,9 +111,7 @@ public class Buscar extends javax.swing.JFrame {
             Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
         } 
         break;
-        
 
-        
             case 2:
             
         //BUSCAR EMPLEADO
@@ -161,7 +153,6 @@ public class Buscar extends javax.swing.JFrame {
             Logger.getLogger(Buscar.class.getName()).log(Level.SEVERE, null, ex);
         }
         break;
-        
         
             case 4:
         //BUSCAR PRODUCTO
@@ -444,11 +435,7 @@ public class Buscar extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Buscar().setVisible(true);
-            }
-        });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -467,4 +454,8 @@ public class Buscar extends javax.swing.JFrame {
     public javax.swing.JTable tablaBuscar;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
+
+    private void iniciarModeloFrame(int opcion) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
