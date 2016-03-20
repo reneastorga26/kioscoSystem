@@ -395,4 +395,8 @@ public class Buscar extends javax.swing.JFrame {
     public javax.swing.JTable tablaBuscar;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
+
+    private void iniciarModeloFrame(int opcion) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
