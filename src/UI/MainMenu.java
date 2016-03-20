@@ -10,6 +10,10 @@ import Watch.Reloj;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
+import model.Cliente;
+import model.Empleado;
+import model.Producto;
+import model.Proveedor;
 
 /**
  *
@@ -17,7 +21,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MainMenu extends javax.swing.JFrame {
     
-    
+    private Producto producto = new Producto();
+    private Empleado empleado = new Empleado();
+    private Proveedor proveedor = new Proveedor();
+    private Cliente cliente = new Cliente();
     /**
      * Creates new form MainMenu
      */
@@ -616,7 +623,6 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProducto.jRadioButton1.setText("CODIGO");
         buscarProducto.jRadioButton1.setSelected(true);
         buscarProducto.jRadioButton2.setText("DESCRIPCION");
-        buscarProducto.evaluar(4);
         buscarProducto.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -683,7 +689,6 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProducto.jRadioButton1.setText("CODIGO");
         buscarProducto.jRadioButton1.setSelected(true);
         buscarProducto.jRadioButton2.setText("DESCRIPCION");
-        buscarProducto.evaluar(4);
         buscarProducto.setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
@@ -710,7 +715,6 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProveedor.jRadioButton1.setText("CUIT");
         buscarProveedor.jRadioButton1.setSelected(true);
         buscarProveedor.jRadioButton2.setText("RAZÓN SOCIAL");
-        buscarProveedor.evaluar(3);
         buscarProveedor.setVisible(true);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
@@ -731,7 +735,6 @@ public class MainMenu extends javax.swing.JFrame {
         buscarCliente.jRadioButton1.setText("DNI");
         buscarCliente.jRadioButton1.setSelected(true);
         buscarCliente.jRadioButton2.setText("NOMBRE Y APELLIDO");
-        buscarCliente.evaluar(1);
         buscarCliente.setVisible(true);
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 
@@ -779,18 +782,7 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-        /*AEmpleado adminPerfil = new AEmpleado();
-        adminPerfil.lblTitulo.setText("Información del Empleado");
-        adminPerfil.btnComprobar.setVisible(false);
-        adminPerfil.btnAgregar.setEnabled(false);
-        adminPerfil.btnConformarBoleta.setEnabled(false);
-        adminPerfil.btnEliminar.setEnabled(false);
-        adminPerfil.btnGurdar.setVisible(false);
-        adminPerfil.btnModificar.setEnabled(false);
-        adminPerfil.btnBuscar.setEnabled(true);
-        adminPerfil.setVisible(true);
-        */
+        
         Buscar buscarEmpleado = new Buscar();
         buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
         buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
@@ -800,7 +792,6 @@ public class MainMenu extends javax.swing.JFrame {
         buscarEmpleado.jRadioButton1.setText("DNI");
         buscarEmpleado.jRadioButton1.setSelected(true);
         buscarEmpleado.jRadioButton2.setText("NOMBRE Y APELLIDO");
-        buscarEmpleado.evaluar(2);
         buscarEmpleado.setVisible(true);
         
     }//GEN-LAST:event_jMenuItem4ActionPerformed

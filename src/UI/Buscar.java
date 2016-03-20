@@ -42,31 +42,7 @@ public class Buscar extends javax.swing.JFrame {
         
     }
     
-    public void evaluar(int opcion){
-        ControladorBD control = sismain.getControladorBD();
-        switch(opcion){
-            case 1:
-                control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA AND p.ESTADO = 1", modeloTabla);
-                valorSeleccion = 1;
-                break;
-            
-            case 2: 
-                control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA AND p.ESTADO = 1", modeloTabla);
-                valorSeleccion = 2;
-                break;
-            
-            case 3: 
-                control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
-                valorSeleccion = 3;
-                break;
-            
-            case 4:
-                control.buscar("ID_PRODUCTO,DESCRIPCION","producto", "ID_PRODUCTO > 0", modeloTabla);
-                valorSeleccion = 4;
-                break;
-            }
-    }
-    
+     
     
     public void limpiarTabla(){
              for(int i=modeloTabla.getRowCount(); i>0;i--){

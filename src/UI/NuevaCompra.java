@@ -506,7 +506,6 @@ public class NuevaCompra extends javax.swing.JFrame {
         buscarProveedor.jRadioButton1.setText("CUIT");
         buscarProveedor.jRadioButton1.setSelected(true);
         buscarProveedor.jRadioButton2.setText("RAZÓN SOCIAL");
-        buscarProveedor.evaluar(3);
         buscarProveedor.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
