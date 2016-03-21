@@ -71,6 +71,7 @@ public class BCMCliente extends javax.swing.JFrame {
     
     public void buscar(String dni){
         ArrayList<String> datos = new ArrayList<>();            
+        cliente.setDni(dni);
         datos = cliente.buscarBD("DNI", null, false);
         
     }

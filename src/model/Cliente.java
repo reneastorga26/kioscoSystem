@@ -73,14 +73,18 @@ public class Cliente extends Persona{
             criterioBusqueda="'"+super.getNombreApellido()+"'";
             criterioPreBusqueda="'"+super.getNombreApellido()+"%'";
         }
-        String tablas = "PERSONA P, CLIENTE C";
-        String columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA ,P.DNI , P.NOMBRE_APELLIDO";
+        String tablas = "PERSONA P, CLIENTE C, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
+        String columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , "
+                + "P.NOMBRE_APELLIDO, D.PERSONA_ID_PERSONA, CE.PERSONA_ID_PERSONA"
+                + "T.PERSONA_ID_PERSONA";
         String condicion;
         if(preBuscar){
             condicion = "(P."+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = C.PERSONA_ID_PERSONA";
         }
         else{
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+" AND P.ID_PERSONA = C.PERSONA_ID_PERSONA";
+            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
+                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA"
+                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA";
         }
         indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
         return indices;

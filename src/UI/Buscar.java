@@ -16,6 +16,9 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.Cliente;
+import model.Empleado;
+import model.Producto;
+import model.Proveedor;
 import sistemakiosco.sismain;
 
 /**
@@ -32,6 +35,9 @@ public class Buscar extends javax.swing.JFrame {
     private String idProveedor;
     private String idProducto;
     private Cliente cliente = new Cliente();
+    private Empleado empleado = new Empleado();
+    private Proveedor proveedor = new Proveedor();
+    private Producto producto = new Producto();
     /**
      * Creates new form BuscarCliente
      */
@@ -42,7 +48,34 @@ public class Buscar extends javax.swing.JFrame {
         
     }
     
-     
+    public void evaluar(int opcion){
+        
+        switch(opcion){
+             case 1:
+                cliente.buscarBD("DNI", modeloTabla, false);
+                //control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
+                valorSeleccion = 2;
+                 break;
+             
+             case 2:
+                empleado.buscarBD("DNI", modeloTabla, false);
+                //control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
+                valorSeleccion = 1;
+                 break;
+             
+             case 3:
+                proveedor.buscarBD("CUIT", modeloTabla, false);
+                //control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
+                valorSeleccion = 3;
+                 break;
+             
+             case 4:
+                producto.buscarBD("ID_PRODUCTO", modeloTabla, false);
+                //control.buscar("ID_PRODUCTO,DESCRIPCION","producto", "ID_PRODUCTO > 0", modeloTabla);
+                valorSeleccion = 4;
+                 break;
+             }
+     } 
     
     public void limpiarTabla(){
              for(int i=modeloTabla.getRowCount(); i>0;i--){
@@ -299,9 +332,10 @@ public class Buscar extends javax.swing.JFrame {
         // TODO add your handling code here:
         txtBuscar.addKeyListener(new KeyAdapter() {
             public void keyReleased(final KeyEvent e) {
-                filtro();
+                
                 String cadena = (txtBuscar.getText());
                 txtBuscar.setText(cadena);
+                filtro();
                 String criterioBusqueda = txtBuscar.getText();
                 System.out.println("Criterio de Busqueda : "+ criterioBusqueda);
                 

@@ -21,10 +21,6 @@ import model.Proveedor;
  */
 public class MainMenu extends javax.swing.JFrame {
     
-    private Producto producto = new Producto();
-    private Empleado empleado = new Empleado();
-    private Proveedor proveedor = new Proveedor();
-    private Cliente cliente = new Cliente();
     /**
      * Creates new form MainMenu
      */
@@ -623,6 +619,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProducto.jRadioButton1.setText("CODIGO");
         buscarProducto.jRadioButton1.setSelected(true);
         buscarProducto.jRadioButton2.setText("DESCRIPCION");
+        buscarProducto.evaluar(4);
         buscarProducto.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -689,6 +686,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProducto.jRadioButton1.setText("CODIGO");
         buscarProducto.jRadioButton1.setSelected(true);
         buscarProducto.jRadioButton2.setText("DESCRIPCION");
+        buscarProducto.evaluar(4);
         buscarProducto.setVisible(true);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
@@ -715,6 +713,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarProveedor.jRadioButton1.setText("CUIT");
         buscarProveedor.jRadioButton1.setSelected(true);
         buscarProveedor.jRadioButton2.setText("RAZÓN SOCIAL");
+        buscarProveedor.evaluar(3);
         buscarProveedor.setVisible(true);
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
@@ -735,6 +734,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarCliente.jRadioButton1.setText("DNI");
         buscarCliente.jRadioButton1.setSelected(true);
         buscarCliente.jRadioButton2.setText("NOMBRE Y APELLIDO");
+        buscarCliente.evaluar(1);
         buscarCliente.setVisible(true);
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 
@@ -792,6 +792,7 @@ public class MainMenu extends javax.swing.JFrame {
         buscarEmpleado.jRadioButton1.setText("DNI");
         buscarEmpleado.jRadioButton1.setSelected(true);
         buscarEmpleado.jRadioButton2.setText("NOMBRE Y APELLIDO");
+        buscarEmpleado.evaluar(2);
         buscarEmpleado.setVisible(true);
         
     }//GEN-LAST:event_jMenuItem4ActionPerformed
