@@ -115,8 +115,11 @@ public class Familiar extends Persona{
                           "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
                         "', OBSERVACIONES = '" + cadena.get(4) + "'";
              
-            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
+            sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
     }
     
+    public void eliminarBD(String cadenaId){
+            sismain.getControladorBD().eliminarBD("FAMILIAR", "EMPLEADO_ID_EMPLEADO", cadenaId);
+    }
     
 }

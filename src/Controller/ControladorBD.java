@@ -80,18 +80,28 @@ public class ControladorBD {
     }
     
     
-    public void eliminar(ArrayList<JTextField> txts, String tabla){  
-        rs = leer(tabla);
+    public void eliminarBD(String tablas, String columnas, String ids){  
+        /*rs = leer(tabla);
         int i = Integer.parseInt(txts.get(0).getText());
         try {
             String query = "DELETE FROM " + tabla + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
             sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        try {
+            String query = "DELETE FROM " + tablas + " WHERE " + columnas + " = " + ids;
+            sismain.getConexion().getStatement().execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
-    public void modificar(String set, String tabla, String columna, String id){
+    
+    
+      
+    
+    public void modificarBD(String set, String tablas, String columnas, String ids){
         /*rs = leer(tabla);
         String set = "";
         try {
@@ -106,11 +116,11 @@ public class ControladorBD {
             String query = "UPDATE " + tabla + " SET " + set + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
             sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControladorBD.class.g  etName()).log(Level.SEVERE, null, ex);
         }*/
         
         try {
-            String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id ;
+            String query = "UPDATE " + tablas + " SET " + set + " WHERE " + columnas + " = " + ids ;
             System.out.println(query);
             sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {

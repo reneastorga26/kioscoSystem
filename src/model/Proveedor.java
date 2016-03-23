@@ -122,6 +122,16 @@ public class Proveedor {
             String set = "CUIT = '" + cadena.get(0) + "', RAZON_SOCIAL = '" + cadena.get(1) + 
                           "', OBSERVACIONES = '" + cadena.get(2) + "'";
              
-            sismain.getControladorBD().modificar(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId); 
+            sismain.getControladorBD().modificarBD(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId); 
+    }
+    
+    public void eliminarFisicaBD(String cadenaId){
+            sismain.getControladorBD().eliminarBD("PROVEEDOR", "ID_PROVEEDOR", cadenaId);
+    }
+    
+    public void eliminarLogicaBD(String cadenaId){
+            String set = "ESTADO = '0'";
+             
+            sismain.getControladorBD().modificarBD(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId);
     }
 }

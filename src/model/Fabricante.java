@@ -60,6 +60,10 @@ public class Fabricante {
              
              String set = "DESCRIPCION = '" + cadena.get(0) + "'";
              
-             sismain.getControladorBD().modificar(set, "FABRICANTE", "ID_FABRICANTE", cadenaId);
+             sismain.getControladorBD().modificarBD(set, "FABRICANTE", "ID_FABRICANTE", cadenaId);
+    }
+    
+    public void eliminarBD(String cadenaId){
+            sismain.getControladorBD().eliminarBD("FABRICANTE", "ID_FABRICANTE", cadenaId);
     }
 }
