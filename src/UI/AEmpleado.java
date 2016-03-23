@@ -9,6 +9,8 @@ import Controller.ControladorBD;
 import Controller.ControladorDate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -16,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import model.CorreoElectronico;
 import model.Domicilio;
 import model.Empleado;
+import model.Familiar;
 import model.Telefono;
 import sistemakiosco.sismain;
 
@@ -30,6 +33,7 @@ public class AEmpleado extends javax.swing.JFrame {
     private Telefono telefono = new Telefono();
     private DefaultTableModel model;
     private Empleado empleado = new Empleado();
+    private Familiar familiar = new Familiar();
     private ControladorDate controladorDate = new ControladorDate();
     private ControladorDate controladorDate1 = new ControladorDate();
     
@@ -855,13 +859,12 @@ public class AEmpleado extends javax.swing.JFrame {
         //GUARDAR EN BD
         long idPersona=empleado.guardarBD();
         
-        
         for(int i = 0; i<tablaTelefono.getRowCount();i++){
             telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
             telefono.setMovil(
                     String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
             telefono.setIdPersona(idPersona);
-            telefono.setIdProveedor(1);
+            telefono.setIdProveedor(0);
             telefono.guardarBD();
         }   
         
@@ -873,7 +876,7 @@ public class AEmpleado extends javax.swing.JFrame {
             domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
             domicilio.setIdPersona(idPersona);
-            domicilio.setIdProveedor(1);
+            domicilio.setIdProveedor(0);
             domicilio.guardarBD();
         }   
         
@@ -881,9 +884,23 @@ public class AEmpleado extends javax.swing.JFrame {
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(idPersona);
-            correoElectronico.setIdProveedor(1);
+            correoElectronico.setIdProveedor(0);
             correoElectronico.guardarBD();
-        }   
+        }
+        
+        for(int i = 0; i<tablaFamiliar.getRowCount();i++){
+            familiar.setDni(
+                    String.valueOf(tablaFamiliar.getValueAt(i,0)));
+            familiar.setNombreApellido(
+                    String.valueOf(tablaFamiliar.getValueAt(i,1)));
+            familiar.setFechaNacimiento(
+                    String.valueOf(tablaFamiliar.getValueAt(i,2)));
+            familiar.setParentesco(
+                    String.valueOf(tablaFamiliar.getValueAt(i,3)));
+            familiar.setIdEmpleado(idPersona); //CORREGIR ES IDEMPLEADO
+            familiar.guardarBD();
+        }
+        
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
         
     }//GEN-LAST:event_btnGurdarActionPerformed
@@ -970,24 +987,19 @@ public class AEmpleado extends javax.swing.JFrame {
 
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
-        ResultSet res;
-        ControladorBD control = sismain.getControladorBD();
+        
+        int i=0;
         String cadena = txtDni.getText();
-        try {
-
-            res = control.buscarRegistros("p.DNI", "persona p, empleado e","p.ID_PERSONA = e.PERSONA_ID_PERSONA");
-            while(res.next()){
-                if(cadena.equals(res.getString("DNI"))){
-                    JOptionPane.showMessageDialog(null, "EL DNI INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-
-                }else{
-
-                }
+        ArrayList<String> datos = new ArrayList<>();
+             
+            datos = empleado.buscarBD("DNI", null, false);
+            Iterator iter = datos.iterator();
+            while (iter.hasNext() && i<datos.size()){
+             System.out.println(iter.next());
+             if(datos.get(i).equals(cadena))   
+             JOptionPane.showMessageDialog(null, "EL DNI INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+             i++;
             }
-            res.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
     }//GEN-LAST:event_btnComprobarActionPerformed
 

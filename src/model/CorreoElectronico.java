@@ -77,17 +77,11 @@ public class CorreoElectronico {
         return idCorreoElectronico;
     }
 
-    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
-             String set = "DIRECCION = '" + txt.get(0) + "'";
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+             String set = "DIRECCION = '" + cadena.get(0) + "'";
+             
+             sismain.getControladorBD().modificar(set, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaId);
     }
     
     

@@ -8,6 +8,8 @@ package UI;
 import Controller.ControladorBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -396,19 +398,18 @@ public class AProveedor extends javax.swing.JFrame {
 
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
-        ResultSet res;
+        int i=0;
         String cadena = txtCuit.getText();
-        try {
+        ArrayList<String> datos = new ArrayList<>();
              
-            res = control.buscarRegistros("CUIT", "proveedor","CUIT > 0");
-            while(res.next()){
-                if(cadena.equals(res.getString("CUIT")))
-                JOptionPane.showMessageDialog(null, "EL CUIT INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+            datos = proveedor.buscarBD("CUIT", null, false);
+            Iterator iter = datos.iterator();
+            while (iter.hasNext() && i<datos.size()){
+             System.out.println(iter.next());
+             if(datos.get(i).equals(cadena))   
+             JOptionPane.showMessageDialog(null, "EL CUIT INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+             i++;
             }
-            res.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }//GEN-LAST:event_btnComprobarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed

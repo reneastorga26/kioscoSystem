@@ -90,37 +90,42 @@ public class Empleado extends Persona{
             criterioBusqueda="'"+super.getNombreApellido()+"'";
             criterioPreBusqueda="'"+super.getNombreApellido()+"%'";
         }
-        String tablas = "PERSONA P, EMPLEADO E";
-        String columnas = "P.ID_PERSONA , E.PERSONA_ID_PERSONA ,P.DNI , P.NOMBRE_APELLIDO";
+        String tablas1 = "PERSONA P, EMPLEADO E";
+        String tablas2 = "PERSONA P, EMPLEADO E, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
+        String columnas1 = "P.ID_PERSONA , E.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
+        String columnas2 = "P.ID_PERSONA , E.PERSONA_ID_PERSONA ,P.DNI , P.NOMBRE_APELLIDO, "
+                + "P.FECHA_NAC, P.OBSERVACIONES, P.ESTADO, D.PERSONA_ID_PERSONA, D.DIRECCION, "
+                + "D.LOCALIDAD, D.PROVINCIA, CE.PERSONA_ID_PERSONA, CE.DIRECCION, "
+                + "T.PERSONA_ID_PERSONA, T.NUMERO, T.MOVIL";
+        
         String condicion;
         if(preBuscar){
-            condicion = "(P."+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = E.PERSONA_ID_PERSONA";
+            condicion = "(P."+columnaBusqueda+" = "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = E.PERSONA_ID_PERSONA";
+            indices = sismain.getControladorBD().buscar(tablas1, columnas1, condicion, modeloTabla);
+            return indices;
         }
         else{
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+" AND P.ID_PERSONA = E.PERSONA_ID_PERSONA";
+            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
+                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA"
+                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA";
+            indices = sismain.getControladorBD().buscar(tablas2, columnas2, condicion, modeloTabla);
+            return indices;
         }
-        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-        return indices;
+        
     }   
     
-    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> cadena, String tabla, String cadenaId){
              String set;
              if(tabla.equals("PERSONA")){
-                 set = "DNI = '" + txt.get(0) + "', NOMBRE_APELLIDO = '" + txt.get(1) + 
-                          "', FECHA_NAC = TO_DATE(" + txt.get(2) + "), SEXO = '" + txt.get(3) + 
-                        "', OBSERVACIONES = '" + txt.get(4) + "'";
+                 set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
+                          "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
+                        "', OBSERVACIONES = '" + cadena.get(4) + "'";
+                 sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
              }else{
-                 set = "CUIL = '" + txt.get(0) + 
-                        "', FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + txt.get(1) + ")";
+                 set = "CUIL = '" + cadena.get(0) + 
+                        "', FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + cadena.get(1) + ")";
+                 sismain.getControladorBD().modificar(set, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
              }
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-                 set = "";
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+             
     }
 }

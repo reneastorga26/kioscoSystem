@@ -9,6 +9,7 @@ import Controller.ControladorBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -51,11 +52,17 @@ public class BCMProducto extends javax.swing.JFrame {
         btnGuardarModificacion.setEnabled(false);
     }
 
-    public void buscar(String dato){
+    public void buscar(long codigo){
+        ArrayList<String> datos = new ArrayList<>();            
+        producto.setIdProducto(codigo);
+        datos = producto.buscarBD("DNI", null, false);
+        Iterator iter = datos.iterator();
+            while (iter.hasNext())
+             System.out.println(iter.next());
         
     }
     
-    public void dato(String idProducto){
+    /*public void dato(String idProducto){
         
         cadenaIdProducto = idProducto;
         txtCodigo.setText(cadenaIdProducto);
@@ -140,7 +147,7 @@ public class BCMProducto extends javax.swing.JFrame {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }
+    }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -479,17 +486,17 @@ public class BCMProducto extends javax.swing.JFrame {
         valoresProducto.add(String.valueOf(producto.getStockCriticoMinimo()));
         valoresProducto.add(String.valueOf(producto.getPuntoPedido()));
         
-        producto.modificarBD(valoresProducto, "PRODUCTO", "ID_PRODUCTO", cadenaIdProducto);
+        producto.modificarBD(valoresProducto, cadenaIdProducto);
         
         ArrayList<String> valoresTipoProducto = new ArrayList<>();
         valoresTipoProducto.add(tipoProducto.getDescripcion());
         
-        tipoProducto.modificarBD(valoresTipoProducto, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", String.valueOf(idTipoProducto));
+        tipoProducto.modificarBD(valoresTipoProducto, String.valueOf(idTipoProducto));
         
         ArrayList<String> valoresFabricante = new ArrayList<>();
         valoresFabricante.add(fabricante.getDescripcion());
         
-        fabricante.modificarBD(valoresFabricante, "FABRICANTE", "ID_FABRICANTE", String.valueOf(idFabricante));
+        fabricante.modificarBD(valoresFabricante, String.valueOf(idFabricante));
         
         JOptionPane.showMessageDialog(null, "EL PRODUCTO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed

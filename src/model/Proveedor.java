@@ -96,30 +96,32 @@ public class Proveedor {
             criterioBusqueda="'"+getRazonSocial()+"'";
             criterioPreBusqueda="'"+getRazonSocial()+"%'";
         }
-        String tablas = "PROVEEDOR";
-        String columnas = "ID_PROVEEDOR , CUIT , RAZON_SOCIAL";
+        String tablas1 = "PROVEEDOR";
+        String tablas2 = "PROVEEDOR P, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
+        String columnas1 = "ID_PROVEEDOR, CUIT , RAZON_SOCIAL";
+        String columnas2 = "P.ID_PROVEEDOR , P.CUIT , P.RAZON_SOCIAL, P.OBSERVACIONES, "
+                + "P.ESTADO, D.PROVEEDOR_ID_PROVEEDOR, "
+                + "D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, CE.PROVEEDOR_ID_PREOVEEDOR, "
+                + "CE.DIRECCION, T.PROVEEDOR_ID_PROVEEDOR, T.NUMERO, T.MOVIL";
         String condicion;
         if(preBuscar){
-            condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
+            condicion = "("+columnaBusqueda+" = "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
+            indices = sismain.getControladorBD().buscar(tablas1, columnas1, condicion, modeloTabla);
+            return indices;
         }
         else{
             condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
+            indices = sismain.getControladorBD().buscar(tablas2, columnas2, condicion, modeloTabla);
+            return indices;
         }
-        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-        return indices;
+        
     }
     
-    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
-             String set = "CUIT = '" + txt.get(0) + "', RAZON_SOCIAL = '" + txt.get(1) + 
-                          "', OBSERVACIONES = '" + txt.get(2) + "'";
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            String set = "CUIT = '" + cadena.get(0) + "', RAZON_SOCIAL = '" + cadena.get(1) + 
+                          "', OBSERVACIONES = '" + cadena.get(2) + "'";
+             
+            sismain.getControladorBD().modificar(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId); 
     }
 }

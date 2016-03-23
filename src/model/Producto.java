@@ -151,31 +151,33 @@ public class Producto {
             criterioBusqueda="'"+getDescripcion()+"'";
             criterioPreBusqueda="'"+getDescripcion()+"%'";
         }
-        String tablas = "PRODUCTO";
-        String columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
+        String tablas1 = "PRODUCTO";
+        String tablas2 = "PRODUCTO PRO, TIPO_PRODUCTO T, FABRICANTE F, PRECIO PRE";
+        String columnas1 = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
+        String columnas2 = "PRO.ID_PRODUCTO , PRO.DESCRIPCION , PRO.STOCK_ACTUAL , "
+                + "PRO.STOCK_CRITICO_MINIMO, PRO.PUNTO_PEDIDO, PRO.ESTADO, "
+                + "T.ID_TIPO_PRODUCTO, T.DESCRIPCION, F.ID_FABRICANTE, F.DESCRIPCION,"
+                + "PRE.NUMERO, PRE.PRODUCTO_ID_PRODUCTO";
         String condicion;
         if(preBuscar){
             condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
+            indices = sismain.getControladorBD().buscar(tablas1, columnas1, condicion, modeloTabla);
+            return indices;
         }
         else{
             condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
+            indices = sismain.getControladorBD().buscar(tablas2, columnas2, condicion, modeloTabla);
+            return indices;
         }
-        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-        return indices;
+        
     }
 
-    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
-             String set = "DESCRIPCION = '" + txt.get(0) + "', STOCK_ACTUAL = " + txt.get(1) + 
-                          ", STOCK_CRITICO_MINIMO = " + txt.get(2) + ", PUNTO_PEDIDO = " + txt.get(3);
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+             String set = "DESCRIPCION = '" + cadena.get(0) + "', STOCK_ACTUAL = " + cadena.get(1) + 
+                          ", STOCK_CRITICO_MINIMO = " + cadena.get(2) + ", PUNTO_PEDIDO = " + cadena.get(3);
+             
+             sismain.getControladorBD().modificar(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
     }
     
     

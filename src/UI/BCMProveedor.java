@@ -10,6 +10,7 @@ import Controller.ControladorDate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -58,11 +59,17 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarTels.setEnabled(false);
     }
 
-    public void buscar(String dato){
+    public void buscar(String cuit){
+        ArrayList<String> datos = new ArrayList<>();            
+        proveedor.setCuit(cuit);
+        datos = proveedor.buscarBD("CUIT", null, false);
+        Iterator iter = datos.iterator();
+            while (iter.hasNext())
+             System.out.println(iter.next());
         
     }
     
-    public void dato(String idProveedor){
+    /*public void dato(String idProveedor){
          
         ResultSet rs;
         cadenaIdProveedor = idProveedor;
@@ -189,7 +196,7 @@ public class BCMProveedor extends javax.swing.JFrame {
             Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
-    }
+    }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -829,7 +836,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         valoresProveedor.add(proveedor.getRazonSocial());
         valoresProveedor.add(proveedor.getObservaciones());
         
-        proveedor.modificarBD(valoresProveedor, "PROVEEDOR", "ID_PROVEEDOR", cadenaIdProveedor);
+        proveedor.modificarBD(valoresProveedor, cadenaIdProveedor);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
@@ -843,7 +850,7 @@ public class BCMProveedor extends javax.swing.JFrame {
             valoresDomicilio.add(domicilio.getDireccion());
             valoresDomicilio.add(domicilio.getLocalidad());
             valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.modificarBD(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            domicilio.modificarBD(valoresDomicilio, cadenaIdProveedor);
             valoresDomicilio.clear();
         }
         
@@ -855,7 +862,7 @@ public class BCMProveedor extends javax.swing.JFrame {
             telefono.setIdPersona(Long.valueOf(cadenaIdProveedor));
             valoresTelefono.add(telefono.getNumero());
             valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.modificarBD(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            telefono.modificarBD(valoresTelefono, cadenaIdProveedor);
             valoresTelefono.clear();
         }
         
@@ -865,7 +872,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdProveedor));
             valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.modificarBD(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdProveedor);
+            correoElectronico.modificarBD(valoresEmail, cadenaIdProveedor);
             valoresEmail.clear();
         }
         

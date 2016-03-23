@@ -10,6 +10,7 @@ import Controller.ControladorBD;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RowFilter;
@@ -52,25 +53,25 @@ public class Buscar extends javax.swing.JFrame {
         
         switch(opcion){
              case 1:
-                cliente.buscarBD("DNI", modeloTabla, false);
+                cliente.buscarBD("DNI", modeloTabla, true);
                 //control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
                 valorSeleccion = 2;
                  break;
              
              case 2:
-                empleado.buscarBD("DNI", modeloTabla, false);
+                empleado.buscarBD("DNI", modeloTabla, true);
                 //control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
                 valorSeleccion = 1;
                  break;
              
              case 3:
-                proveedor.buscarBD("CUIT", modeloTabla, false);
+                proveedor.buscarBD("CUIT", modeloTabla, true);
                 //control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
                 valorSeleccion = 3;
                  break;
              
              case 4:
-                producto.buscarBD("ID_PRODUCTO", modeloTabla, false);
+                producto.buscarBD("ID_PRODUCTO", modeloTabla, true);
                 //control.buscar("ID_PRODUCTO,DESCRIPCION","producto", "ID_PRODUCTO > 0", modeloTabla);
                 valorSeleccion = 4;
                  break;
@@ -100,6 +101,7 @@ public class Buscar extends javax.swing.JFrame {
             case 1:
                  
         //BUSCAR CLIENTE
+        
         BCMCliente adminCliente = new BCMCliente();
         String datoCliente = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
         adminCliente.buscar(datoCliente);
@@ -130,7 +132,7 @@ public class Buscar extends javax.swing.JFrame {
         
         BCMProducto adminProducto = new BCMProducto();
         String datoProducto = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        adminProducto.buscar(datoProducto);
+        adminProducto.buscar(Long.valueOf(datoProducto));
         break;
         
         

@@ -91,8 +91,8 @@ public class ControladorBD {
         }
     }
      
-    public void modificar(ArrayList<JTextField> txts, String tabla){
-        rs = leer(tabla);
+    public void modificar(String set, String tabla, String columna, String id){
+        /*rs = leer(tabla);
         String set = "";
         try {
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
@@ -104,6 +104,14 @@ public class ControladorBD {
             }
             int i = Integer.parseInt(txts.get(0).getText());
             String query = "UPDATE " + tabla + " SET " + set + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
+            sismain.getConexion().getStatement().execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        try {
+            String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id ;
+            System.out.println(query);
             sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -153,7 +161,7 @@ public class ControladorBD {
      }
      
     
-    public ResultSet buscarRegistros(String columnas, 
+    /*public ResultSet buscarRegistros(String columnas, 
                          String tablas,
                          String condicion
                          ){
@@ -173,7 +181,7 @@ public class ControladorBD {
         }
      
      return rs;
-     } 
+     } */
     
     
     public long obtenerUltimoIndice(String tabla){

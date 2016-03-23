@@ -12,10 +12,12 @@ import java.awt.image.ImageObserver;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
 import model.CorreoElectronico;
@@ -69,10 +71,15 @@ public class BCMCliente extends javax.swing.JFrame {
         return tablaTelefono;
     }
     
+    
+
     public void buscar(String dni){
         ArrayList<String> datos = new ArrayList<>();            
         cliente.setDni(dni);
         datos = cliente.buscarBD("DNI", null, false);
+        Iterator iter = datos.iterator();
+            while (iter.hasNext())
+             System.out.println(iter.next());
         
     }
     /*
@@ -780,7 +787,7 @@ public class BCMCliente extends javax.swing.JFrame {
         valoresPersona.add(cliente.getFechaNacimiento());
         valoresPersona.add(String.valueOf(cliente.getSexo()));
         valoresPersona.add(cliente.getObservaciones());
-        cliente.modificarBD(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        cliente.modificarBD(valoresPersona, cadenaIdPersona);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
@@ -794,7 +801,7 @@ public class BCMCliente extends javax.swing.JFrame {
             valoresDomicilio.add(domicilio.getDireccion());
             valoresDomicilio.add(domicilio.getLocalidad());
             valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.modificarBD(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            domicilio.modificarBD(valoresDomicilio, cadenaIdPersona);
             valoresDomicilio.clear();
         }
         
@@ -806,7 +813,7 @@ public class BCMCliente extends javax.swing.JFrame {
             telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresTelefono.add(telefono.getNumero());
             valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.modificarBD(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            telefono.modificarBD(valoresTelefono, cadenaIdPersona);
             valoresTelefono.clear();
         }
         
@@ -816,7 +823,7 @@ public class BCMCliente extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.modificarBD(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            correoElectronico.modificarBD(valoresEmail, cadenaIdPersona);
             valoresEmail.clear();
         }
         

@@ -10,6 +10,7 @@ import Controller.ControladorDate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import model.CorreoElectronico;
 import model.Domicilio;
 import model.Empleado;
 import model.ObraSocial;
+import model.RelacionEmpleadoObraSocial;
 import model.Telefono;
 import sistemakiosco.sismain;
 
@@ -33,6 +35,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private Empleado empleado = new Empleado();
     private Domicilio domicilio = new Domicilio();
     private Telefono telefono = new Telefono();
+    private RelacionEmpleadoObraSocial relEmpleadoObraSocial = new RelacionEmpleadoObraSocial();
     private ObraSocial obraSocial = new ObraSocial();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
@@ -76,10 +79,17 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
     }
     
-    public void buscar(String dato){
+    public void buscar(String dni){
+        ArrayList<String> datos = new ArrayList<>();            
+        empleado.setDni(dni);
+        datos = empleado.buscarBD("DNI", null, false);
+        Iterator iter = datos.iterator();
+            while (iter.hasNext())
+             System.out.println(iter.next());
         
     }  
     
+    /*
     public void dato(String idPersona){
         
         ResultSet rs;
@@ -244,7 +254,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         }catch (SQLException ex) {
             Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         } 
-    }
+    }*/
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1179,12 +1189,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
         valoresPersona.add(empleado.getFechaNacimiento());
         valoresPersona.add("M");
         valoresPersona.add("");
-        empleado.modificarBD(valoresPersona, "PERSONA", "ID_PERSONA", cadenaIdPersona);
+        empleado.modificarBD(valoresPersona, "PERSONA", cadenaIdPersona);
         
         ArrayList<String> valoresEmpleado = new ArrayList<>();
         valoresEmpleado.add(empleado.getCuil());
         valoresEmpleado.add(empleado.getFechaInicioRelacionLaboral());
-        empleado.modificarBD(valoresEmpleado, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+        empleado.modificarBD(valoresEmpleado, "EMPLEADO", cadenaIdPersona);
         
         ArrayList<String> valoresDomicilio = new ArrayList<>();
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
@@ -1198,7 +1208,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             valoresDomicilio.add(domicilio.getDireccion());
             valoresDomicilio.add(domicilio.getLocalidad());
             valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.modificarBD(valoresDomicilio, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            domicilio.modificarBD(valoresDomicilio, cadenaIdPersona);
             valoresDomicilio.clear();
         }
         
@@ -1210,7 +1220,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresTelefono.add(telefono.getNumero());
             valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.modificarBD(valoresTelefono, "TELEFONO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            telefono.modificarBD(valoresTelefono, cadenaIdPersona);
             valoresTelefono.clear();
         }
         
@@ -1220,7 +1230,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
             valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.modificarBD(valoresEmail, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaIdPersona);
+            correoElectronico.modificarBD(valoresEmail, cadenaIdPersona);
             valoresEmail.clear();
         }
         
@@ -1233,7 +1243,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
             obraSocial.setCuentaBancaria(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
             valoresObraSocial.add(correoElectronico.getDireccion());
-            obraSocial.modificarBD(valoresObraSocial, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaIdPersona);
+            obraSocial.modificarBD(valoresObraSocial, cadenaIdPersona); //MODIFICAR. CRUZAR LAS
+                                                                        //TABLAS EMPLEADO && OBRA_SOCIAL
             valoresObraSocial.clear();
         }
         

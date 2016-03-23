@@ -67,17 +67,12 @@ public class ObraSocial {
         this.cuentaBancaria = cuentaBancaria;
     }
      
-    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
-             String set = "CUIL = " + txt.get(0) + ", FECHA_INICIO_LABORAL = " + txt.get(1);
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            String set = "DESCRIPCION = " + cadena.get(0) + ", BANCO = " + cadena.get(1) 
+                    + "CUENTA_BANCARIA = " + cadena.get(2);
+            
+            sismain.getControladorBD().modificar(set, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
     }
      
 }

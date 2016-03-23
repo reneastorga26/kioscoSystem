@@ -88,16 +88,10 @@ public class Telefono {
         return idTelefono;
     }
      
-    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+    public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
-             String set = "NUMERO = '" + txt.get(0) + "', MOVIL = '" + txt.get(1) + "'";
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+             String set = "NUMERO = '" + cadena.get(0) + "', MOVIL = '" + cadena.get(1) + "'";
+             
+             sismain.getControladorBD().modificar(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
     } 
 }

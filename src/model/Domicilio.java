@@ -102,18 +102,12 @@ public class Domicilio {
     }
 
 
-        public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+        public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
-             String set = "DIRECCION = '" + txt.get(0) + "', LOCALIDAD = '" + txt.get(1) +
-                            "', PROVINCIA = '" + txt.get(2) + "'";
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+             String set = "DIRECCION = '" + cadena.get(0) + "', LOCALIDAD = '" + cadena.get(1) +
+                            "', PROVINCIA = '" + cadena.get(2) + "'";
+             
+             sismain.getControladorBD().modificar(set, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaId);
     }
     
     
