@@ -591,8 +591,10 @@ public class ACliente extends javax.swing.JFrame {
         cliente.setDni(txtDni.getText());
         cliente.setNombreApellido(txtNombre.getText());
         cliente.setFechaNacimiento(
-                controladorDate.darFormatoStringOracle(comboDia,comboMes,
-                        comboAnio));
+                controladorDate.darFormatoStringOracle(
+                        comboDia.getSelectedItem().toString(),
+                        comboMes.getSelectedItem().toString(),
+                        comboAnio.getSelectedItem().toString()));
         if(comboSexo.getSelectedIndex()==0) 
             cliente.setSexo('M');
         else

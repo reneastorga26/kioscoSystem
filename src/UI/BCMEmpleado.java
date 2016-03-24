@@ -1178,11 +1178,14 @@ public class BCMEmpleado extends javax.swing.JFrame {
         empleado.setDni(txtDni.getText());
         empleado.setCuil(txtCuil.getText());
         empleado.setNombreApellido(txtNombre.getText());
-        empleado.setFechaNacimiento(controladorDate.darFormatoStringOracle(comboDia,comboMes,
-                        comboAnio));
-        empleado.setFechaInicioRelacionLaboral(controladorDate.darFormatoStringOracle(comboDia1,comboMes1,
-                        comboAnio1));
-        
+        empleado.setFechaNacimiento(controladorDate.darFormatoStringOracle(
+                        comboDia.getSelectedItem().toString(),
+                        comboMes.getSelectedItem().toString(),
+                        comboAnio.getSelectedItem().toString()));
+        empleado.setFechaInicioRelacionLaboral(controladorDate.darFormatoStringOracle(
+                        comboDia1.getSelectedItem().toString(),
+                        comboMes1.getSelectedItem().toString(),
+                        comboAnio1.getSelectedItem().toString()));   
         ArrayList<String> valoresPersona = new ArrayList<>();
         valoresPersona.add(empleado.getDni());
         valoresPersona.add(empleado.getNombreApellido());

@@ -161,29 +161,6 @@ public class ControladorBD {
      }
      
     
-    /*public ResultSet buscarRegistros(String columnas, 
-                         String tablas,
-                         String condicion
-                         ){
-    
-     rs = null;
-     String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
-     
-     System.out.println(query);
-        try {
-            
-            rs=sismain.getConexion().getStatement().executeQuery(query);
-            System.out.println("Buscando...");
-                      
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-        }
-     
-     return rs;
-     } */
-    
-    
     public long obtenerUltimoIndice(String tabla){
         long index=0;
         rs = leer(tabla);

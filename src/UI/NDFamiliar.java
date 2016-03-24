@@ -223,7 +223,10 @@ public class NDFamiliar extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String dni = txtDni.getText();
         String nombre = txtNombre.getText();
-        String nacimiento = controladorDate.darFormatoStringOracle(comboDia, comboMes, comboAnio);
+        String nacimiento = controladorDate.darFormatoStringOracle(
+                        comboDia.getSelectedItem().toString(),
+                        comboMes.getSelectedItem().toString(),
+                        comboAnio.getSelectedItem().toString());
         String parentesco = txtParentesco.getText();
         Object [] fila = new Object [4];
         fila [0] = dni;

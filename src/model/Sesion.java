@@ -5,6 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author CX
@@ -14,19 +17,20 @@ public class Sesion {
     private int idSesion;
     private String fechaHoraInicio;
     private String fechaHoraFin;
-    private String novedades;
-    private Perfil idPerfil;
+    private String novedades = "";
+    private long idPerfil;
     
     public Sesion(){
         
     }
     
-    public Sesion(int idSesion, String fechaHoraInicio, String fechaHoraFin,
-            String novedades, Perfil idPerfil){
-        this.idSesion = idSesion;
-        this.fechaHoraInicio = fechaHoraInicio;
-        this.fechaHoraFin = fechaHoraFin;
-        this.novedades = novedades;
+    public Sesion(long idPerfil){
+        this.idPerfil=idPerfil;
+        initSesion();
+    }
+
+    public long getIdPerfil() {
+        return idPerfil;
     }
 
     public int getIdSesion() {
@@ -61,15 +65,27 @@ public class Sesion {
         this.novedades = novedades;
     }
 
-    public Perfil getIdPerfil() {
-        return idPerfil;
+    private void initSesion() {
+        //IniciarfechaHoraInicio
+        fechaHoraInicio=sismain.getControladorDate().obtenerFechaActual(2);
+    }
+    
+    private void finishSesion() throws Throwable{
+        fechaHoraInicio=sismain.getControladorDate().obtenerFechaActual(2);
+        guardarBD();
+        super.finalize();
     }
 
-    public void setIdPerfil(Perfil idPerfil) {
-        this.idPerfil = idPerfil;
+    private long guardarBD() {
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(String.valueOf(idSesion));
+        valores.add(fechaHoraInicio);
+        valores.add(fechaHoraFin);
+        valores.add(novedades);
+        valores.add(String.valueOf(idPerfil));
+        sismain.getControladorBD().aniadirBD(valores,"PERFIL",false);
+        valores.clear();
+        return idSesion;
     }
-
-    
-    
     
 }

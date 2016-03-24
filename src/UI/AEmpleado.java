@@ -34,8 +34,7 @@ public class AEmpleado extends javax.swing.JFrame {
     private DefaultTableModel model;
     private Empleado empleado = new Empleado();
     private Familiar familiar = new Familiar();
-    private ControladorDate controladorDate = new ControladorDate();
-    private ControladorDate controladorDate1 = new ControladorDate();
+    private ControladorDate controladorDate = sismain.getControladorDate();
     
     /**
      * Creates new form ABMProducto
@@ -43,7 +42,7 @@ public class AEmpleado extends javax.swing.JFrame {
     public AEmpleado() {
         initComponents();
         controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
-        controladorDate1.iniciarCombos(comboDia1, comboMes1, comboAnio1);
+        controladorDate.iniciarCombos(comboDia1, comboMes1, comboAnio1);
         this.btnBuscar.setEnabled(false);
     }
 
@@ -852,8 +851,11 @@ public class AEmpleado extends javax.swing.JFrame {
         empleado.setCuil(txtCuil.getText());
         empleado.setNombreApellido(txtNombre.getText());
         empleado.setFechaNacimiento(
-                controladorDate.darFormatoStringOracle(comboDia,comboMes,
-                        comboAnio));
+                controladorDate.darFormatoStringOracle(
+                        comboDia.getSelectedItem().toString(),
+                        controladorDate.toMesNumero
+                        (comboMes.getSelectedItem().toString()),
+                        comboAnio.getSelectedItem().toString()));
         empleado.setObservaciones(txaObservaciones.getText());
         
         //GUARDAR EN BD
@@ -943,12 +945,12 @@ public class AEmpleado extends javax.swing.JFrame {
 
     private void comboMes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMes1ActionPerformed
         // TODO add your handling code here:
-        controladorDate1.corregirCombos(comboDia1, comboMes1, comboAnio1);
+        controladorDate.corregirCombos(comboDia1, comboMes1, comboAnio1);
     }//GEN-LAST:event_comboMes1ActionPerformed
 
     private void comboAnio1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnio1ActionPerformed
         // TODO add your handling code here:
-        controladorDate1.corregirCombos(comboDia1, comboMes1, comboAnio1);
+        controladorDate.corregirCombos(comboDia1, comboMes1, comboAnio1);
     }//GEN-LAST:event_comboAnio1ActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed

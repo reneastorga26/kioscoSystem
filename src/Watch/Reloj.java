@@ -14,13 +14,27 @@ public class Reloj {
     private Calendar calendario;
     private int dia, mes, año, segundos, minutos, hora;
     private JLabel label;
-    
-    public Reloj(JLabel label){
-        this.label=label;
+    private String hour;
+    private String date;
+
+    public String getHour() {
+        return hour;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setLabel(JLabel label) {
+        this.label = label;
+    }
+
+    public Reloj(){
+        calendario= new GregorianCalendar();
     }
     
     public void ejecutarReloj(){
-        calendario= new GregorianCalendar();
+        
         segundos=calendario.get(Calendar.SECOND);
         Timer timer = new Timer(1000,new ActionListener(){
             
@@ -33,11 +47,12 @@ public class Reloj {
                 segundos = calendario.get(Calendar.SECOND);
                 minutos = calendario.get(Calendar.MINUTE);
                 hora = calendario.get(Calendar.HOUR_OF_DAY);
-                String hour = String.format("%02d : %02d : %02d", hora, minutos,segundos);
-                String date = String.format("%02d/%02d/%02d", dia, mes, año);
+                hour = String.format("%02d : %02d : %02d", hora, minutos,segundos);
+                date = String.format("%02d/%02d/%02d", dia, mes, año);
                 label.setText("Fecha Actual: "+date+ " Hora Actual: " + hour );
             }
         });
         timer.start();
     }
+    
 }

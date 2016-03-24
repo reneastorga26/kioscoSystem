@@ -5,6 +5,14 @@
  */
 package model;
 
+import Controller.ControladorBD;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author CX
@@ -15,7 +23,7 @@ public class Perfil {
     private String usuario;
     private String password;
     private String tipo;
-    private Empleado idEmpleado;
+    private int idEmpleado;
     
     public Perfil(){
         
@@ -63,15 +71,50 @@ public class Perfil {
         this.tipo = tipo;
     }
 
-    public Empleado getIdEmpleado() {
-        return idEmpleado;
+  
+        private long guardarBD() {
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(String.valueOf(idPerfil));
+        valores.add(usuario);
+        valores.add(password);
+        valores.add(tipo);
+        valores.add(String.valueOf(idEmpleado));
+        sismain.getControladorBD().aniadirBD(valores,"PERFIL",false);
+        valores.clear();
+        return idPerfil;
+        
+        
+    }
+        
+        public ArrayList buscarBD(String columnaBusqueda, 
+                         DefaultTableModel modeloTabla,
+                         boolean preBuscar){
+        ArrayList<String> indices = new ArrayList<>();
+        String criterioBusqueda;
+        String criterioPreBusqueda;
+            
+        String tablas = "PERFIL P";
+        String columnas = "P.ID_PERFIL,P.USUARIO,P.PASSWORD,P.TIPO,P.EMPLEADO_ID_EMPLEADO";
+        String condicion = "USUARIO = " + usuario;
+     
+        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+        return indices;
     }
 
-    public void setIdEmpleado(Empleado idEmpleado) {
-        this.idEmpleado = idEmpleado;
-    }
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
+             
+             String set = "DNI = '" + txt.get(0) + "', NOMBRE_APELLIDO = '" + txt.get(1) + 
+                          "', FECHA_NAC = TO_DATE(" + txt.get(2) + "), SEXO = '" + txt.get(3) + 
+                        "', OBSERVACIONES = '" + txt.get(4) + "'";
+             try{
 
-    
+                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id ;
+                 System.out.println(query);
+                 sismain.getConexion().getStatement().execute(query);
+             }catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
     
     
 }

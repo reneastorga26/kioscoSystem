@@ -6,6 +6,7 @@
 package UI;
 
 import Controller.ControladorBD;
+import Watch.Cronometro;
 import Watch.Reloj;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -14,21 +15,27 @@ import model.Cliente;
 import model.Empleado;
 import model.Producto;
 import model.Proveedor;
+import sistemakiosco.sismain;
 
 /**
  *
  * @author IgnacioMatias
  */
 public class MainMenu extends javax.swing.JFrame {
-    
+    Cronometro cronometro = new Cronometro();
     /**
      * Creates new form MainMenu
      */
     public MainMenu() {
         initComponents();
         this.setTitle("SisKios - Menu Principal");
-        Reloj reloj = new Reloj(lblRelojFec);
+        Reloj reloj = sismain.getReloj();
+        reloj.setLabel(lblRelojFec);
         reloj.ejecutarReloj();
+        cronometro.setLabelCronometro(lblTiempoSesion);
+        lblInicioSesion.setText(sismain.getControladorDate().obtenerFechaActual(1));
+        cronometro.ejecutarCronometro();
+        sismain.getConexion().getSesion().getIdPerfil();
         this.setLocationRelativeTo(null);
         
         //jMenuBar1.setVisible(false);
@@ -71,6 +78,9 @@ public class MainMenu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
+        lblInicioSesion = new javax.swing.JLabel();
+        lblTiempoSesion = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -269,40 +279,65 @@ public class MainMenu extends javax.swing.JFrame {
         jButton3.setText("CONSULTAR ACTIVIDAD");
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel1.setText("Nombre:");
+        jLabel1.setText("Usuario:");
 
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel6.setText("Tiempo de Inicio de Sesion:");
+        jLabel6.setText("Inicio de Sesion:");
 
         jLabel7.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel7.setText("Duracion:");
+        jLabel7.setText("Tiempo transcurrido:");
+
+        lblUsuario.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblUsuario.setText("Usuario:");
+
+        lblInicioSesion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblInicioSesion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblInicioSesion.setText("Inicio de Sesion:");
+
+        lblTiempoSesion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        lblTiempoSesion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTiempoSesion.setText("Tiempo transcurrido:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel1)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(44, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblInicioSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblTiempoSesion, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblUsuario))
                 .addGap(12, 12, 12)
-                .addComponent(jLabel6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(lblInicioSesion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(lblTiempoSesion))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton3))
@@ -347,7 +382,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel5))
-                .addContainerGap(889, Short.MAX_VALUE))
+                .addContainerGap(886, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,7 +405,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 362, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -885,6 +920,9 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JLabel lblInicioSesion;
     private javax.swing.JLabel lblRelojFec;
+    private javax.swing.JLabel lblTiempoSesion;
+    private javax.swing.JLabel lblUsuario;
     // End of variables declaration//GEN-END:variables
 }
