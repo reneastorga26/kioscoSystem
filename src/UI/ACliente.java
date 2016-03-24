@@ -46,7 +46,7 @@ public class ACliente extends javax.swing.JFrame {
     public ACliente() {
         initComponents();
         
-        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
     }

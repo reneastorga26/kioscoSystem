@@ -41,8 +41,8 @@ public class AEmpleado extends javax.swing.JFrame {
      */
     public AEmpleado() {
         initComponents();
-        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
-        controladorDate.iniciarCombos(comboDia1, comboMes1, comboAnio1);
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().iniciarCombos(comboDia1, comboMes1, comboAnio1);
         this.btnBuscar.setEnabled(false);
     }
 

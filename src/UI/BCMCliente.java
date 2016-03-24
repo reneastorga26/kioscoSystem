@@ -35,8 +35,6 @@ public class BCMCliente extends javax.swing.JFrame {
     private Telefono telefono = new Telefono();
     private Domicilio domicilio = new Domicilio();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
-    private ControladorDate controladorDate = new ControladorDate();
-    private ControladorDate controladorDate1 = new ControladorDate();
     private DefaultTableModel model;
     private String cadenaIdPersona;
     /**
@@ -45,7 +43,7 @@ public class BCMCliente extends javax.swing.JFrame {
     public BCMCliente() {
         initComponents();
         
-        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.txtDni.setEnabled(false);
@@ -707,11 +705,11 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
         
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboAnioActionPerformed
 
     private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboMesActionPerformed
 
     private void btnNuevoTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTelefonoActionPerformed
@@ -773,7 +771,7 @@ public class BCMCliente extends javax.swing.JFrame {
         
         cliente.setDni(txtDni.getText());
         cliente.setNombreApellido(txtNombre.getText());
-        cliente.setFechaNacimiento(controladorDate.darFormatoStringOracle(
+        cliente.setFechaNacimiento(sismain.getControladorDate().darFormatoStringOracle(
                         comboDia.getSelectedItem().toString(),
                         comboMes.getSelectedItem().toString(),
                         comboAnio.getSelectedItem().toString()));

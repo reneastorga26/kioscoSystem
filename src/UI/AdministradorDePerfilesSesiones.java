@@ -6,6 +6,7 @@
 package UI;
 
 import Controller.ControladorDate;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -13,8 +14,7 @@ import Controller.ControladorDate;
  */
 public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
 
-    ControladorDate controladorDate = new ControladorDate();
-    
+        
     public AdministradorDePerfilesSesiones() {
         this.setTitle("Administrador de Perfiles y Sesiones");
         this.setVisible(true);
@@ -500,12 +500,13 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
     }//GEN-LAST:event_comboDiaActionPerformed
 
     private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        //controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboMesActionPerformed
 
     private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
-
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+        //controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboAnioActionPerformed
 
     private void comboDia1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDia1ActionPerformed

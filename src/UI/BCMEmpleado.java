@@ -29,9 +29,7 @@ import sistemakiosco.sismain;
  */
 public class BCMEmpleado extends javax.swing.JFrame {
 
-    private ControladorDate controladorDate = new ControladorDate();
-    private ControladorDate controladorDate1 = new ControladorDate();
-    private ControladorDate controladorDate2 = new ControladorDate();
+    
     private Empleado empleado = new Empleado();
     private Domicilio domicilio = new Domicilio();
     private Telefono telefono = new Telefono();
@@ -46,8 +44,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
      */
     public BCMEmpleado() {
         initComponents();
-        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
-        controladorDate1.iniciarCombos(comboDia1, comboMes1, comboAnio1);
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().iniciarCombos(comboDia1, comboMes1, comboAnio1);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.btnNuevoFamiliar.setEnabled(false);
@@ -1071,12 +1069,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_comboDiaActionPerformed
 
     private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboMesActionPerformed
 
     private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
 
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboAnioActionPerformed
 
     private void comboDia1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDia1ActionPerformed
@@ -1085,12 +1083,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void comboMes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMes1ActionPerformed
         // TODO add your handling code here:
-        controladorDate1.corregirCombos(comboDia1, comboMes1, comboAnio1);
+        sismain.getControladorDate().corregirCombos(comboDia1, comboMes1, comboAnio1);
     }//GEN-LAST:event_comboMes1ActionPerformed
 
     private void comboAnio1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnio1ActionPerformed
         // TODO add your handling code here:
-        controladorDate1.corregirCombos(comboDia1, comboMes1, comboAnio1);
+        sismain.getControladorDate().corregirCombos(comboDia1, comboMes1, comboAnio1);
     }//GEN-LAST:event_comboAnio1ActionPerformed
 
     private void btnNuevoFamiliarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoFamiliarActionPerformed
@@ -1178,11 +1176,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
         empleado.setDni(txtDni.getText());
         empleado.setCuil(txtCuil.getText());
         empleado.setNombreApellido(txtNombre.getText());
-        empleado.setFechaNacimiento(controladorDate.darFormatoStringOracle(
+        empleado.setFechaNacimiento(sismain.getControladorDate().darFormatoStringOracle(
                         comboDia.getSelectedItem().toString(),
                         comboMes.getSelectedItem().toString(),
                         comboAnio.getSelectedItem().toString()));
-        empleado.setFechaInicioRelacionLaboral(controladorDate.darFormatoStringOracle(
+        empleado.setFechaInicioRelacionLaboral(sismain.getControladorDate().darFormatoStringOracle(
                         comboDia1.getSelectedItem().toString(),
                         comboMes1.getSelectedItem().toString(),
                         comboAnio1.getSelectedItem().toString()));   

@@ -59,20 +59,20 @@ public class Cliente extends Persona{
         return idPersona;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda,
-                        DefaultTableModel modeloTabla,
-                        boolean preBuscar){
+    public void buscarBD(String columnaBusqueda, String id, DefaultTableModel modeloTabla){
+        
         ArrayList<String> indices = new ArrayList<>();
 
         String criterioBusqueda;
-        String criterioPreBusqueda;
+        //String criterioPreBusqueda;
+        
         if(columnaBusqueda.equals("DNI")){
             criterioBusqueda=super.getDni();
-            criterioPreBusqueda="'"+super.getDni()+"%'";
+            //criterioPreBusqueda="'"+super.getDni()+"%'";
         }
         else{
             criterioBusqueda="'"+super.getNombreApellido()+"'";
-            criterioPreBusqueda="'"+super.getNombreApellido()+"%'";
+            //criterioPreBusqueda="'"+super.getNombreApellido()+"%'";
         }
         String tablas1 = "PERSONA P, CLIENTE C";
         String tablas2 = "PERSONA P, CLIENTE C, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
