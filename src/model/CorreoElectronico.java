@@ -81,8 +81,11 @@ public class CorreoElectronico {
              
              String set = "DIRECCION = '" + cadena.get(0) + "'";
              
-             sismain.getControladorBD().modificar(set, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificarBD(set, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaId);
     }
     
+    public void eliminarBD(String columna, String cadenaId){
+            sismain.getControladorBD().eliminarBD("CORREOELECTRONICO", columna, cadenaId);
+    }
     
 }

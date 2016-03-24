@@ -77,7 +77,7 @@ public class Telefono {
     }
 
     
-      public long guardarBD(){
+    public long guardarBD(){
         long idTelefono=-1;
         ArrayList<String> valores= new ArrayList<>();
         valores.add(numero);
@@ -92,6 +92,10 @@ public class Telefono {
              
              String set = "NUMERO = '" + cadena.get(0) + "', MOVIL = '" + cadena.get(1) + "'";
              
-             sismain.getControladorBD().modificar(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificarBD(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
     } 
+    
+    public void eliminarBD(String columna, String cadenaId){
+            sismain.getControladorBD().eliminarBD("TELEFONO", columna, cadenaId);
+    }
 }

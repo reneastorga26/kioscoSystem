@@ -60,6 +60,6 @@ public class TipoProducto {
              
              String set = "DESCRIPCION = '" + cadena.get(0) + "'";
              
-             sismain.getControladorBD().modificar(set, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", cadenaId); 
+             sismain.getControladorBD().modificarBD(set, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", cadenaId); 
      }
 }

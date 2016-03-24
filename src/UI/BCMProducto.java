@@ -55,7 +55,7 @@ public class BCMProducto extends javax.swing.JFrame {
     public void buscar(long codigo){
         ArrayList<String> datos = new ArrayList<>();            
         producto.setIdProducto(codigo);
-        datos = producto.buscarBD("DNI", null, false);
+        datos = producto.buscarBD("ID_PRODUCTO", null, false);
         Iterator iter = datos.iterator();
             while (iter.hasNext())
              System.out.println(iter.next());

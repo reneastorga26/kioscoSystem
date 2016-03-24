@@ -120,12 +120,23 @@ public class Empleado extends Persona{
                  set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
                           "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
                         "', OBSERVACIONES = '" + cadena.get(4) + "'";
-                 sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
+                 sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
              }else{
                  set = "CUIL = '" + cadena.get(0) + 
                         "', FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + cadena.get(1) + ")";
-                 sismain.getControladorBD().modificar(set, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
+                 sismain.getControladorBD().modificarBD(set, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
              }
              
+    }
+    
+    public void eliminarFisicaBD(String cadenaId){
+            sismain.getControladorBD().eliminarBD("EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
+            sismain.getControladorBD().eliminarBD("PERSONA", "ID_PERSONA", cadenaId);
+    }
+    
+    public void eliminarLogicaBD(String cadenaId){
+            String set = "ESTADO = '0'";
+             
+            sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
     }
 }

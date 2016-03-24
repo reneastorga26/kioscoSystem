@@ -107,8 +107,11 @@ public class Domicilio {
              String set = "DIRECCION = '" + cadena.get(0) + "', LOCALIDAD = '" + cadena.get(1) +
                             "', PROVINCIA = '" + cadena.get(2) + "'";
              
-             sismain.getControladorBD().modificar(set, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificarBD(set, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaId);
     }
     
+        public void eliminarBD(String columna, String cadenaId){
+            sismain.getControladorBD().eliminarBD("DOMICILIO", columna, cadenaId);
+    }
     
 }
