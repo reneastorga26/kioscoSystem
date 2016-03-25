@@ -5,14 +5,8 @@
  */
 package model;
 
-import Controller.ControladorBD;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
@@ -59,42 +53,80 @@ public class Cliente extends Persona{
         return idPersona;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda, 
-                              DefaultTableModel modeloTabla){
+    public ArrayList ampliarInfoBD(long idCliente){
         
-        ArrayList<String> indices = new ArrayList<>();
-
-        String criterioBusqueda;
-        String tablas;      
+        ArrayList<Object> infoAmpliada = new ArrayList<>();
+        ArrayList<Object> infoCliente = new ArrayList<>();
+        ArrayList<Telefono> telefonos = new ArrayList<>();
+        ArrayList<Domicilio> domicilios = new ArrayList<>();
+        ArrayList<CorreoElectronico> correosElectronicos = new ArrayList<>();
+        String criterioBusqueda; 
+        String tablas;
         String columnas;
         String condicion;
+        this.idCliente=idCliente;
+        tablas = "PERSONA P, CLIENTE C";
+        columnas = "C.ID_CLIENTE , C.PERSONA_ID_PERSONA"
+                + "P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
+                + "P.FECHA_NAC, P.OSERVACIONES";
+        condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
+                + "C.ID_CLIENTE = "+ idCliente;
         
-        if(columnaBusqueda.equals("DNI") || columnaBusqueda.equals("NOMBRE_APELLIDO")){
-            criterioBusqueda=super.getDni();
-            tablas  = "PERSONA P, CLIENTE C";
-            columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
-            condicion = "(P."+columnaBusqueda+" = "+ criterioBusqueda + " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA "
-                    + "AND P.ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            criterioBusqueda="'"+super.getIdPersona()+"'";
-            tablas = "PERSONA P, CLIENTE C, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
-            columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , "
-                + "P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P.OBSERVACIONES, "
-                + "P.ESTADO, D.PERSONA_ID_PERSONA, D.DIRECCION, D.LOCALIDAD, "
-                + "D.PROVINCIA, CE.PERSONA_ID_PERSONA, CE.DIRECCION, "
-                + "T.PERSONA_ID_PERSONA, T.NUMERO, T.MOVIL";
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA "
-                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA "
-                    + "AND P.ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
-            return indices;
-        }
+        infoCliente = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        super.setIdPersona(Long.parseLong(infoCliente.get(3).toString()));
+        super.setNombreApellido(infoCliente.get(4).toString());
+        super.setDni(infoCliente.get(5).toString());
+        super.setSexo(infoCliente.get(6).toString().charAt(0));
+        super.setFechaNacimiento(infoCliente.get(7).toString());
+        super.setObservaciones(infoCliente.get(8).toString());
+        
+        infoAmpliada.add(this);
+        
+        //TELEFONO;
+        
+        tablas =  "TELEFONO T";
+        columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PERSONA_ID_PERSONA ";
+        condicion = "WHERE T.PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        
+        telefonos = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        infoAmpliada.add(this);
+        
+        //DOMICILIO;
+        
+        tablas = "DOMICILIO D";
+        columnas = "D.ID_DOMICLIO, D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, D.PERSONA_ID_PERSONA ";
+        condicion = "WHERE D.PERSONA_ID_PERSONA ="+super.getIdPersona();
+        
+        domicilios = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        infoAmpliada.add(domicilios);
+        
+        //CORREO ELECTRONICO
+        
+        tablas= "CORREO ELECTRONICO E";
+        columnas ="E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PERSONA_ID_PERSONA ";
+        condicion = "WHERE E.PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        
+        correosElectronicos = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        infoAmpliada.add(correosElectronicos);
         
         
+        /*
+        ArrayList InfoAmpliada:
+            Primer Elemento, clase Cliente,
+            Segundo Elemento, ArrayList de Telefonos
+            Tercer Elemento, ArrayList de Domicilios
+            Cuarto Elemento, ArrayList de Correos Electroicos
+        */
+        
+        return infoAmpliada;
     }
 
     public void modificarBD(ArrayList<String> cadena, String cadenaId){

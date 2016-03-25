@@ -95,13 +95,13 @@ public class Familiar extends Persona{
         String condicion;
         if(preBuscar){
             condicion = "(P."+columnaBusqueda+" = "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = E.PERSONA_ID_PERSONA";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+            indices = sismain.getControladorBD().buscarBD(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
         else{
             condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
                     " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA AND E.ID_EMPLEADO = F.EMPLEADO_ID_EMPLEADO";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+            indices = sismain.getControladorBD().buscarBD(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
         

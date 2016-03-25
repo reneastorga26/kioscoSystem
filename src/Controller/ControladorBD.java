@@ -129,7 +129,30 @@ public class ControladorBD {
     }
          
     
-    public ArrayList buscar (String columnas, 
+    public ArrayList extenderInfo(String columnas, 
+                         String tablas, 
+                         String condicion){
+        
+        ArrayList<Object> registros = new ArrayList<>();
+        rs=null;
+        
+        String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
+        try {
+            rs=sismain.getConexion().getStatement().executeQuery(query);
+            Object[] campos =new Object[rs.getMetaData().getColumnCount()];
+            while(rs.next()){
+                for(int i=0;i<rs.getMetaData().getColumnCount();i++){
+                    campos[i]=rs.getObject(i+1);
+                }
+                registros.add(campos);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return registros;
+    }
+    
+    public ArrayList buscarBD (String columnas, 
                          String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla

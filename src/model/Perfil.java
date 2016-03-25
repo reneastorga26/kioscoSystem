@@ -97,7 +97,7 @@ public class Perfil {
         String columnas = "P.ID_PERFIL,P.USUARIO,P.PASSWORD,P.TIPO,P.EMPLEADO_ID_EMPLEADO";
         String condicion = "USUARIO = " + usuario;
      
-        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+        indices = sismain.getControladorBD().buscarBD(tablas, columnas, condicion, modeloTabla);
         return indices;
     }
 
