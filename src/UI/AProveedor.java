@@ -402,7 +402,7 @@ public class AProveedor extends javax.swing.JFrame {
         String cadena = txtCuit.getText();
         ArrayList<String> datos = new ArrayList<>();
              
-            datos = proveedor.buscarBD("CUIT", null, false);
+            datos = proveedor.buscarBD("CUIT", null);
             Iterator iter = datos.iterator();
             while (iter.hasNext() && i<datos.size()){
              System.out.println(iter.next());

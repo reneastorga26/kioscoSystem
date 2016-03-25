@@ -62,7 +62,7 @@ public class BCMProveedor extends javax.swing.JFrame {
     public void buscar(String cuit){
         ArrayList<String> datos = new ArrayList<>();            
         proveedor.setCuit(cuit);
-        datos = proveedor.buscarBD("CUIT", null, false);
+        datos = proveedor.buscarBD("CUIT", null);
         Iterator iter = datos.iterator();
             while (iter.hasNext())
              System.out.println(iter.next());

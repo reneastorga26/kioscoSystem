@@ -454,7 +454,7 @@ public class BCMProducto extends javax.swing.JFrame {
         txtDescripcion.setEnabled(true);
         cmbTipoProducto.setEnabled(true);
         cmbTipoProducto.removeAllItems();
-        completarComboTipo();
+        //completarComboTipo();
         btnNuevoTipo.setEnabled(true);
         txtFabricante.setEnabled(true);
         txtPrecioUnitarioVenta.setEnabled(true);

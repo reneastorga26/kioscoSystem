@@ -994,7 +994,7 @@ public class AEmpleado extends javax.swing.JFrame {
         String cadena = txtDni.getText();
         ArrayList<String> datos = new ArrayList<>();
              
-            datos = empleado.buscarBD("DNI", null, false);
+            datos = empleado.buscarBD("DNI", null);
             Iterator iter = datos.iterator();
             while (iter.hasNext() && i<datos.size()){
              System.out.println(iter.next());

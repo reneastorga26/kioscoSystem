@@ -80,7 +80,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     public void buscar(String dni){
         ArrayList<String> datos = new ArrayList<>();            
         empleado.setDni(dni);
-        datos = empleado.buscarBD("DNI", null, false);
+        datos = empleado.buscarBD("DNI", null);
         Iterator iter = datos.iterator();
             while (iter.hasNext())
              System.out.println(iter.next());

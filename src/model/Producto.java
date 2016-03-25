@@ -137,7 +137,8 @@ public class Producto {
     }
     
     public ArrayList buscarBD(String columnaBusqueda, 
-                              DefaultTableModel modeloTabla){
+                              DefaultTableModel modeloTabla,
+                              boolean busquedaRapida){
         
         ArrayList<String> indices = new ArrayList<>();
 
@@ -146,7 +147,8 @@ public class Producto {
         String columnas;
         String condicion;
         
-        if(columnaBusqueda.equals("ID_PRODUCTO") || columnaBusqueda.equals("DESCRIPCION")){
+        //if(columnaBusqueda.equals("ID_PRODUCTO") || columnaBusqueda.equals("DESCRIPCION")){
+        if(busquedaRapida){
             criterioBusqueda="'"+getIdProducto()+"'";
             tablas  = "PRODUCTO";
             columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
