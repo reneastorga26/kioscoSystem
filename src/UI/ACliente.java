@@ -654,7 +654,7 @@ public class ACliente extends javax.swing.JFrame {
         String cadena = txtDni.getText();
         ArrayList<String> datos = new ArrayList<>();
              
-            datos = cliente.buscarBD("DNI", null, false);
+            datos = cliente.buscarBD("DNI", model);
             Iterator iter = datos.iterator();
             while (iter.hasNext() && i<datos.size()){
              System.out.println(iter.next());

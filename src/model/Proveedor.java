@@ -82,40 +82,41 @@ public class Proveedor {
     }
     
     public ArrayList buscarBD(String columnaBusqueda, 
-                         DefaultTableModel modeloTabla,
-                         boolean preBuscar){
+                              DefaultTableModel modeloTabla){
+        
         ArrayList<String> indices = new ArrayList<>();
 
         String criterioBusqueda;
-        String criterioPreBusqueda;
-        if(columnaBusqueda.equals("CUIT")){
+        String tablas;      
+        String columnas;
+        String condicion;
+        
+        if(columnaBusqueda.equals("CUIT") || columnaBusqueda.equals("RAZON_SOCIAL")){
             criterioBusqueda=getCuit();
-            criterioPreBusqueda="'"+getCuit()+"%'";
+            tablas  = "PROVEEDOR";
+            columnas = "ID_PROVEEDOR, CUIT , RAZON_SOCIAL";
+            condicion = "("+columnaBusqueda+" = "+criterioBusqueda+ " )";
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+            return indices;
         }
         else{
-            criterioBusqueda="'"+getRazonSocial()+"'";
-            criterioPreBusqueda="'"+getRazonSocial()+"%'";
-        }
-        String tablas1 = "PROVEEDOR";
-        String tablas2 = "PROVEEDOR P, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
-        String columnas1 = "ID_PROVEEDOR, CUIT , RAZON_SOCIAL";
-        String columnas2 = "P.ID_PROVEEDOR , P.CUIT , P.RAZON_SOCIAL, P.OBSERVACIONES, "
+            criterioBusqueda="'"+getIdProveedor()+"'";
+            tablas = "PROVEEDOR P, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
+            columnas = "P.ID_PROVEEDOR , P.CUIT , P.RAZON_SOCIAL, P.OBSERVACIONES, "
                 + "P.ESTADO, D.PROVEEDOR_ID_PROVEEDOR, "
                 + "D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, CE.PROVEEDOR_ID_PREOVEEDOR, "
                 + "CE.DIRECCION, T.PROVEEDOR_ID_PROVEEDOR, T.NUMERO, T.MOVIL";
-        String condicion;
-        if(preBuscar){
-            condicion = "("+columnaBusqueda+" = "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
-            indices = sismain.getControladorBD().buscar(tablas1, columnas1, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
-            indices = sismain.getControladorBD().buscar(tablas2, columnas2, condicion, modeloTabla);
+            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
+                    " AND P.ID_PROVEEDOR = D.PROVEEDOR_ID_PROVEEDOR"
+                    + "AND P.ID_PROVEEDOR = CE.PROVEEDOR_ID_PROVEEDOR "
+                    + "AND P.ID_PROVEEDOR = T.PROVEEDOR_ID_PROVEEDOR";
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
             return indices;
         }
         
+        
     }
+    
     
     public void modificarBD(ArrayList<String> cadena, String cadenaId){
              

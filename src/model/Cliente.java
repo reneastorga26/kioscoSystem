@@ -59,43 +59,38 @@ public class Cliente extends Persona{
         return idPersona;
     }
     
-    public void buscarBD(String columnaBusqueda, String id, DefaultTableModel modeloTabla){
+    public ArrayList buscarBD(String columnaBusqueda, 
+                              DefaultTableModel modeloTabla){
         
         ArrayList<String> indices = new ArrayList<>();
 
         String criterioBusqueda;
-        //String criterioPreBusqueda;
+        String tablas;      
+        String columnas;
+        String condicion;
         
-        if(columnaBusqueda.equals("DNI")){
+        if(columnaBusqueda.equals("DNI") || columnaBusqueda.equals("NOMBRE_APELLIDO")){
             criterioBusqueda=super.getDni();
-            //criterioPreBusqueda="'"+super.getDni()+"%'";
+            tablas  = "PERSONA P, CLIENTE C";
+            columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
+            condicion = "(P."+columnaBusqueda+" = "+ criterioBusqueda + " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA";
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+            return indices;
         }
         else{
-            criterioBusqueda="'"+super.getNombreApellido()+"'";
-            //criterioPreBusqueda="'"+super.getNombreApellido()+"%'";
-        }
-        String tablas1 = "PERSONA P, CLIENTE C";
-        String tablas2 = "PERSONA P, CLIENTE C, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
-        String columnas1 = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
-        String columnas2 = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , "
+            criterioBusqueda="'"+super.getIdPersona()+"'";
+            tablas = "PERSONA P, CLIENTE C, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
+            columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , "
                 + "P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P.OBSERVACIONES, "
                 + "P.ESTADO, D.PERSONA_ID_PERSONA, D.DIRECCION, D.LOCALIDAD, "
                 + "D.PROVINCIA, CE.PERSONA_ID_PERSONA, CE.DIRECCION, "
                 + "T.PERSONA_ID_PERSONA, T.NUMERO, T.MOVIL";
-        String condicion;
-        if(preBuscar){
-            condicion = "(P."+columnaBusqueda+" = "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = C.PERSONA_ID_PERSONA";
-            indices = sismain.getControladorBD().buscar(tablas1, columnas1, condicion, modeloTabla);
-            return indices;
-        }
-        else{
             condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
                     " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA"
                     + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA";
-            indices = sismain.getControladorBD().buscar(tablas2, columnas2, condicion, modeloTabla);
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
             return indices;
         }
-        
         
         
     }

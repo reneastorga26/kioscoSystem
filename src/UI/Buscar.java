@@ -53,7 +53,7 @@ public class Buscar extends javax.swing.JFrame {
         
         switch(opcion){
              case 1:
-                cliente.buscarBD("DNI", modeloTabla, true);
+                cliente.buscarBD("DNI", modeloTabla);
                 //control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
                 valorSeleccion = 2;
                  break;

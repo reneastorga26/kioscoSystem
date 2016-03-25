@@ -137,40 +137,40 @@ public class Producto {
     }
     
     public ArrayList buscarBD(String columnaBusqueda, 
-                         DefaultTableModel modeloTabla,
-                         boolean preBuscar){
+                              DefaultTableModel modeloTabla){
+        
         ArrayList<String> indices = new ArrayList<>();
 
         String criterioBusqueda;
-        String criterioPreBusqueda;
-        if(columnaBusqueda.equals("ID_PRODUCTO")){
-            criterioBusqueda=String.valueOf(getIdProducto());
-            criterioPreBusqueda="'"+String.valueOf(getIdProducto())+"%'";
+        String tablas;      
+        String columnas;
+        String condicion;
+        
+        if(columnaBusqueda.equals("ID_PRODUCTO") || columnaBusqueda.equals("DESCRIPCION")){
+            criterioBusqueda="'"+getIdProducto()+"'";
+            tablas  = "PRODUCTO";
+            columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
+            condicion = columnaBusqueda+" = "+ criterioBusqueda;
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+            return indices;
         }
         else{
-            criterioBusqueda="'"+getDescripcion()+"'";
-            criterioPreBusqueda="'"+getDescripcion()+"%'";
-        }
-        String tablas1 = "PRODUCTO";
-        String tablas2 = "PRODUCTO PRO, TIPO_PRODUCTO T, FABRICANTE F, PRECIO PRE";
-        String columnas1 = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
-        String columnas2 = "PRO.ID_PRODUCTO , PRO.DESCRIPCION , PRO.STOCK_ACTUAL , "
+            criterioBusqueda="'"+getIdProducto()+"'";
+            tablas = "PRODUCTO PRO, TIPO_PRODUCTO T, FABRICANTE F, PRECIO PRE";
+            columnas = "PRO.ID_PRODUCTO , PRO.DESCRIPCION , PRO.STOCK_ACTUAL , "
                 + "PRO.STOCK_CRITICO_MINIMO, PRO.PUNTO_PEDIDO, PRO.ESTADO, "
                 + "T.ID_TIPO_PRODUCTO, T.DESCRIPCION, F.ID_FABRICANTE, F.DESCRIPCION,"
                 + "PRE.NUMERO, PRE.PRODUCTO_ID_PRODUCTO";
-        String condicion;
-        if(preBuscar){
-            condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
-            indices = sismain.getControladorBD().buscar(tablas1, columnas1, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
-            indices = sismain.getControladorBD().buscar(tablas2, columnas2, condicion, modeloTabla);
+            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
+                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA"
+                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA";
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
             return indices;
         }
         
+        
     }
+    
 
     public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
