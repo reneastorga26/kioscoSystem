@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author CX
@@ -17,6 +19,34 @@ public abstract class Persona {
     private char sexo;
     private String fechaNacimiento;
     private String observaciones;
+    private ArrayList<Telefono> telefonos = new ArrayList<>();
+    private ArrayList<Domicilio> domicilios = new ArrayList<>();
+    private ArrayList<CorreoElectronico> correosElectronicos = new ArrayList<>();
+
+    public ArrayList<Telefono> getTelefonos() {
+        return telefonos;
+    }
+
+    public void setTelefonos(ArrayList<Telefono> telefonos) {
+        this.telefonos = telefonos;
+    }
+
+    public ArrayList<Domicilio> getDomicilios() {
+        return domicilios;
+    }
+
+    public void setDomicilios(ArrayList<Domicilio> domicilios) {
+        this.domicilios = domicilios;
+    }
+
+    public ArrayList<CorreoElectronico> getCorreosElectronicos() {
+        return correosElectronicos;
+    }
+
+    public void setCorreosElectronicos(ArrayList<CorreoElectronico> correosElectronicos) {
+        this.correosElectronicos = correosElectronicos;
+    }
+    
     
     public Persona(){
         

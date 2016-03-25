@@ -53,36 +53,31 @@ public class Cliente extends Persona{
         return idPersona;
     }
     
-    public ArrayList ampliarInfoBD(long idCliente){
+    public void ampliarInfoBD(long idCliente){
         
-        ArrayList<Object> infoAmpliada = new ArrayList<>();
         ArrayList<Object> infoCliente = new ArrayList<>();
-        ArrayList<Telefono> telefonos = new ArrayList<>();
-        ArrayList<Domicilio> domicilios = new ArrayList<>();
-        ArrayList<CorreoElectronico> correosElectronicos = new ArrayList<>();
-        String criterioBusqueda; 
+
         String tablas;
         String columnas;
         String condicion;
         this.idCliente=idCliente;
         tablas = "PERSONA P, CLIENTE C";
-        columnas = "C.ID_CLIENTE , C.PERSONA_ID_PERSONA"
-                + "P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
+        columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
                 + "P.FECHA_NAC, P.OSERVACIONES";
         condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
                 + "C.ID_CLIENTE = "+ idCliente;
         
+        
         infoCliente = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        super.setIdPersona(Long.parseLong(infoCliente.get(3).toString()));
-        super.setNombreApellido(infoCliente.get(4).toString());
-        super.setDni(infoCliente.get(5).toString());
-        super.setSexo(infoCliente.get(6).toString().charAt(0));
-        super.setFechaNacimiento(infoCliente.get(7).toString());
-        super.setObservaciones(infoCliente.get(8).toString());
+        super.setIdPersona(Long.parseLong(infoCliente.get(1).toString()));
+        super.setNombreApellido(infoCliente.get(2).toString());
+        super.setDni(infoCliente.get(3).toString());
+        super.setSexo(infoCliente.get(4).toString().charAt(5));
+        super.setFechaNacimiento(infoCliente.get(6).toString());
+        super.setObservaciones(infoCliente.get(7).toString());
         
-        infoAmpliada.add(this);
         
         //TELEFONO;
         
@@ -90,10 +85,8 @@ public class Cliente extends Persona{
         columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PERSONA_ID_PERSONA ";
         condicion = "WHERE T.PERSONA_ID_PERSONA = "+ super.getIdPersona();
         
-        telefonos = sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion);
-        
-        infoAmpliada.add(this);
+        super.setTelefonos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
         
         //DOMICILIO;
         
@@ -101,10 +94,9 @@ public class Cliente extends Persona{
         columnas = "D.ID_DOMICLIO, D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, D.PERSONA_ID_PERSONA ";
         condicion = "WHERE D.PERSONA_ID_PERSONA ="+super.getIdPersona();
         
-        domicilios = sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion);
+        super.setDomicilios(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
         
-        infoAmpliada.add(domicilios);
         
         //CORREO ELECTRONICO
         
@@ -112,10 +104,8 @@ public class Cliente extends Persona{
         columnas ="E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PERSONA_ID_PERSONA ";
         condicion = "WHERE E.PERSONA_ID_PERSONA = "+ super.getIdPersona();
         
-        correosElectronicos = sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion);
-        
-        infoAmpliada.add(correosElectronicos);
+        super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
         
         
         /*
@@ -126,7 +116,7 @@ public class Cliente extends Persona{
             Cuarto Elemento, ArrayList de Correos Electroicos
         */
         
-        return infoAmpliada;
+     
     }
 
     public void modificarBD(ArrayList<String> cadena, String cadenaId){
