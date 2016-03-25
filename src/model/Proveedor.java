@@ -94,8 +94,8 @@ public class Proveedor {
         if(columnaBusqueda.equals("CUIT") || columnaBusqueda.equals("RAZON_SOCIAL")){
             criterioBusqueda=getCuit();
             tablas  = "PROVEEDOR";
-            columnas = "ID_PROVEEDOR, CUIT , RAZON_SOCIAL";
-            condicion = "("+columnaBusqueda+" = "+criterioBusqueda+ " )";
+            columnas = "ID_PROVEEDOR, CUIT , RAZON_SOCIAL, ESTADO";
+            condicion = "("+columnaBusqueda+" = "+criterioBusqueda+ " AND ESTADO = '1')";
             indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
@@ -107,9 +107,10 @@ public class Proveedor {
                 + "D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, CE.PROVEEDOR_ID_PREOVEEDOR, "
                 + "CE.DIRECCION, T.PROVEEDOR_ID_PROVEEDOR, T.NUMERO, T.MOVIL";
             condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PROVEEDOR = D.PROVEEDOR_ID_PROVEEDOR"
+                    " AND P.ID_PROVEEDOR = D.PROVEEDOR_ID_PROVEEDOR "
                     + "AND P.ID_PROVEEDOR = CE.PROVEEDOR_ID_PROVEEDOR "
-                    + "AND P.ID_PROVEEDOR = T.PROVEEDOR_ID_PROVEEDOR";
+                    + "AND P.ID_PROVEEDOR = T.PROVEEDOR_ID_PROVEEDOR "
+                    + "AND ESTADO = '1'";
             indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
             return indices;
         }

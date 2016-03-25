@@ -73,7 +73,8 @@ public class Cliente extends Persona{
             criterioBusqueda=super.getDni();
             tablas  = "PERSONA P, CLIENTE C";
             columnas = "P.ID_PERSONA , C.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
-            condicion = "(P."+columnaBusqueda+" = "+ criterioBusqueda + " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA";
+            condicion = "(P."+columnaBusqueda+" = "+ criterioBusqueda + " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA "
+                    + "AND P.ESTADO = '1'";
             indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
@@ -86,8 +87,9 @@ public class Cliente extends Persona{
                 + "D.PROVINCIA, CE.PERSONA_ID_PERSONA, CE.DIRECCION, "
                 + "T.PERSONA_ID_PERSONA, T.NUMERO, T.MOVIL";
             condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA"
-                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA";
+                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA "
+                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA "
+                    + "AND P.ESTADO = '1'";
             indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
             return indices;
         }

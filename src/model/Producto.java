@@ -151,8 +151,8 @@ public class Producto {
         if(busquedaRapida){
             criterioBusqueda="'"+getIdProducto()+"'";
             tablas  = "PRODUCTO";
-            columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
-            condicion = columnaBusqueda+" = "+ criterioBusqueda;
+            columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO, ESTADO";
+            condicion = columnaBusqueda+" = "+ criterioBusqueda + " AND AND ESTADO = '1'";
             indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
@@ -164,8 +164,8 @@ public class Producto {
                 + "T.ID_TIPO_PRODUCTO, T.DESCRIPCION, F.ID_FABRICANTE, F.DESCRIPCION,"
                 + "PRE.NUMERO, PRE.PRODUCTO_ID_PRODUCTO";
             condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PERSONA = C.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA"
-                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA";
+                    " AND PRO.ID_PRODUCTO = T.PRODUCTO_ID_PRODUCTO AND PRO.ID_PRODUCTO = F.PRODUCTO_ID_PRODUCTO "
+                    + "AND PRO.ID_PRODUCTO = PRE.ID_PRECIO AND PRO.ESTADO = '1'"; // CRUZAR PRODUCTO Y PRECIO
             indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
             return indices;
         }
