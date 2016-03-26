@@ -98,7 +98,7 @@ public class Cliente extends Persona{
         
         tablas =  "TELEFONO T";
         columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PERSONA_ID_PERSONA ";
-        condicion = "WHERE T.PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        condicion = "T.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
         
         super.setTelefonos(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -109,7 +109,7 @@ public class Cliente extends Persona{
         columnas = "D.ID_DOMICLIO, D.DIRECCION, "
                 + "D.LOCALIDAD, D.PROVINCIA, "
                 + "D.PERSONA_ID_PERSONA ";
-        condicion = "WHERE D.PERSONA_ID_PERSONA ="+super.getIdPersona();
+        condicion = "D.PERSONA_ID_PERSONA ="+super.getIdPersona()+"'";
         
         super.setDomicilios(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -117,9 +117,9 @@ public class Cliente extends Persona{
         
         //CORREO ELECTRONICO
         
-        tablas= "CORREO ELECTRONICO E";
+        tablas= "CORREOELECTRONICO E";
         columnas ="E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PERSONA_ID_PERSONA ";
-        condicion = "WHERE E.PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        condicion = "E.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
         
         super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -136,20 +136,56 @@ public class Cliente extends Persona{
      
     }
 
-    public void modificarBD(long idCliente){
+    public void modificarBD(){
         
+                     
+            String tablas = "PERSONA P";
+            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
+            + "P.DNI = " + super.getDni() + ","
+            + "P.SEXO = " + super.getSexo() + ","
+            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
+            + "P.OBSERVACIONES = "+super.getObservaciones()+ ",";
+            String condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
         
     }
     
-    public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminar("CLIENTE", "PERSONA_ID_PERSONA", cadenaId);
-            sismain.getControladorBD().eliminar("PERSONA", "ID_PERSONA", cadenaId);
+    public void habilitarBD(){
+        
+        long idPersona = super.getIdPersona();
+        String tablas= "PERSONA P";
+        String set = "P.ESTADO = 'H'";
+        String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
+
+        sismain.getControladorBD().modificar(tablas,set,condicion);
+        
     }
     
-    public void eliminarLogicaBD(String cadenaId){
-            String set = "ESTADO = '0'";
-             
-            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
+    public void deshabilitarBD(){
+        
+        long idPersona = super.getIdPersona();
+        String tablas= "PERSONA P";
+        String set = "P.ESTADO = 'D'";
+        String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
+        
+        sismain.getControladorBD().modificar(tablas, set, condicion);
+
     }
+    
 }
 
+        /*
+        tabla = "TELEFONO T";
+        condicion = "T.PERSONA_ID_PERSONA= "+ idPersona;
+        sismain.getControladorBD().eliminar(tabla, condicion);
+        
+        tabla = "DOMICILIO D";
+        condicion = "D.PERSONA_ID_PERSONA= " + idPersona;
+        sismain.getControladorBD().eliminar(tabla, condicion);
+        
+        tabla = "CORREOELECTRONICO E";
+        condicion ="E.PERSONA_ID_PERSONA= "+ idPersona;
+        
+        tabla = "CLIENte"
+        
+*/

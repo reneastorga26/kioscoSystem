@@ -738,7 +738,7 @@ public class BCMCliente extends javax.swing.JFrame {
         telefono.setNumero(tablaTelefono.getValueAt(
                 filaSeleccionada, 0).toString());
         numero = telefono.getNumero();
-        telefono.eliminarBD(numero,idCliente,true);
+        telefono.eliminarFisicoBD(numero,idCliente,true);
         model.removeRow(tablaTelefono.getSelectedRow());
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 

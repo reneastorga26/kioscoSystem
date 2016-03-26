@@ -5,11 +5,7 @@
  */
 package model;
 
-import Controller.ControladorBD;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sistemakiosco.sismain;
 
 /**
@@ -101,17 +97,31 @@ public class Domicilio {
         return idDomicilio;
     }
 
-
-        public void modificarBD(ArrayList<String> cadena, String cadenaId){
+    public void modificarBD(){
              
-             String set = "DIRECCION = '" + cadena.get(0) + "', LOCALIDAD = '" + cadena.get(1) +
-                            "', PROVINCIA = '" + cadena.get(2) + "'";
+            String tablas = "DOMICILIO D";
+            String set = "D.DIRECCION = '" + direccion +"',"
+                       + "D.LOCALIDAD = '"+ localidad +"',"
+                       + "D.PROVINCIA = '"+ provincia +"',";
+            String condicion = "D.ID_DOMICILIO = '"+ idDomicilio +"' ";
              
-             sismain.getControladorBD().modificar(set, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificar(tablas,set,condicion);
+    } 
+    
+    public void eliminarBD(String numero,long id_referenciado, boolean persona){
+        
+        String referenciado;
+        
+        if(persona)referenciado ="T.PERSONA_ID_PERSONA"; 
+        else referenciado="T.PROVEEDOR_ID_PROVEEDOR";
+        
+        String tabla = "DOMICILIO D";
+        String condicion = referenciado + " = "+ id_referenciado +" AND "
+                +" D.ID_DOMICILIO = "+ idDomicilio;
+        
+        sismain.getControladorBD().eliminar(tabla, condicion);
+               
     }
     
-        public void eliminarBD(String columna, String cadenaId){
-            sismain.getControladorBD().eliminar("DOMICILIO", columna, cadenaId);
-    }
     
 }

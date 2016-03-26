@@ -80,18 +80,11 @@ public class ControladorBD {
     }
     
     
-    public void eliminar(String tablas, String columnas, String ids){  
-        /*rs = leer(tabla);
-        int i = Integer.parseInt(txts.get(0).getText());
-        try {
-            String query = "DELETE FROM " + tabla + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
-            sismain.getConexion().getStatement().execute(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+    public void eliminar(String tabla, String condicion){  
+
         
         try {
-            String query = "DELETE FROM " + tablas + " WHERE " + columnas + " = " + ids;
+            String query = "DELETE FROM " + tabla + " WHERE " + condicion;
             sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,26 +94,11 @@ public class ControladorBD {
     
       
     
-    public void modificar(String set, String tablas, String columnas, String ids){
-        /*rs = leer(tabla);
-        String set = "";
-        try {
-            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                if(i!=0){
-                set = set + " " + rs.getMetaData().getColumnName(i+1) + " = '" + txts.get(i).getText() + "'";
-                if(i!= rs.getMetaData().getColumnCount() - 1)
-                    set=set + ",";
-            }
-            }
-            int i = Integer.parseInt(txts.get(0).getText());
-            String query = "UPDATE " + tabla + " SET " + set + " WHERE " + rs.getMetaData().getColumnName(1) + " = " + i;
-            sismain.getConexion().getStatement().execute(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.g  etName()).log(Level.SEVERE, null, ex);
-        }*/
+    public void modificar(String tablas, String set, String condicion){
+
         
         try {
-            String query = "UPDATE " + tablas + " SET " + set + " WHERE " + columnas + " = " + ids ;
+            String query = "UPDATE " + tablas + " SET " + set + " WHERE " + condicion ;
             System.out.println(query);
             sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {

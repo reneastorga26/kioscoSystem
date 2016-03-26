@@ -88,14 +88,28 @@ public class Telefono {
         return idTelefono;
     }
      
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
+    public void modificarBD(){
              
-             String set = "NUMERO = '" + cadena.get(0) + "', MOVIL = '" + cadena.get(1) + "'";
+            String tablas = "TELEFONO T";
+            String set = "T.NUMERO = '" + numero + "', T.MOVIL = '"+ movil +"'";
+            String condicion = "T.ID_TELEFONO = '"+ idTelefono+"'";
              
-             sismain.getControladorBD().modificar(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
     
-    public void eliminarBD(String numero,long id_referenciado, boolean persona){
-        String 
+    public void eliminarBD(String id_telefono,long id_referenciado, boolean persona){
+        
+        String referenciado;
+        
+        if(persona)referenciado ="T.PERSONA_ID_PERSONA"; 
+        else referenciado="T.PROVEEDOR_ID_PROVEEDOR";
+        
+        String tabla = "TELEFONO T";
+        String condicion = referenciado + " = "+ id_referenciado +" AND "
+                +" T.ID_TELEFONO = '"+ idTelefono+"'";
+        
+        sismain.getControladorBD().eliminar(tabla, condicion);
+               
     }
+    
 }
