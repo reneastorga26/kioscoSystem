@@ -42,7 +42,7 @@ public class ControladorBD {
     }    
      
     
-    public long aniadirBD(ArrayList<String> valores, String tabla, boolean idcargado){
+    public long aniadir(ArrayList<String> valores, String tabla, boolean idcargado){
         String values = new String();
         String campos = new String();
         long index = 0;
@@ -80,7 +80,7 @@ public class ControladorBD {
     }
     
     
-    public void eliminarBD(String tablas, String columnas, String ids){  
+    public void eliminar(String tablas, String columnas, String ids){  
         /*rs = leer(tabla);
         int i = Integer.parseInt(txts.get(0).getText());
         try {
@@ -101,7 +101,7 @@ public class ControladorBD {
     
       
     
-    public void modificarBD(String set, String tablas, String columnas, String ids){
+    public void modificar(String set, String tablas, String columnas, String ids){
         /*rs = leer(tabla);
         String set = "";
         try {
@@ -152,7 +152,7 @@ public class ControladorBD {
         return registros;
     }
     
-    public ArrayList buscarBD (String columnas, 
+    public ArrayList buscar (String columnas, 
                          String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla
@@ -160,16 +160,8 @@ public class ControladorBD {
     
      rs = null;
      String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
-     int numIndice=1;
+
      ArrayList<String> indices = new ArrayList<>();
-     char character;
-     for(int i=0; i<tablas.length(); i++){
-         character = tablas.charAt(i);
-         if(character==','){
-             numIndice++;
-         }
-     }
-     System.out.println(query);
         try {
             
             rs=sismain.getConexion().getStatement().executeQuery(query);
@@ -179,9 +171,8 @@ public class ControladorBD {
                 indices.add(rs.getObject(1).toString());
                 Object[] fila = new Object[rs.getMetaData().getColumnCount()]; 
                 
-                for(int i = 0; i<rs.getMetaData().getColumnCount(); i++){
-                    fila[i]=rs.getObject(i+1);
-                    System.out.println(fila[i]);
+                for(int i = 1; i<rs.getMetaData().getColumnCount(); i++){
+                    fila[i-1]=rs.getObject(i+1);
                 }
                 modeloTabla.addRow(fila);
             }

@@ -63,12 +63,12 @@ public class Familiar extends Persona{
         valores.add(super.getNombreApellido());
         valores.add(super.getDni());
         valores.add(super.getFechaNacimiento());
-        idPersona = sismain.getControladorBD().aniadirBD(valores, "PERSONA",false);
+        idPersona = sismain.getControladorBD().aniadir(valores, "PERSONA",false);
         valores.clear();
         
         valores.add(parentesco);
         valores.add(String.valueOf(idEmpleado));
-        sismain.getControladorBD().aniadirBD(valores,"FAMILIAR",false);
+        sismain.getControladorBD().aniadir(valores,"FAMILIAR",false);
         return idPersona;
     }
     
@@ -95,13 +95,13 @@ public class Familiar extends Persona{
         String condicion;
         if(preBuscar){
             condicion = "(P."+columnaBusqueda+" = "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = E.PERSONA_ID_PERSONA";
-            indices = sismain.getControladorBD().buscarBD(tablas, columnas, condicion, modeloTabla);
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
         else{
             condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
                     " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA AND E.ID_EMPLEADO = F.EMPLEADO_ID_EMPLEADO";
-            indices = sismain.getControladorBD().buscarBD(tablas, columnas, condicion, modeloTabla);
+            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
             return indices;
         }
         
@@ -115,11 +115,11 @@ public class Familiar extends Persona{
                           "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
                         "', OBSERVACIONES = '" + cadena.get(4) + "'";
              
-            sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
+            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
     }
     
     public void eliminarBD(String cadenaId){
-            sismain.getControladorBD().eliminarBD("FAMILIAR", "EMPLEADO_ID_EMPLEADO", cadenaId);
+            sismain.getControladorBD().eliminar("FAMILIAR", "EMPLEADO_ID_EMPLEADO", cadenaId);
     }
     
 }

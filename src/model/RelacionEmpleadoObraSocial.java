@@ -47,7 +47,7 @@ public class RelacionEmpleadoObraSocial {
             String set = "DESCRIPCION = " + cadena.get(0) + ", BANCO = " + cadena.get(1) 
                     + "CUENTA_BANCARIA = " + cadena.get(2);
             
-            sismain.getControladorBD().modificarBD(set, "RELACION_EMPLEADO_OS", "EMPLEADO_ID_EMPLEADO", cadenaId);
+            sismain.getControladorBD().modificar(set, "RELACION_EMPLEADO_OS", "EMPLEADO_ID_EMPLEADO", cadenaId);
     }
     
     

@@ -37,6 +37,7 @@ public class BCMCliente extends javax.swing.JFrame {
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
     private String cadenaIdPersona;
+    private int filaSeleccionada;
     /**
      * Creates new form ABMProducto
      */
@@ -731,7 +732,14 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
-        model.removeRow(tablaTelefono.getSelectedRow()); 
+        long idCliente = cliente.getIdCliente();
+        String numero;
+        filaSeleccionada=tablaTelefono.getSelectedRow();
+        telefono.setNumero(tablaTelefono.getValueAt(
+                filaSeleccionada, 0).toString());
+        numero = telefono.getNumero();
+        telefono.eliminarBD(numero,idCliente,true);
+        model.removeRow(tablaTelefono.getSelectedRow());
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed

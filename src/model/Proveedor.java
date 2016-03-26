@@ -74,10 +74,10 @@ public class Proveedor {
         valores.add(getRazonSocial());
         valores.add(getCuit());
         valores.add(getObservaciones());
-        idProveedor = sismain.getControladorBD().aniadirBD(valores, "PROVEEDOR",false);
+        idProveedor = sismain.getControladorBD().aniadir(valores, "PROVEEDOR",false);
         valores.clear();
         valores.add(String.valueOf(idProveedor));
-        sismain.getControladorBD().aniadirBD(valores,"PROVEEDOR",false);
+        sismain.getControladorBD().aniadir(valores,"PROVEEDOR",false);
         return idProveedor;
     }
     
@@ -124,16 +124,16 @@ public class Proveedor {
             String set = "CUIT = '" + cadena.get(0) + "', RAZON_SOCIAL = '" + cadena.get(1) + 
                           "', OBSERVACIONES = '" + cadena.get(2) + "'";
              
-            sismain.getControladorBD().modificarBD(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId); 
+            sismain.getControladorBD().modificar(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId); 
     }
     
     public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminarBD("PROVEEDOR", "ID_PROVEEDOR", cadenaId);
+            sismain.getControladorBD().eliminar("PROVEEDOR", "ID_PROVEEDOR", cadenaId);
     }
     
     public void eliminarLogicaBD(String cadenaId){
             String set = "ESTADO = '0'";
              
-            sismain.getControladorBD().modificarBD(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId);
+            sismain.getControladorBD().modificar(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId);
     }
 }

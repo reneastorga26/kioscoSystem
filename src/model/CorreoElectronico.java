@@ -73,7 +73,7 @@ public class CorreoElectronico {
         valores.add(String.valueOf(direccion));
         valores.add(String.valueOf(idProveedor));
         valores.add(String.valueOf(idPersona));
-        idCorreoElectronico = sismain.getControladorBD().aniadirBD(valores, "CORREOELECTRONICO",false);
+        idCorreoElectronico = sismain.getControladorBD().aniadir(valores, "CORREOELECTRONICO",false);
         return idCorreoElectronico;
     }
 
@@ -81,11 +81,11 @@ public class CorreoElectronico {
              
              String set = "DIRECCION = '" + cadena.get(0) + "'";
              
-             sismain.getControladorBD().modificarBD(set, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificar(set, "CORREOELECTRONICO", "PERSONA_ID_PERSONA", cadenaId);
     }
     
     public void eliminarBD(String columna, String cadenaId){
-            sismain.getControladorBD().eliminarBD("CORREOELECTRONICO", columna, cadenaId);
+            sismain.getControladorBD().eliminar("CORREOELECTRONICO", columna, cadenaId);
     }
     
 }

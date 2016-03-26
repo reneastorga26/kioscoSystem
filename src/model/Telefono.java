@@ -84,7 +84,7 @@ public class Telefono {
         valores.add(String.valueOf(movil));
         valores.add(String.valueOf(idProveedor));
         valores.add(String.valueOf(idPersona));
-        idTelefono = sismain.getControladorBD().aniadirBD(valores, "TELEFONO",false);
+        idTelefono = sismain.getControladorBD().aniadir(valores, "TELEFONO",false);
         return idTelefono;
     }
      
@@ -92,10 +92,10 @@ public class Telefono {
              
              String set = "NUMERO = '" + cadena.get(0) + "', MOVIL = '" + cadena.get(1) + "'";
              
-             sismain.getControladorBD().modificarBD(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificar(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
     } 
     
-    public void eliminarBD(String columna, String cadenaId){
-            sismain.getControladorBD().eliminarBD("TELEFONO", columna, cadenaId);
+    public void eliminarBD(String numero,long id_referenciado, boolean persona){
+        String 
     }
 }

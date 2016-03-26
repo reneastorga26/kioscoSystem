@@ -68,10 +68,10 @@ public class Empleado extends Persona{
         valores.add(String.valueOf(super.getSexo()));
         valores.add(super.getFechaNacimiento());
         valores.add(super.getObservaciones());
-        idPersona = sismain.getControladorBD().aniadirBD(valores, "PERSONA",false);
+        idPersona = sismain.getControladorBD().aniadir(valores, "PERSONA",false);
         valores.clear();
         valores.add(String.valueOf(idPersona));
-        sismain.getControladorBD().aniadirBD(valores,"EMPLEADO",false);
+        sismain.getControladorBD().aniadir(valores,"EMPLEADO",false);
         return idPersona;
     }
     
@@ -119,23 +119,23 @@ public class Empleado extends Persona{
                  set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
                           "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
                         "', OBSERVACIONES = '" + cadena.get(4) + "'";
-                 sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
+                 sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
              }else{
                  set = "CUIL = '" + cadena.get(0) + 
                         "', FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + cadena.get(1) + ")";
-                 sismain.getControladorBD().modificarBD(set, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
+                 sismain.getControladorBD().modificar(set, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
              }
              
     }
     
     public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminarBD("EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
-            sismain.getControladorBD().eliminarBD("PERSONA", "ID_PERSONA", cadenaId);
+            sismain.getControladorBD().eliminar("EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
+            sismain.getControladorBD().eliminar("PERSONA", "ID_PERSONA", cadenaId);
     }
     
     public void eliminarLogicaBD(String cadenaId){
             String set = "ESTADO = '0'";
              
-            sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
+            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
     }
 }

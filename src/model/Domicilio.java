@@ -97,7 +97,7 @@ public class Domicilio {
         valores.add(provincia);
         valores.add(String.valueOf(idProveedor));
         valores.add(String.valueOf(idPersona));
-        idDomicilio = sismain.getControladorBD().aniadirBD(valores, "DOMICILIO",false);
+        idDomicilio = sismain.getControladorBD().aniadir(valores, "DOMICILIO",false);
         return idDomicilio;
     }
 
@@ -107,11 +107,11 @@ public class Domicilio {
              String set = "DIRECCION = '" + cadena.get(0) + "', LOCALIDAD = '" + cadena.get(1) +
                             "', PROVINCIA = '" + cadena.get(2) + "'";
              
-             sismain.getControladorBD().modificarBD(set, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaId);
+             sismain.getControladorBD().modificar(set, "DOMICILIO", "PERSONA_ID_PERSONA", cadenaId);
     }
     
         public void eliminarBD(String columna, String cadenaId){
-            sismain.getControladorBD().eliminarBD("DOMICILIO", columna, cadenaId);
+            sismain.getControladorBD().eliminar("DOMICILIO", columna, cadenaId);
     }
     
 }

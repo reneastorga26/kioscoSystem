@@ -72,11 +72,11 @@ public class ObraSocial {
             String set = "DESCRIPCION = " + cadena.get(0) + ", BANCO = " + cadena.get(1) 
                     + "CUENTA_BANCARIA = " + cadena.get(2);
             
-            sismain.getControladorBD().modificarBD(set, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
+            sismain.getControladorBD().modificar(set, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
     }
     
     public void eliminarBD(String cadenaId){
-            sismain.getControladorBD().eliminarBD("RELACION_EMPLEADO_OS", "OBRA_SOCIAL_ID_OBRA_SOCIAL", cadenaId);
-            sismain.getControladorBD().eliminarBD("OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
+            sismain.getControladorBD().eliminar("RELACION_EMPLEADO_OS", "OBRA_SOCIAL_ID_OBRA_SOCIAL", cadenaId);
+            sismain.getControladorBD().eliminar("OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
     }
 }

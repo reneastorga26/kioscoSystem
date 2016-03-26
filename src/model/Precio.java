@@ -85,10 +85,10 @@ public class Precio {
         valores.add(getFechaHoraInicio());
         valores.add(getFechaHoraFin());
         valores.add(String.valueOf(getIdProducto()));
-        idPrecio = sismain.getControladorBD().aniadirBD(valores, "PRECIO",false);
+        idPrecio = sismain.getControladorBD().aniadir(valores, "PRECIO",false);
         valores.clear();
         valores.add(String.valueOf(idPrecio));
-        sismain.getControladorBD().aniadirBD(valores,"PRECIO",false);
+        sismain.getControladorBD().aniadir(valores,"PRECIO",false);
         return idPrecio;
     }
     

@@ -79,7 +79,7 @@ public class Perfil {
         valores.add(password);
         valores.add(tipo);
         valores.add(String.valueOf(idEmpleado));
-        sismain.getControladorBD().aniadirBD(valores,"PERFIL",false);
+        sismain.getControladorBD().aniadir(valores,"PERFIL",false);
         valores.clear();
         return idPerfil;
         
@@ -97,7 +97,7 @@ public class Perfil {
         String columnas = "P.ID_PERFIL,P.USUARIO,P.PASSWORD,P.TIPO,P.EMPLEADO_ID_EMPLEADO";
         String condicion = "USUARIO = " + usuario;
      
-        indices = sismain.getControladorBD().buscarBD(tablas, columnas, condicion, modeloTabla);
+        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
         return indices;
     }
 

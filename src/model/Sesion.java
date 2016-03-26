@@ -83,7 +83,7 @@ public class Sesion {
         valores.add(fechaHoraFin);
         valores.add(novedades);
         valores.add(String.valueOf(idPerfil));
-        sismain.getControladorBD().aniadirBD(valores,"PERFIL",false);
+        sismain.getControladorBD().aniadir(valores,"PERFIL",false);
         valores.clear();
         return idSesion;
     }

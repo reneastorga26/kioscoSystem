@@ -46,16 +46,31 @@ public class Cliente extends Persona{
         valores.add(String.valueOf(super.getSexo()));
         valores.add(super.getFechaNacimiento());
         valores.add(super.getObservaciones());
-        idPersona = sismain.getControladorBD().aniadirBD(valores, "PERSONA",false);
+        idPersona = sismain.getControladorBD().aniadir(valores, "PERSONA",false);
         valores.clear();
         valores.add(String.valueOf(idPersona));
-        sismain.getControladorBD().aniadirBD(valores,"CLIENTE",false);
+        sismain.getControladorBD().aniadir(valores,"CLIENTE",false);
         return idPersona;
+    }
+    
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            DefaultTableModel modeloTabla){
+        
+        ArrayList<Long> indices = new ArrayList<>();
+
+        String tablas = "PERSONA P , CLIENTE C";
+        String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
+        String condicion = "WHERE P."+columnaBusqueda+ " = " + criterioBusqueda;
+        
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
+        
+        return indices;
     }
     
     public void ampliarInfoBD(long idCliente){
         
-        ArrayList<Object> infoCliente = new ArrayList<>();
+        ArrayList<Object> camposCliente = new ArrayList<>();
 
         String tablas;
         String columnas;
@@ -68,15 +83,15 @@ public class Cliente extends Persona{
                 + "C.ID_CLIENTE = "+ idCliente;
         
         
-        infoCliente = sismain.getControladorBD().extenderInfo
+        camposCliente = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        super.setIdPersona(Long.parseLong(infoCliente.get(1).toString()));
-        super.setNombreApellido(infoCliente.get(2).toString());
-        super.setDni(infoCliente.get(3).toString());
-        super.setSexo(infoCliente.get(4).toString().charAt(5));
-        super.setFechaNacimiento(infoCliente.get(6).toString());
-        super.setObservaciones(infoCliente.get(7).toString());
+        super.setIdPersona(Long.parseLong(camposCliente.get(1).toString()));
+        super.setNombreApellido(camposCliente.get(2).toString());
+        super.setDni(camposCliente.get(3).toString());
+        super.setSexo(camposCliente.get(4).toString().charAt(5));
+        super.setFechaNacimiento(camposCliente.get(6).toString());
+        super.setObservaciones(camposCliente.get(7).toString());
         
         
         //TELEFONO;
@@ -91,7 +106,9 @@ public class Cliente extends Persona{
         //DOMICILIO;
         
         tablas = "DOMICILIO D";
-        columnas = "D.ID_DOMICLIO, D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, D.PERSONA_ID_PERSONA ";
+        columnas = "D.ID_DOMICLIO, D.DIRECCION, "
+                + "D.LOCALIDAD, D.PROVINCIA, "
+                + "D.PERSONA_ID_PERSONA ";
         condicion = "WHERE D.PERSONA_ID_PERSONA ="+super.getIdPersona();
         
         super.setDomicilios(sismain.getControladorBD().extenderInfo
@@ -113,30 +130,26 @@ public class Cliente extends Persona{
             Primer Elemento, clase Cliente,
             Segundo Elemento, ArrayList de Telefonos
             Tercer Elemento, ArrayList de Domicilios
-            Cuarto Elemento, ArrayList de Correos Electroicos
+            Cuarto Elemento, ArrayList de Correos Electronicos
         */
         
      
     }
 
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
+    public void modificarBD(long idCliente){
         
-            String set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
-                          "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
-                        "', OBSERVACIONES = '" + cadena.get(4) + "'";
-             
-            sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
+        
     }
     
     public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminarBD("CLIENTE", "PERSONA_ID_PERSONA", cadenaId);
-            sismain.getControladorBD().eliminarBD("PERSONA", "ID_PERSONA", cadenaId);
+            sismain.getControladorBD().eliminar("CLIENTE", "PERSONA_ID_PERSONA", cadenaId);
+            sismain.getControladorBD().eliminar("PERSONA", "ID_PERSONA", cadenaId);
     }
     
     public void eliminarLogicaBD(String cadenaId){
             String set = "ESTADO = '0'";
              
-            sismain.getControladorBD().modificarBD(set, "PERSONA", "ID_PERSONA", cadenaId);
+            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
     }
 }
 

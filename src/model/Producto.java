@@ -129,10 +129,10 @@ public class Producto {
         valores.add(String.valueOf(getPuntoPedido()));
         valores.add(String.valueOf(getIdProducto()));
         valores.add(String.valueOf(getIdFabricante()));
-        idProducto = sismain.getControladorBD().aniadirBD(valores, "PRODUCTO",false);
+        idProducto = sismain.getControladorBD().aniadir(valores, "PRODUCTO",false);
         valores.clear();
         valores.add(String.valueOf(idProducto));
-        sismain.getControladorBD().aniadirBD(valores,"PRODUCTO",false);
+        sismain.getControladorBD().aniadir(valores,"PRODUCTO",false);
         return idProducto;
     }
     
@@ -179,17 +179,17 @@ public class Producto {
              String set = "DESCRIPCION = '" + cadena.get(0) + "', STOCK_ACTUAL = " + cadena.get(1) + 
                           ", STOCK_CRITICO_MINIMO = " + cadena.get(2) + ", PUNTO_PEDIDO = " + cadena.get(3);
              
-             sismain.getControladorBD().modificarBD(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
+             sismain.getControladorBD().modificar(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
     }
     
     public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminarBD("PRODUCTO", "ID_PRODUCTO", cadenaId);
+            sismain.getControladorBD().eliminar("PRODUCTO", "ID_PRODUCTO", cadenaId);
     }
     
     public void eliminarLogicaBD(String cadenaId){
             String set = "ESTADO = '0'";
              
-            sismain.getControladorBD().modificarBD(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
+            sismain.getControladorBD().modificar(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
     }
     
 }
