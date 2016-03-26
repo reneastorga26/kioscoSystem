@@ -99,6 +99,7 @@ public class Domicilio {
 
     public void modificarBD(){
              
+        //HI
             String tablas = "DOMICILIO D";
             String set = "D.DIRECCION = '" + direccion +"',"
                        + "D.LOCALIDAD = '"+ localidad +"',"
