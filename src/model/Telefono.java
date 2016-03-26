@@ -95,7 +95,7 @@ public class Telefono {
              sismain.getControladorBD().modificar(set, "TELEFONO", "PERSONA_ID_PERSONA", cadenaId);
     } 
     
-    public void eliminarBD(String numero,long id_referenciado, boolean persona){
-        String 
+    public void eliminarBD(String columnas, String cadenaId){
+            sismain.getControladorBD().eliminar("TELEFONO", columnas, cadenaId);
     }
 }

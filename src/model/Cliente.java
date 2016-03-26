@@ -53,19 +53,13 @@ public class Cliente extends Persona{
         return idPersona;
     }
     
-    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
-            DefaultTableModel modeloTabla){
-        
-        ArrayList<Long> indices = new ArrayList<>();
-
-        String tablas = "PERSONA P , CLIENTE C";
-        String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
-        String condicion = "WHERE P."+columnaBusqueda+ " = " + criterioBusqueda;
-        
-        indices = sismain.getControladorBD().buscar(columnas, 
-                tablas, condicion, modeloTabla);
-        
-        return indices;
+       
+    public void buscarBD(DefaultTableModel modeloTabla){
+        sismain.getControladorBD().buscar("C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO", 
+                                "CLIENTE C, PERSONA P", 
+                                "C.PERSONA_ID_PERSONA = P.ID_PERSONA AND P.ESTADO = '1'", 
+                                modeloTabla);
+                
     }
     
     public void ampliarInfoBD(long idCliente){
@@ -96,20 +90,19 @@ public class Cliente extends Persona{
         
         //TELEFONO;
         
-        tablas =  "TELEFONO T";
-        columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PERSONA_ID_PERSONA ";
-        condicion = "WHERE T.PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        tablas =  "TELEFONO ";
+        columnas = "NUMERO, MOVIL ";
+        condicion = "PERSONA_ID_PERSONA = "+ super.getIdPersona();
         
         super.setTelefonos(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
         
         //DOMICILIO;
         
-        tablas = "DOMICILIO D";
-        columnas = "D.ID_DOMICLIO, D.DIRECCION, "
-                + "D.LOCALIDAD, D.PROVINCIA, "
-                + "D.PERSONA_ID_PERSONA ";
-        condicion = "WHERE D.PERSONA_ID_PERSONA ="+super.getIdPersona();
+        tablas = "DOMICILIO ";
+        columnas = "DIRECCION, "
+                + "LOCALIDAD, PROVINCIA ";
+        condicion = "PERSONA_ID_PERSONA = "+super.getIdPersona();
         
         super.setDomicilios(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -117,9 +110,9 @@ public class Cliente extends Persona{
         
         //CORREO ELECTRONICO
         
-        tablas= "CORREO ELECTRONICO E";
-        columnas ="E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PERSONA_ID_PERSONA ";
-        condicion = "WHERE E.PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        tablas= "CORREO ELECTRONICO ";
+        columnas ="DIRECCION ";
+        condicion = "PERSONA_ID_PERSONA = "+ super.getIdPersona();
         
         super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -136,8 +129,14 @@ public class Cliente extends Persona{
      
     }
 
-    public void modificarBD(long idCliente){
-        
+    public void modificarBD(ArrayList<String> cadena, String cadenaId){
+        String set;
+             
+                 set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
+                          "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
+                        "', OBSERVACIONES = '" + cadena.get(4) + "'";
+                 sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
+             
         
     }
     

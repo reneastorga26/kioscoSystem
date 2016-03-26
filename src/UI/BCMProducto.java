@@ -52,102 +52,34 @@ public class BCMProducto extends javax.swing.JFrame {
         btnGuardarModificacion.setEnabled(false);
     }
 
-    public void buscar(long codigo){
-        ArrayList<String> datos = new ArrayList<>();            
-        producto.setIdProducto(codigo);
-        datos = producto.buscarBD("ID_PRODUCTO", null, false);
-        Iterator iter = datos.iterator();
-            while (iter.hasNext())
-             System.out.println(iter.next());
+    public void completarCampos(){
+        completarDatosProducto();
+        completarTiposProductos();
+        completarFabricantes();
+    }
+    
+    public void completarDatosProducto(){
+        txtCodigo.setText(String.valueOf(producto.getIdProducto()));
+        txtDescripcion.setText(producto.getDescripcion());
+        txtStockActual.setText(String.valueOf(producto.getStockActual()));
+        txtStockMinimo.setText(String.valueOf(producto.getStockCriticoMinimo()));
+        txtPuntoPedido.setText(String.valueOf(producto.getPuntoPedido()));
+        
+        //FALTA STOCK MAXIMO
         
     }
     
-    /*public void dato(String idProducto){
-        
-        cadenaIdProducto = idProducto;
-        txtCodigo.setText(cadenaIdProducto);
-        completarDatos();
+    public void completarTiposProductos(){
+        cmbTipoProducto.addItem(producto.getTiposProductos().get(0).getDescripcion());
     }
     
-    
-    public void completarDatos(){
-        
-        try{
-        ResultSet rs;
-        
-        rs = control.buscarRegistros("*", "PRODUCTO", "ID_PRODUCTO = " + cadenaIdProducto);
-        while(rs.next()){
-            txtDescripcion.setText(rs.getString("DESCRIPCION"));
-            cmbTipoProducto.setSelectedItem(rs.getString("TIPO_PRODUCTO_ID_TIPO_PRODUCTO"));
-            txtFabricante.setText(rs.getString("FABRICANTE_ID_FABRICANTE"));
-            txtStockActual.setText(rs.getString("STOCK_ACTUAL"));
-            txtStockMinimo.setText(rs.getString("STOCK_CRITICO_MINIMO"));
-            txtPuntoPedido.setText(rs.getString("PUNTO_PEDIDO"));
-            idTipoProducto = Long.valueOf(rs.getString("TIPO_PRODUCTO_ID_TIPO_PRODUCTO"));
-            idFabricante = Long.valueOf(rs.getString("FABRICANTE_ID_FABRICANTE"));
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        completarPrecio();
-        completarTipo();
-        completarFabricante();
+    public void completarFabricantes(){
+        txtFabricante.setText(producto.getFabricantes().get(0).getDescripcion());
     }
     
-    public void completarTipo(){
-        
-        try{
-        ResultSet res;
-        res = control.buscarRegistros("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO = " + idTipoProducto);
-        while(res.next()){
-                //cmbTipoProducto.setSelectedItem(res.getString("DESCRIPCION"));
-                cmbTipoProducto.addItem(res.getString("DESCRIPCION"));
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }  
+    public void completarPrecios(){
+        txtPrecioUnitarioVenta.setText(String.valueOf(producto.getPrecios().get(0).getNumero()));
     }
-    
-    public void completarComboTipo(){
-        
-        try{
-        ResultSet res;
-        res = control.buscarRegistros("DESCRIPCION", "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO > 0 ");
-        while(res.next()){
-                //cmbTipoProducto.setSelectedItem(res.getString("DESCRIPCION"));
-                cmbTipoProducto.addItem(res.getString("DESCRIPCION"));
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }  
-    }
-    
-    public void completarFabricante(){
-        
-        try{
-        ResultSet res;
-        res = control.buscarRegistros("DESCRIPCION", "FABRICANTE", "ID_FABRICANTE = " + idFabricante);
-        while(res.next()){
-                txtFabricante.setText(res.getString("DESCRIPCION"));
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void completarPrecio(){
-        
-        try{
-        ResultSet res;
-        res = control.buscarRegistros("NUMERO", "PRECIO", "PRODUCTO_ID_PRODUCTO = " + cadenaIdProducto);
-        while(res.next()){
-                txtPrecioUnitarioVenta.setText(res.getString("NUMERO"));
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -72,137 +72,49 @@ public class BCMCliente extends javax.swing.JFrame {
     
     
 
-    public void buscar(String dni){
-        ArrayList<String> datos = new ArrayList<>();            
-        cliente.setDni(dni);
-        datos = cliente.ampliarInfoBD("DNI", null);
-        Iterator iter = datos.iterator();
-            while (iter.hasNext())
-             System.out.println(iter.next());
-        
-    }
-    /*
-    public void dato(String idPersona){
-        cadenaIdPersona = idPersona;
-        try{
-                completarNombre();
-                completarFechaNac();
-                completarDomicilios();
-                completarCorreosElectronicos();
-                completarTelefonos(); 
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    } 
-    
-    public void completarNombre(){
-        
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String nombre;
-        String observaciones;
-        try{
-        res = control.buscarRegistrosSinTabla("*", "PERSONA", condicion);
-        while(res.next()){
-                    nombre = res.getString("NOMBRE_APELLIDO");
-                    txtNombre.setText(nombre);
-                    observaciones = res.getString("OBSERVACIONES");
-                    txtObservaciones.setText(observaciones);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+    public void completarCampos(){
+        completarDatosCliente();
+        completarDomicilios();
+        completarTelefonos();
+        completarCorreosElectronicos();
     }
     
-    public void completarFechaNac(){
+    public void completarDatosCliente(){
+        txtDni.setText(cliente.getDni());
+        txtNombre.setText(cliente.getNombreApellido());
         
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String fechaNac;
-        try{
-        res = control.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
-        while(res.next()){
-                    fechaNac = res.getString("FECHA_NAC");
-                    controladorDate1.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        //FALTA AGREGAR FECHA NACIMIENTO
         
+        comboSexo.addItem(String.valueOf(cliente.getSexo()));
+        txtObservaciones.setText(cliente.getObservaciones());
     }
-     
+    
     public void completarDomicilios(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        ResultSet res;
-        String direccion;
-        String localidad;
-        String provincia;
-        try{
-        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    localidad = res.getString("LOCALIDAD");
-                    provincia = res.getString("PROVINCIA");
-                    Object [] fila = new Object[3];
-                    fila[0] = direccion;
-                    fila[1] = localidad;
-                    fila[2] = provincia;
+        Object [] fila = new Object[3];
+                    fila[0] = cliente.getDomicilios().get(0).getDireccion();
+                    fila[1] = cliente.getDomicilios().get(1).getLocalidad();
+                    fila[2] = cliente.getDomicilios().get(2).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void completarCorreosElectronicos(){
-        
-        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        ResultSet res;
-        String direccion;
-        try{
-        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    Object [] fila = new Object[1];
-                    fila[0] = direccion;
-                    modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
     }
     
     public void completarTelefonos(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        ResultSet res;
-        String telefono;
-        String tipo;
-        try{
-        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[2];
-                    fila[0] = telefono;
-                    tipo = res.getString("MOVIL");
-                    if(tipo.equals("F")){
-                      fila[1] = "Fijo";  
-                    }else{
-                    fila[1] = "Movil";
-                    }
+        Object [] fila = new Object[2];
+                    fila[0] = cliente.getTelefonos().get(0).getNumero();
+                    fila[1] = cliente.getTelefonos().get(1).getMovil();
                     modeloTabla.addRow(fila);
-                    tablaTelefono.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }*/
+                    tablaDomicilio.setModel(modeloTabla);
+    }
+    
+    public void completarCorreosElectronicos(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
+        Object [] fila = new Object[1];
+                    fila[0] = cliente.getCorreosElectronicos().get(0).getDireccion();
+                    modeloTabla.addRow(fila);
+                    tablaDomicilio.setModel(modeloTabla);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -738,8 +650,9 @@ public class BCMCliente extends javax.swing.JFrame {
         telefono.setNumero(tablaTelefono.getValueAt(
                 filaSeleccionada, 0).toString());
         numero = telefono.getNumero();
-        telefono.eliminarBD(numero,idCliente,true);
+        
         model.removeRow(tablaTelefono.getSelectedRow());
+        telefono.eliminarBD("NUMERO, MOVIL " , String.valueOf(idCliente));
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed

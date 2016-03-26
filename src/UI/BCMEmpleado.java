@@ -77,182 +77,48 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
     }
     
-    public void buscar(String dni){
-        ArrayList<String> datos = new ArrayList<>();            
-        empleado.setDni(dni);
-        datos = empleado.buscarBD("DNI", null);
-        Iterator iter = datos.iterator();
-            while (iter.hasNext())
-             System.out.println(iter.next());
-        
-    }  
-    
-    /*
-    public void dato(String idPersona){
-        
-        ResultSet rs;
-        cadenaIdPersona = idPersona;
-        try{
-            rs = control.buscarRegistros("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
-            while(rs.next()){
-                txtDni.setText(rs.getString("DNI"));
-            }
-                completarCuil();
-                completarNombre();
-                completarFechaNac();
-                completarDomicilios();
-                completarCorreosElectronicos();
-                completarInicioLaboral();
-                completarTelefonos();
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    } 
-    
-    
-    public void completarCuil(){
-        
-        ResultSet res;
-        String condicion = "PERSONA_ID_PERSONA = " + cadenaIdPersona;
-        String cuil;
-        try{
-        res = control.buscarRegistros("CUIL", "EMPLEADO", condicion);
-        while(res.next()){
-                    cuil = res.getString("CUIL");
-                    txtCuil.setText(cuil);
-                    System.out.println(cuil);
-                    
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+    public void completarCampos(){
+        completarDatosEmpleado();
+        completarDomicilios();
+        completarTelefonos();
+        completarCorreosElectronicos();
     }
-    public void completarNombre(){
+    
+    public void completarDatosEmpleado(){
+        txtDni.setText(empleado.getDni());
+        txtNombre.setText(empleado.getNombreApellido());
+        txtCuil.setText(empleado.getCuil());
         
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String nombre;
-        try{
-        res = control.buscarRegistros("NOMBRE_APELLIDO", "PERSONA", condicion);
-        while(res.next()){
-                    nombre = res.getString("NOMBRE_APELLIDO");
-                    txtNombre.setText(nombre);
-                    System.out.println(nombre);
-                    
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        //FALTA AGREGAR FECHA NACIMIENTO, FECHA INICIO LABORAL
         
     }
     
-    public void completarFechaNac(){
-        
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String fechaNac;
-        try{
-        res = control.buscarRegistros("FECHA_NAC", "PERSONA", condicion);
-        while(res.next()){
-                    fechaNac = res.getString("FECHA_NAC");
-                    controladorDate2.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
-    }
-     
     public void completarDomicilios(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        ResultSet res;
-        String direccion;
-        String localidad;
-        String provincia;
-        try{
-        res = control.buscarRegistros("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    localidad = res.getString("LOCALIDAD");
-                    provincia = res.getString("PROVINCIA");
-                    Object [] fila = new Object[3];
-                    fila[0] = direccion;
-                    fila[1] = localidad;
-                    fila[2] = provincia;
+        Object [] fila = new Object[3];
+                    fila[0] = empleado.getDomicilios().get(0).getDireccion();
+                    fila[1] = empleado.getDomicilios().get(1).getLocalidad();
+                    fila[2] = empleado.getDomicilios().get(2).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void completarCorreosElectronicos(){
-        
-        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        ResultSet res;
-        String direccion;
-        try{
-        res = control.buscarRegistros("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    Object [] fila = new Object[1];
-                    fila[0] = direccion;
-                    modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    
-    public void completarInicioLaboral(){
-        
-        ResultSet res;
-        String fechaInicioLaboral;
-        try{
-        res = control.buscarRegistros("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    fechaInicioLaboral = res.getString("FECHA_INICIO_RELACION_LABORAL");
-                    controladorDate2.darFormatoaComboBox(fechaInicioLaboral,comboDia1,comboMes1,comboAnio1);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
     }
     
     public void completarTelefonos(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        ResultSet res;
-        String telefono;
-        String tipo;
-        try{
-        res = control.buscarRegistros("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[2];
-                    fila[0] = telefono;
-                    tipo = res.getString("MOVIL");
-                    if(tipo.equals("F")){
-                      fila[1] = "Fijo";  
-                    }else{
-                    fila[1] = "Movil";
-                    }
+        Object [] fila = new Object[2];
+                    fila[0] = empleado.getTelefonos().get(0).getNumero();
+                    fila[1] = empleado.getTelefonos().get(1).getMovil();
                     modeloTabla.addRow(fila);
-                    tablaTelefono.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }*/
+                    tablaDomicilio.setModel(modeloTabla);
+    }
+    
+    public void completarCorreosElectronicos(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
+        Object [] fila = new Object[1];
+                    fila[0] = empleado.getCorreosElectronicos().get(0).getDireccion();
+                    modeloTabla.addRow(fila);
+                    tablaDomicilio.setModel(modeloTabla);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.

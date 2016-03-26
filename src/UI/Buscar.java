@@ -53,25 +53,25 @@ public class Buscar extends javax.swing.JFrame {
         
         switch(opcion){
              case 1:
-                cliente.ampliarInfoBD(1);
+                cliente.buscarBD(modeloTabla);
                 //control.buscar("p.DNI,p.NOMBRE_APELLIDO","cliente c, persona p", "p.ID_PERSONA = c.PERSONA_ID_PERSONA", modeloTabla);
-                valorSeleccion = 2;
-                 break;
-             
-             case 2:
-                empleado.buscarBD("DNI", modeloTabla);
-                //control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
                 valorSeleccion = 1;
                  break;
              
+             case 2:
+                empleado.buscarBD(modeloTabla);
+                //control.buscar("p.DNI,p.NOMBRE_APELLIDO","empleado e, persona p", "p.ID_PERSONA = e.PERSONA_ID_PERSONA", modeloTabla);
+                valorSeleccion = 2;
+                 break;
+             
              case 3:
-                proveedor.buscarBD("CUIT", modeloTabla);
+                proveedor.buscarBD(modeloTabla);
                 //control.buscar("CUIT,RAZON_SOCIAL","proveedor", "ID_PROVEEDOR > 0", modeloTabla);
                 valorSeleccion = 3;
                  break;
              
              case 4:
-                producto.buscarBD("ID_PRODUCTO", modeloTabla, true);
+                producto.buscarBD(modeloTabla);
                 //control.buscar("ID_PRODUCTO,DESCRIPCION","producto", "ID_PRODUCTO > 0", modeloTabla);
                 valorSeleccion = 4;
                  break;
@@ -104,7 +104,8 @@ public class Buscar extends javax.swing.JFrame {
         
         BCMCliente adminCliente = new BCMCliente();
         String datoCliente = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        adminCliente.buscar(datoCliente);
+        cliente.ampliarInfoBD(Long.valueOf(datoCliente));
+        adminCliente.completarCampos();
         break;
         
             case 2:
@@ -113,7 +114,8 @@ public class Buscar extends javax.swing.JFrame {
         
         BCMEmpleado adminEmpleado = new BCMEmpleado();
         String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        adminEmpleado.buscar(datoEmpleado);
+        empleado.ampliarInfoBD(Long.valueOf(datoEmpleado));
+        adminEmpleado.completarCampos();
         break;
         
         
@@ -123,7 +125,8 @@ public class Buscar extends javax.swing.JFrame {
         
         BCMProveedor adminProveedor = new BCMProveedor();
         String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        adminProveedor.buscar(datoProveedor);
+        proveedor.ampliarInfoBD(Long.valueOf(datoProveedor));
+        adminProveedor.completarCampos();
         break;
         
        
@@ -132,7 +135,8 @@ public class Buscar extends javax.swing.JFrame {
         
         BCMProducto adminProducto = new BCMProducto();
         String datoProducto = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
-        adminProducto.buscar(Long.valueOf(datoProducto));
+        producto.ampliarInfoBD(Long.valueOf(datoProducto));
+        adminProducto.completarCampos();
         break;
         
         

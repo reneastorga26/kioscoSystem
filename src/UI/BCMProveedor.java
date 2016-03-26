@@ -59,144 +59,47 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarTels.setEnabled(false);
     }
 
-    public void buscar(String cuit){
-        ArrayList<String> datos = new ArrayList<>();            
-        proveedor.setCuit(cuit);
-        datos = proveedor.buscarBD("CUIT", null);
-        Iterator iter = datos.iterator();
-            while (iter.hasNext())
-             System.out.println(iter.next());
-        
+    public void completarCampos(){
+        completarDatosProveedor();
+        completarDomicilios();
+        completarTelefonos();
+        completarCorreosElectronicos();
     }
     
-    /*public void dato(String idProveedor){
-         
-        ResultSet rs;
-        cadenaIdProveedor = idProveedor;
-        try{
-            rs = control.buscarRegistros("CUIT", "PROVEEDOR", "ID_PROVEEDOR = " + cadenaIdProveedor);
-            while(rs.next()){
-                txtCuit.setText(rs.getString("CUIT"));
-            }
-                completarRazonSocial();
-                completarDomicilios();
-                completarCorreosElectronicos();
-                completarTelefonos();
-                completarObservaciones();
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void completarDatosProveedor(){
+        txtCuit.setText(proveedor.getCuit());
+        txtRazonSocial.setText(proveedor.getRazonSocial());
+        txaObservaciones.setText(proveedor.getObservaciones());
         
-    } 
-    
-    
-    public void completarRazonSocial(){
-        
-        ResultSet res;
-        String cuit = txtCuit.getText();
-        String condicion = "CUIT = " + cuit;
-        String razonSocial;
-        try{
-        res = control.buscarRegistros("RAZON_SOCIAL", "PROVEEDOR", condicion);
-        while(res.next()){
-                    razonSocial = res.getString("RAZON_SOCIAL");
-                    txtRazonSocial.setText(razonSocial);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
         
     }
     
     public void completarDomicilios(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        ResultSet res;
-        String direccion;
-        String localidad;
-        String provincia;
-        try{
-        res = control.buscarRegistros("*", "DOMICILIO D", "D.PROVEEDOR_ID_PROVEEDOR = " + cadenaIdProveedor);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    localidad = res.getString("LOCALIDAD");
-                    provincia = res.getString("PROVINCIA");
-                    Object [] fila = new Object[3];
-                    fila[0] = direccion;
-                    fila[1] = localidad;
-                    fila[2] = provincia;
+        Object [] fila = new Object[3];
+                    fila[0] = proveedor.getDomicilios().get(0).getDireccion();
+                    fila[1] = proveedor.getDomicilios().get(1).getLocalidad();
+                    fila[2] = proveedor.getDomicilios().get(2).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+    }
+    
+    public void completarTelefonos(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
+        Object [] fila = new Object[2];
+                    fila[0] = proveedor.getTelefonos().get(0).getNumero();
+                    fila[1] = proveedor.getTelefonos().get(1).getMovil();
+                    modeloTabla.addRow(fila);
+                    tablaDomicilio.setModel(modeloTabla);
     }
     
     public void completarCorreosElectronicos(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        ResultSet res;
-        String direccion;
-        try{
-        res = control.buscarRegistros("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    Object [] fila = new Object[1];
-                    fila[0] = direccion;
+        Object [] fila = new Object[1];
+                    fila[0] = proveedor.getCorreosElectronicos().get(0).getDireccion();
                     modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+                    tablaDomicilio.setModel(modeloTabla);
     }
-    
-    
-    
-    public void completarTelefonos(){
-        
-        DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        ResultSet res;
-        String telefono;
-        String tipo;
-        try{
-        res = control.buscarRegistros("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdProveedor);
-        while(res.next()){
-                    telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[2];
-                    fila[0] = telefono;
-                    tipo = res.getString("MOVIL");
-                    if(tipo.equals("F")){
-                      fila[1] = "Fijo";  
-                    }else{
-                    fila[1] = "Movil";
-                    }
-                    modeloTabla.addRow(fila);
-                    tablaTelefono.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void completarObservaciones(){
-        
-        ResultSet res;
-        String cuit = txtCuit.getText();
-        String condicion = "CUIT = " + cuit;
-        String observaciones;
-        try{
-        res = control.buscarRegistros("OBSERVACIONES", "PROVEEDOR", condicion);
-        while(res.next()){
-                    observaciones = res.getString("OBSERVACIONES");
-                    txaObservaciones.setText(observaciones);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(ACliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
-    }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

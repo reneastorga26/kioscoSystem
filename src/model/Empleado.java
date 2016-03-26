@@ -75,42 +75,82 @@ public class Empleado extends Persona{
         return idPersona;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda, 
-                              DefaultTableModel modeloTabla){
+    public void buscarBD(DefaultTableModel modeloTabla){
+        sismain.getControladorBD().buscar("E.ID_EMPLEADO, P.DNI, P.NOMBRE_APELLIDO", 
+                                "EMPLEADO E, PERSONA P", 
+                                "E.PERSONA_ID_PERSONA = P.ID_PERSONA AND P.ESTADO = '1'", 
+                                modeloTabla);
+                
+    }
+    
+    public void ampliarInfoBD(long idEmpleado){
         
-        ArrayList<String> indices = new ArrayList<>();
+        ArrayList<Object> camposEmpleado = new ArrayList<>();
 
-        String criterioBusqueda;
-        String tablas;      
+        String tablas;
         String columnas;
         String condicion;
-        
-        if(columnaBusqueda.equals("DNI") || columnaBusqueda.equals("NOMBRE_APELLIDO")){
-            criterioBusqueda=super.getDni();
-            tablas  = "PERSONA P, EMPLEADO C";
-            columnas = "P.ID_PERSONA , E.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
-            condicion = "(P."+columnaBusqueda+" = "+ criterioBusqueda + " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA "
-                    + "AND P.ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            criterioBusqueda="'"+super.getIdPersona()+"'";
-            tablas = "PERSONA P, EMPLEADO E, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
-            columnas = "P.ID_PERSONA , E.PERSONA_ID_PERSONA , P.DNI , "
-                + "P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P.OBSERVACIONES, "
-                + "P.ESTADO, E.CUIL, D.PERSONA_ID_PERSONA, D.DIRECCION, D.LOCALIDAD, "
-                + "D.PROVINCIA, CE.PERSONA_ID_PERSONA, CE.DIRECCION, "
-                + "T.PERSONA_ID_PERSONA, T.NUMERO, T.MOVIL";
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA "
-                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA "
-                    + "AND P.ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
-            return indices;
-        }
+        this.idEmpleado = idEmpleado;
+        tablas = "PERSONA P, EMPLEADO E";
+        columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
+                + "P.FECHA_NAC, P.OSERVACIONES, E.CUIL, "
+                + "E.FECHA_INICIO_RELACION_LABORAL";
+        condicion = "P.ID_PERSONA = E.PERSONA_ID_PERSONA AND "
+                + "E.ID_EMPLEADO = "+ idEmpleado;
         
         
+        camposEmpleado = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        super.setIdPersona(Long.parseLong(camposEmpleado.get(1).toString()));
+        super.setNombreApellido(camposEmpleado.get(2).toString());
+        super.setDni(camposEmpleado.get(3).toString());
+        super.setSexo(camposEmpleado.get(4).toString().charAt(5));
+        super.setFechaNacimiento(camposEmpleado.get(6).toString());
+        super.setObservaciones(camposEmpleado.get(7).toString());
+        setCuil(camposEmpleado.get(8).toString());
+        setFechaInicioRelacionLaboral(camposEmpleado.get(9).toString());
+        
+        
+        //TELEFONO;
+        
+        tablas =  "TELEFONO ";
+        columnas = "NUMERO, MOVIL ";
+        condicion = "PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        
+        super.setTelefonos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        //DOMICILIO;
+        
+        tablas = "DOMICILIO ";
+        columnas = "DIRECCION, "
+                + "LOCALIDAD, PROVINCIA ";
+        condicion = "PERSONA_ID_PERSONA = "+super.getIdPersona();
+        
+        super.setDomicilios(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        
+        //CORREO ELECTRONICO
+        
+        tablas= "CORREO ELECTRONICO ";
+        columnas ="DIRECCION ";
+        condicion = "PERSONA_ID_PERSONA = "+ super.getIdPersona();
+        
+        super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        
+        /*
+        ArrayList InfoAmpliada:
+            Primer Elemento, clase Cliente,
+            Segundo Elemento, ArrayList de Telefonos
+            Tercer Elemento, ArrayList de Domicilios
+            Cuarto Elemento, ArrayList de Correos Electronicos
+        */
+        
+     
     }
     
     public void modificarBD(ArrayList<String> cadena, String tabla, String cadenaId){
