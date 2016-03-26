@@ -54,14 +54,22 @@ public class Cliente extends Persona{
     }
     
     public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
-            DefaultTableModel modeloTabla){
+            DefaultTableModel modeloTabla, char estado){
         
         ArrayList<Long> indices = new ArrayList<>();
 
+
         String tablas = "PERSONA P , CLIENTE C";
         String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
-        String condicion = "WHERE P."+columnaBusqueda+ " = " + criterioBusqueda;
+        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda;
         
+        if(estado=='H'){
+            condicion = condicion + " AND P.ESTADO = 'H'";
+        }
+        if(estado=='D'){
+            condicion = condicion + " AND P.ESTADO = 'D'";
+        }
+ 
         indices = sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
@@ -109,7 +117,7 @@ public class Cliente extends Persona{
         columnas = "D.ID_DOMICLIO, D.DIRECCION, "
                 + "D.LOCALIDAD, D.PROVINCIA, "
                 + "D.PERSONA_ID_PERSONA ";
-        condicion = "D.PERSONA_ID_PERSONA ="+super.getIdPersona()+"'";
+        condicion = "D.PERSONA_ID_PERSONA ='"+super.getIdPersona()+"'";
         
         super.setDomicilios(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -140,11 +148,11 @@ public class Cliente extends Persona{
         
                      
             String tablas = "PERSONA P";
-            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
-            + "P.DNI = " + super.getDni() + ","
-            + "P.SEXO = " + super.getSexo() + ","
-            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
-            + "P.OBSERVACIONES = "+super.getObservaciones()+ ",";
+            String set = "P.NOMBRE_APELLIDO = '"+ super.getNombreApellido()+"',"
+            + "P.DNI = '"+ super.getDni() + "',"
+            + "P.SEXO = '" + super.getSexo() + "',"
+            + "P.FECHA_NAC = '" +super.getFechaNacimiento()+ "',"
+            + "P.OBSERVACIONES = '"+super.getObservaciones()+ "',";
             String condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);
         
@@ -152,7 +160,6 @@ public class Cliente extends Persona{
     
     public void habilitarBD(){
         
-        long idPersona = super.getIdPersona();
         String tablas= "PERSONA P";
         String set = "P.ESTADO = 'H'";
         String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
@@ -163,7 +170,6 @@ public class Cliente extends Persona{
     
     public void deshabilitarBD(){
         
-        long idPersona = super.getIdPersona();
         String tablas= "PERSONA P";
         String set = "P.ESTADO = 'D'";
         String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
