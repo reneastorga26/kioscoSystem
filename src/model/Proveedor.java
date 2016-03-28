@@ -19,16 +19,19 @@ import sistemakiosco.sismain;
  */
 public class Proveedor {
     
-    private int idProveedor;
+    private long idProveedor;
     private String cuit;
     private String razonSocial;
     private String observaciones;
+    private ArrayList<Telefono> telefonos = new ArrayList<>();
+    private ArrayList<Domicilio> domicilios = new ArrayList<>();
+    private ArrayList<CorreoElectronico> correosElectronicos = new ArrayList<>();
     
     public Proveedor(){
         
     }
     
-    public Proveedor(int idProveedor, String cuit, String razonSocial, 
+    public Proveedor(long idProveedor, String cuit, String razonSocial, 
             String observaciones){
         this.idProveedor = idProveedor;
         this.cuit = cuit;
@@ -36,11 +39,11 @@ public class Proveedor {
         this.observaciones = observaciones;
     }
 
-    public int getIdProveedor() {
+    public long getIdProveedor() {
         return idProveedor;
     }
 
-    public void setIdProveedor(int idProveedor) {
+    public void setIdProveedor(long idProveedor) {
         this.idProveedor = idProveedor;
     }
 
@@ -67,6 +70,32 @@ public class Proveedor {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+
+    public ArrayList<Telefono> getTelefonos() {
+        return telefonos;
+    }
+
+    public void setTelefonos(ArrayList<Telefono> telefonos) {
+        this.telefonos = telefonos;
+    }
+
+    public ArrayList<Domicilio> getDomicilios() {
+        return domicilios;
+    }
+
+    public void setDomicilios(ArrayList<Domicilio> domicilios) {
+        this.domicilios = domicilios;
+    }
+
+    public ArrayList<CorreoElectronico> getCorreosElectronicos() {
+        return correosElectronicos;
+    }
+
+    public void setCorreosElectronicos(ArrayList<CorreoElectronico> correosElectronicos) {
+        this.correosElectronicos = correosElectronicos;
+    }
+    
+    
     
     public long guardarBD(){
         long idProveedor=-1;
@@ -81,59 +110,126 @@ public class Proveedor {
         return idProveedor;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda, 
-                              DefaultTableModel modeloTabla){
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            char estado, DefaultTableModel modeloTabla){
         
-        ArrayList<String> indices = new ArrayList<>();
+        ArrayList<Long> indices = new ArrayList<>();
 
-        String criterioBusqueda;
-        String tablas;      
+        String tablas = "PROVEEDOR";
+        String columnas = "P.ID_PROVEEDOR, P.CUIT, P.RAZON_SOCIAL";
+        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda; 
+        
+        switch(estado){
+            case 1:
+                condicion = condicion + " AND ESTADO = 'H'";
+                break;
+            case 2:
+                condicion = condicion + " AND ESTADO = 'D'";
+                break;
+            default:
+        }
+        
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
+        
+        return indices;
+    }
+    
+    public void ampliarInfoBD(long idProveedor){
+        
+        ArrayList<Object> camposProveedor = new ArrayList<>();
+
+        String tablas;
         String columnas;
         String condicion;
-        
-        if(columnaBusqueda.equals("CUIT") || columnaBusqueda.equals("RAZON_SOCIAL")){
-            criterioBusqueda=getCuit();
-            tablas  = "PROVEEDOR";
-            columnas = "ID_PROVEEDOR, CUIT , RAZON_SOCIAL, ESTADO";
-            condicion = "("+columnaBusqueda+" = "+criterioBusqueda+ " AND ESTADO = '1')";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            criterioBusqueda="'"+getIdProveedor()+"'";
-            tablas = "PROVEEDOR P, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
-            columnas = "P.ID_PROVEEDOR , P.CUIT , P.RAZON_SOCIAL, P.OBSERVACIONES, "
-                + "P.ESTADO, D.PROVEEDOR_ID_PROVEEDOR, "
-                + "D.DIRECCION, D.LOCALIDAD, D.PROVINCIA, CE.PROVEEDOR_ID_PREOVEEDOR, "
-                + "CE.DIRECCION, T.PROVEEDOR_ID_PROVEEDOR, T.NUMERO, T.MOVIL";
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PROVEEDOR = D.PROVEEDOR_ID_PROVEEDOR "
-                    + "AND P.ID_PROVEEDOR = CE.PROVEEDOR_ID_PROVEEDOR "
-                    + "AND P.ID_PROVEEDOR = T.PROVEEDOR_ID_PROVEEDOR "
-                    + "AND ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
-            return indices;
-        }
+        this.idProveedor = idProveedor;
+        tablas = "PROVEEDOR P";
+        columnas ="P.ID_PROVEEDOR , P.RAZON_SOCIAL , P.CUIT, P.OBSERVACIONES";
+        condicion = "P.ID_PROVEEDOR = '" + idProveedor + "'";
         
         
+        camposProveedor = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        setIdProveedor(Long.parseLong(camposProveedor.get(1).toString()));
+        setRazonSocial(camposProveedor.get(2).toString());
+        setCuit(camposProveedor.get(3).toString());
+        setObservaciones(camposProveedor.get(4).toString());
+        
+        
+        //TELEFONO;
+        
+        tablas =  "TELEFONO T";
+        columnas = "T.NUMERO, T.MOVIL ";
+        condicion = "T.PROVEEDOR_ID_PROVEEDOR = '"+ getIdProveedor()+"'";
+        
+        setTelefonos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        //DOMICILIO;
+        
+        tablas = "DOMICILIO D";
+        columnas = "D.DIRECCION, "
+                + "D.LOCALIDAD, D.PROVINCIA ";
+        condicion = "D.PROVEEDOR_ID_PROVEEDOR ="+ getIdProveedor()+"'";
+        
+        setDomicilios(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        
+        //CORREO ELECTRONICO
+        
+        tablas= "CORREOELECTRONICO E";
+        columnas ="E.DIRECCION ";
+        condicion = "E.PROVEEDOR_ID_PROVEEDOR = '"+ getIdProveedor()+"'";
+        
+        setCorreosElectronicos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        
+        /*
+        ArrayList InfoAmpliada:
+            Primer Elemento, clase Cliente,
+            Segundo Elemento, ArrayList de Telefonos
+            Tercer Elemento, ArrayList de Domicilios
+            Cuarto Elemento, ArrayList de Correos Electronicos
+        */
+        
+     
     }
     
     
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
-             
-            String set = "CUIT = '" + cadena.get(0) + "', RAZON_SOCIAL = '" + cadena.get(1) + 
-                          "', OBSERVACIONES = '" + cadena.get(2) + "'";
-             
-            sismain.getControladorBD().modificar(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId); 
+    public void modificarBD(){
+        
+                     
+            String tablas = "PROVEEDOR P";
+            String set = "P.RAZON_SOCIAL = '"+ getRazonSocial()+"', "
+            + "P.CUIT = '" + getCuit() + "', "
+            + "P.OBSERVACIONES = '" + getObservaciones() + "'";
+            String condicion = "P.ID_PROVEEDOR = '"+ getIdProveedor()+"'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
+        
     }
     
-    public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminar("PROVEEDOR", "ID_PROVEEDOR", cadenaId);
+    public void habilitarBD(){
+        
+        
+        String tablas= "PROVEEDOR P";
+        String set = "P.ESTADO = 'H'";
+        String condicion = "P.ID_PROVEEDOR = '"+getIdProveedor()+"'";
+
+        sismain.getControladorBD().modificar(tablas,set,condicion);
+        
     }
     
-    public void eliminarLogicaBD(String cadenaId){
-            String set = "ESTADO = '0'";
-             
-            sismain.getControladorBD().modificar(set, "PROVEEDOR", "ID_PROVEEDOR", cadenaId);
+    public void deshabilitarBD(){
+        
+        
+        String tablas= "PROVEEDOR P";
+        String set = "P.ESTADO = 'D'";
+        String condicion = "P.ID_PROVEEDOR = '"+getIdProveedor()+"'";
+        
+        sismain.getControladorBD().modificar(tablas, set, condicion);
+
     }
 }

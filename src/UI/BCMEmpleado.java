@@ -30,15 +30,16 @@ import sistemakiosco.sismain;
 public class BCMEmpleado extends javax.swing.JFrame {
 
     
-    private Empleado empleado = new Empleado();
-    private Domicilio domicilio = new Domicilio();
-    private Telefono telefono = new Telefono();
+    private Empleado empleado;
+    private Domicilio domicilio;
+    private Telefono telefono;
+    private Familiar familiar;
     private RelacionEmpleadoObraSocial relEmpleadoObraSocial = new RelacionEmpleadoObraSocial();
     private ObraSocial obraSocial = new ObraSocial();
-    private CorreoElectronico correoElectronico = new CorreoElectronico();
+    private CorreoElectronico correoElectronico;
     private DefaultTableModel model;
     private String cadenaIdPersona;
-    ControladorBD control = sismain.getControladorBD();
+    private int filaSeleccionada;
     /**
      * Creates new form ABMProducto
      */
@@ -58,7 +59,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         this.comboAnio.setEnabled(false);
         this.tablaDomicilio.setEnabled(false);
         this.tablaCorreoElectronico.setEnabled(false);
-        this.comboCategoria.setEnabled(false);
+        this.comboSexo.setEnabled(false);
         this.comboTurno.setEnabled(false);
         this.comboDia1.setEnabled(false);
         this.comboMes1.setEnabled(false);
@@ -77,182 +78,64 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
     }
     
-    public void buscar(String dni){
-        ArrayList<String> datos = new ArrayList<>();            
-        empleado.setDni(dni);
-        datos = empleado.buscarBD("DNI", null);
-        Iterator iter = datos.iterator();
-            while (iter.hasNext())
-             System.out.println(iter.next());
-        
-    }  
-    
-    /*
-    public void dato(String idPersona){
-        
-        ResultSet rs;
-        cadenaIdPersona = idPersona;
-        try{
-            rs = control.buscarRegistros("DNI", "PERSONA", "ID_PERSONA = " + cadenaIdPersona);
-            while(rs.next()){
-                txtDni.setText(rs.getString("DNI"));
-            }
-                completarCuil();
-                completarNombre();
-                completarFechaNac();
-                completarDomicilios();
-                completarCorreosElectronicos();
-                completarInicioLaboral();
-                completarTelefonos();
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    } 
-    
-    
-    public void completarCuil(){
-        
-        ResultSet res;
-        String condicion = "PERSONA_ID_PERSONA = " + cadenaIdPersona;
-        String cuil;
-        try{
-        res = control.buscarRegistros("CUIL", "EMPLEADO", condicion);
-        while(res.next()){
-                    cuil = res.getString("CUIL");
-                    txtCuil.setText(cuil);
-                    System.out.println(cuil);
-                    
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+    public void completarCampos(){
+        completarDatosEmpleado();
+        completarDomicilios();
+        completarTelefonos();
+        completarCorreosElectronicos();
+        completarFamiliares();
     }
-    public void completarNombre(){
-        
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String nombre;
-        try{
-        res = control.buscarRegistros("NOMBRE_APELLIDO", "PERSONA", condicion);
-        while(res.next()){
-                    nombre = res.getString("NOMBRE_APELLIDO");
-                    txtNombre.setText(nombre);
-                    System.out.println(nombre);
-                    
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+    
+    public void completarDatosEmpleado(){
+        txtDni.setText(empleado.getDni());
+        txtNombre.setText(empleado.getNombreApellido());
+        txtCuil.setText(empleado.getCuil());
+        sismain.getControladorDate().darFormatoaComboBox(
+                empleado.getFechaNacimiento(), comboDia, comboMes, comboAnio);
+        if(empleado.getSexo()== 'M') 
+            comboSexo.addItem("Masculino");
+        else
+            comboSexo.addItem("Femenino");
         
     }
     
-    public void completarFechaNac(){
-        
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String fechaNac;
-        try{
-        res = control.buscarRegistros("FECHA_NAC", "PERSONA", condicion);
-        while(res.next()){
-                    fechaNac = res.getString("FECHA_NAC");
-                    controladorDate2.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
-    }
-     
     public void completarDomicilios(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        ResultSet res;
-        String direccion;
-        String localidad;
-        String provincia;
-        try{
-        res = control.buscarRegistros("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    localidad = res.getString("LOCALIDAD");
-                    provincia = res.getString("PROVINCIA");
-                    Object [] fila = new Object[3];
-                    fila[0] = direccion;
-                    fila[1] = localidad;
-                    fila[2] = provincia;
+        Object [] fila = new Object[3];
+                    fila[0] = empleado.getDomicilios().get(0).getDireccion();
+                    fila[1] = empleado.getDomicilios().get(1).getLocalidad();
+                    fila[2] = empleado.getDomicilios().get(2).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void completarCorreosElectronicos(){
-        
-        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        ResultSet res;
-        String direccion;
-        try{
-        res = control.buscarRegistros("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    Object [] fila = new Object[1];
-                    fila[0] = direccion;
-                    modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    
-    public void completarInicioLaboral(){
-        
-        ResultSet res;
-        String fechaInicioLaboral;
-        try{
-        res = control.buscarRegistros("FECHA_INICIO_RELACION_LABORAL", "EMPLEADO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    fechaInicioLaboral = res.getString("FECHA_INICIO_RELACION_LABORAL");
-                    controladorDate2.darFormatoaComboBox(fechaInicioLaboral,comboDia1,comboMes1,comboAnio1);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
     }
     
     public void completarTelefonos(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        ResultSet res;
-        String telefono;
-        String tipo;
-        try{
-        res = control.buscarRegistros("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[2];
-                    fila[0] = telefono;
-                    tipo = res.getString("MOVIL");
-                    if(tipo.equals("F")){
-                      fila[1] = "Fijo";  
-                    }else{
-                    fila[1] = "Movil";
-                    }
+        Object [] fila = new Object[2];
+                    fila[0] = empleado.getTelefonos().get(0).getNumero();
+                    fila[1] = empleado.getTelefonos().get(1).getMovil();
                     modeloTabla.addRow(fila);
-                    tablaTelefono.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }*/
+                    tablaDomicilio.setModel(modeloTabla);
+    }
+    
+    public void completarCorreosElectronicos(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
+        Object [] fila = new Object[1];
+                    fila[0] = empleado.getCorreosElectronicos().get(0).getDireccion();
+                    modeloTabla.addRow(fila);
+                    tablaDomicilio.setModel(modeloTabla);
+    }
+    
+    public void completarFamiliares(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaFamiliares.getModel();
+        Object [] fila = new Object[4];
+                    fila[0] = empleado.getFamiliares().get(0).getDni();
+                    fila[1] = empleado.getFamiliares().get(1).getNombreApellido();
+                    fila[2] = empleado.getFamiliares().get(2).getFechaNacimiento();
+                    fila[3] = empleado.getFamiliares().get(5).getParentesco();
+                    modeloTabla.addRow(fila);
+                    tablaFamiliares.setModel(modeloTabla);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -300,8 +183,6 @@ public class BCMEmpleado extends javax.swing.JFrame {
         jLabel27 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
         tablaCorreoElectronico = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        comboCategoria = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         comboTurno = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
@@ -321,6 +202,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarCorreos = new javax.swing.JButton();
         btnNuevaObraSocial = new javax.swing.JButton();
         btnEliminarObrasSociales = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        comboSexo = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
@@ -371,7 +254,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
         jLabel16.setBackground(new java.awt.Color(255, 255, 255));
         jLabel16.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setForeground(new java.awt.Color(0, 255, 0));
         jLabel16.setText("Operaciones del Empleado con el Sistema");
 
         jButton11.setBackground(new java.awt.Color(51, 0, 51));
@@ -386,7 +269,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
         jLabel20.setBackground(new java.awt.Color(255, 255, 255));
         jLabel20.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setForeground(new java.awt.Color(0, 255, 0));
         jLabel20.setText("Liquidacion de Haberes del Empleado");
 
         jButton17.setBackground(new java.awt.Color(51, 0, 51));
@@ -406,7 +289,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
         jLabel17.setBackground(new java.awt.Color(255, 255, 255));
         jLabel17.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setForeground(new java.awt.Color(0, 255, 0));
         jLabel17.setText("Observaciones del Empleado");
 
         btnModificarDatos.setBackground(new java.awt.Color(51, 0, 51));
@@ -495,7 +378,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         jLabel3.setText("APELLIDO Y NOMBRE:");
 
         jLabel18.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel18.setForeground(java.awt.Color.white);
+        jLabel18.setForeground(new java.awt.Color(0, 255, 0));
         jLabel18.setText("Datos Generales del Empleado");
 
         comboDia.addActionListener(new java.awt.event.ActionListener() {
@@ -553,12 +436,6 @@ public class BCMEmpleado extends javax.swing.JFrame {
             }
         ));
         jScrollPane6.setViewportView(tablaCorreoElectronico);
-
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel9.setText("CATEGORIA:");
-
-        comboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Empleado", "Cajero", " " }));
 
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -673,18 +550,25 @@ public class BCMEmpleado extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("SEXO:");
+
+        comboSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Femenino" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnNuevaObraSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEliminarObrasSociales))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jSeparator5)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(14, 14, 14)
@@ -692,38 +576,29 @@ public class BCMEmpleado extends javax.swing.JFrame {
                                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(31, 31, 31)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtNombre)
-                                    .addComponent(txtDni)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel22)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel23)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(31, 31, 31)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtNombre)
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtCuil, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(82, 82, 82))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jLabel24))
+                                .addComponent(jLabel18)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel10)
-                                    .addComponent(jLabel9)
                                     .addComponent(jLabel11))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(comboDia1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -733,37 +608,44 @@ public class BCMEmpleado extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel26)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGap(161, 161, 161)
-                        .addComponent(txtCuil))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel22)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel23)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel27)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminarDomicilios))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEliminarCorreos))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnNuevaObraSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEliminarObrasSociales)))
+                                .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEliminarCorreos))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel27))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnEliminarDomicilios))
+                                    .addComponent(jLabel24))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -793,6 +675,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel24)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -804,15 +690,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addComponent(jLabel27)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNuevoCorreo)
-                    .addComponent(btnEliminarCorreos))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(comboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEliminarCorreos)
+                    .addComponent(btnNuevoCorreo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
@@ -838,7 +720,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
 
         jLabel19.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel19.setForeground(java.awt.Color.white);
+        jLabel19.setForeground(new java.awt.Color(0, 255, 0));
         jLabel19.setText("Grupo Familiar del Empleado");
 
         tablaFamiliares.setModel(new javax.swing.table.DefaultTableModel(
@@ -1107,7 +989,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         this.comboAnio.setEnabled(true);
         this.tablaDomicilio.setEnabled(true);
         this.tablaCorreoElectronico.setEnabled(true);
-        this.comboCategoria.setEnabled(true);
+        this.comboSexo.setEnabled(true);
         this.comboTurno.setEnabled(true);
         this.comboDia1.setEnabled(true);
         this.comboMes1.setEnabled(true);
@@ -1134,7 +1016,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelefonoActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
+        filaSeleccionada = tablaTelefono.getSelectedRow();
+        telefono.setIdTelefono(
+                empleado.getTelefonos().get(filaSeleccionada).getIdTelefono());
+                
         model.removeRow(tablaTelefono.getSelectedRow());
+        telefono.eliminarBD(empleado.getIdEmpleado(),true);
     }//GEN-LAST:event_btnEliminarTelefonoActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
@@ -1145,7 +1032,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarDomiciliosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomiciliosActionPerformed
         model = (DefaultTableModel)tablaDomicilio.getModel();
+        filaSeleccionada = tablaDomicilio.getSelectedRow();
+        domicilio.setIdDomicilio(
+                empleado.getDomicilios().get(filaSeleccionada).getIdDomicilio());
+                
         model.removeRow(tablaDomicilio.getSelectedRow());
+        domicilio.eliminarBD(empleado.getIdEmpleado(),true);
     }//GEN-LAST:event_btnEliminarDomiciliosActionPerformed
 
     private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
@@ -1157,7 +1049,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarCorreosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCorreosActionPerformed
         model = (DefaultTableModel)tablaCorreoElectronico.getModel();
+        filaSeleccionada = tablaCorreoElectronico.getSelectedRow();
+        correoElectronico.setIdCorreoElectronico(
+                empleado.getCorreosElectronicos().get(filaSeleccionada).getIdCorreoElectronico());
+                
         model.removeRow(tablaCorreoElectronico.getSelectedRow());
+        correoElectronico.eliminarBD(empleado.getIdEmpleado(),true);
     }//GEN-LAST:event_btnEliminarCorreosActionPerformed
 
     private void btnNuevaObraSocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaObraSocialActionPerformed
@@ -1168,7 +1065,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarObrasSocialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarObrasSocialesActionPerformed
         model = (DefaultTableModel)tablaObraSocial.getModel();
+        filaSeleccionada = tablaObraSocial.getSelectedRow();
+        obraSocial.setIdObraSocial(
+                empleado.getObrasSociales().get(filaSeleccionada).getIdObraSocial());
+                
         model.removeRow(tablaObraSocial.getSelectedRow());
+        relacionEmpleadoOs.eliminarBD(empleado.getIdEmpleado(),true);
     }//GEN-LAST:event_btnEliminarObrasSocialesActionPerformed
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
@@ -1184,20 +1086,9 @@ public class BCMEmpleado extends javax.swing.JFrame {
                         comboDia1.getSelectedItem().toString(),
                         comboMes1.getSelectedItem().toString(),
                         comboAnio1.getSelectedItem().toString()));   
-        ArrayList<String> valoresPersona = new ArrayList<>();
-        valoresPersona.add(empleado.getDni());
-        valoresPersona.add(empleado.getNombreApellido());
-        valoresPersona.add(empleado.getFechaNacimiento());
-        valoresPersona.add("M");
-        valoresPersona.add("");
-        empleado.modificarBD(valoresPersona, "PERSONA", cadenaIdPersona);
         
-        ArrayList<String> valoresEmpleado = new ArrayList<>();
-        valoresEmpleado.add(empleado.getCuil());
-        valoresEmpleado.add(empleado.getFechaInicioRelacionLaboral());
-        empleado.modificarBD(valoresEmpleado, "EMPLEADO", cadenaIdPersona);
-        
-        ArrayList<String> valoresDomicilio = new ArrayList<>();
+        empleado.modificarBD();
+                
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
             domicilio.setDireccion(
                     String.valueOf(tablaDomicilio.getValueAt(i,0)));
@@ -1206,36 +1097,40 @@ public class BCMEmpleado extends javax.swing.JFrame {
             domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
             domicilio.setIdPersona(Long.valueOf(cadenaIdPersona));
-            valoresDomicilio.add(domicilio.getDireccion());
-            valoresDomicilio.add(domicilio.getLocalidad());
-            valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.modificarBD(valoresDomicilio, cadenaIdPersona);
-            valoresDomicilio.clear();
+            domicilio.modificarBD();
         }
         
-        ArrayList<String> valoresTelefono = new ArrayList<>();
         for(int i = 0; i<tablaTelefono.getRowCount();i++){
             telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
             telefono.setMovil(
                     String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
             telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
-            valoresTelefono.add(telefono.getNumero());
-            valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.modificarBD(valoresTelefono, cadenaIdPersona);
-            valoresTelefono.clear();
+            
+            telefono.modificarBD();
         }
         
-        ArrayList<String> valoresEmail = new ArrayList<>();
+        
         for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
-            valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.modificarBD(valoresEmail, cadenaIdPersona);
-            valoresEmail.clear();
+            
+            correoElectronico.modificarBD();
         }
         
-        ArrayList<String> valoresObraSocial = new ArrayList<>();
+        for(int i = 0; i<tablaFamiliares.getRowCount();i++){
+            familiar.setDni(
+                    String.valueOf(tablaFamiliares.getValueAt(i,0)));
+            familiar.setNombreApellido(
+                    String.valueOf(tablaFamiliares.getValueAt(i,1)));
+            familiar.setFechaNacimiento(
+                    String.valueOf(tablaFamiliares.getValueAt(i,2)));
+            familiar.setParentesco(
+                    String.valueOf(tablaFamiliares.getValueAt(i,3)));
+            familiar.setIdEmpleado(idEmpleado); 
+            familiar.guardarBD();
+        }
+        
         for(int i = 0; i<tablaObraSocial.getRowCount();i++){
             obraSocial.setDescripcion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
@@ -1243,10 +1138,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
             obraSocial.setCuentaBancaria(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
-            valoresObraSocial.add(correoElectronico.getDireccion());
-            obraSocial.modificarBD(valoresObraSocial, cadenaIdPersona); //MODIFICAR. CRUZAR LAS
-                                                                        //TABLAS EMPLEADO && OBRA_SOCIAL
-            valoresObraSocial.clear();
+            obraSocial.modificarBD();
         }
         
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
@@ -1336,11 +1228,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> comboAnio;
     private javax.swing.JComboBox<String> comboAnio1;
-    private javax.swing.JComboBox<String> comboCategoria;
     private javax.swing.JComboBox<String> comboDia;
     private javax.swing.JComboBox<String> comboDia1;
     private javax.swing.JComboBox<String> comboMes;
     private javax.swing.JComboBox<String> comboMes1;
+    private javax.swing.JComboBox<String> comboSexo;
     private javax.swing.JComboBox<String> comboTurno;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -1368,7 +1260,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

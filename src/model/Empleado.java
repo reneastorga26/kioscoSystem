@@ -22,6 +22,9 @@ public class Empleado extends Persona{
     private long idEmpleado;
     private String cuil;
     private String fechaInicioRelacionLaboral;
+    private ArrayList<Familiar> familiares = new ArrayList<>();
+    private ArrayList<ObraSocial> obrasSociales = new ArrayList<>();
+    
     
     public Empleado(){
         super();
@@ -60,6 +63,24 @@ public class Empleado extends Persona{
         this.fechaInicioRelacionLaboral = fechaInicioRelacionLaboral;
     }
 
+    public ArrayList<Familiar> getFamiliares() {
+        return familiares;
+    }
+
+    public void setFamiliares(ArrayList<Familiar> familiares) {
+        this.familiares = familiares;
+    }
+
+    public ArrayList<ObraSocial> getObrasSociales() {
+        return obrasSociales;
+    }
+
+    public void setObrasSociales(ArrayList<ObraSocial> obrasSociales) {
+        this.obrasSociales = obrasSociales;
+    }
+
+    
+    
     public long guardarBD(){
         long idPersona=-1;
         ArrayList<String> valores= new ArrayList<>();
@@ -75,67 +96,151 @@ public class Empleado extends Persona{
         return idPersona;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda, 
-                              DefaultTableModel modeloTabla){
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            char estado, DefaultTableModel modeloTabla){
         
-        ArrayList<String> indices = new ArrayList<>();
+        ArrayList<Long> indices = new ArrayList<>();
 
-        String criterioBusqueda;
-        String tablas;      
+        String tablas = "PERSONA P , EMPLEADO E";
+        String columnas = "E.ID_EMPLEADO, P.DNI, P.NOMBRE_APELLIDO";
+        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda ;
+        
+        switch(estado){
+            case 1:
+                condicion = condicion + " AND ESTADO = 'H'";
+                break;
+            case 2:
+                condicion = condicion + " AND ESTADO = 'D'";
+                break;
+            default:
+        }
+        
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
+        
+        return indices;
+    }
+    
+    public void ampliarInfoBD(long idEmpleado){
+        
+        ArrayList<Object> camposEmpleado = new ArrayList<>();
+
+        String tablas;
         String columnas;
         String condicion;
+        this.idEmpleado = idEmpleado;
+        tablas = "PERSONA P, EMPLEADO E";
+        columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
+                + "P.FECHA_NAC, P.OSERVACIONES, E.CUIL, E.FECHA_INICIO_RELACION_LABORAL";
+        condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
+                + "E.ID_EMPLEADO = "+ idEmpleado;
         
-        if(columnaBusqueda.equals("DNI") || columnaBusqueda.equals("NOMBRE_APELLIDO")){
-            criterioBusqueda=super.getDni();
-            tablas  = "PERSONA P, EMPLEADO C";
-            columnas = "P.ID_PERSONA , E.PERSONA_ID_PERSONA , P.DNI , P.NOMBRE_APELLIDO";
-            condicion = "(P."+columnaBusqueda+" = "+ criterioBusqueda + " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA "
-                    + "AND P.ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            criterioBusqueda="'"+super.getIdPersona()+"'";
-            tablas = "PERSONA P, EMPLEADO E, DOMICILIO D, CORREOELECTRONICO CE, TELEFONO T";
-            columnas = "P.ID_PERSONA , E.PERSONA_ID_PERSONA , P.DNI , "
-                + "P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P.OBSERVACIONES, "
-                + "P.ESTADO, E.CUIL, D.PERSONA_ID_PERSONA, D.DIRECCION, D.LOCALIDAD, "
-                + "D.PROVINCIA, CE.PERSONA_ID_PERSONA, CE.DIRECCION, "
-                + "T.PERSONA_ID_PERSONA, T.NUMERO, T.MOVIL";
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA AND P.ID_PERSONA = D.PERSONA_ID_PERSONA "
-                    + "AND P.ID_PERSONA = CE.PERSONA_ID_PERSONA AND P.ID_PERSONA = T.PERSONA_ID_PERSONA "
-                    + "AND P.ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
-            return indices;
-        }
         
+        camposEmpleado = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        super.setIdPersona(Long.parseLong(camposEmpleado.get(1).toString()));
+        super.setNombreApellido(camposEmpleado.get(2).toString());
+        super.setDni(camposEmpleado.get(3).toString());
+        super.setSexo(camposEmpleado.get(4).toString().charAt(5));
+        super.setFechaNacimiento(camposEmpleado.get(6).toString());
+        super.setObservaciones(camposEmpleado.get(7).toString());
+        setCuil(camposEmpleado.get(8).toString());
+        setFechaInicioRelacionLaboral(camposEmpleado.get(9).toString());
+        
+        
+        //TELEFONO;
+        
+        tablas =  "TELEFONO T";
+        columnas = "T.NUMERO, T.MOVIL ";
+        condicion = "T.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
+        
+        super.setTelefonos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        //DOMICILIO;
+        
+        tablas = "DOMICILIO D";
+        columnas = "D.DIRECCION, "
+                + "D.LOCALIDAD, D.PROVINCIA ";
+        condicion = "D.PERSONA_ID_PERSONA = "+super.getIdPersona()+"'";
+        
+        super.setDomicilios(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        
+        //CORREO ELECTRONICO
+        
+        tablas= "CORREOELECTRONICO E";
+        columnas ="E.DIRECCION ";
+        condicion = "E.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
+        
+        super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        //FAMILIARES
+        
+        tablas= "PERSONA P, FAMILIAR F";
+        columnas ="P.DNI, P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P. OBSERVACIONES, "
+                + "F.PARENTESCO ";
+        condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"' AND "
+                + "F.EMPLEADO_ID_EMPLEADO = '" + getIdEmpleado() + "'";
+        
+        setFamiliares(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        /*
+        ArrayList InfoAmpliada:
+            Primer Elemento, clase Cliente,
+            Segundo Elemento, ArrayList de Telefonos
+            Tercer Elemento, ArrayList de Domicilios
+            Cuarto Elemento, ArrayList de Correos Electronicos
+        */
+        
+        //OBRAS SOCIALES
+        
+        tablas= "OBRA_SOCIAL O";
+        columnas ="O.DESCRIPCION, O.BANCO, O.CUENTA_BANCARIA";
+        condicion = "O.ID_OBRA_SOCIAL = '"+ getIdObraSocial()+"'";
+        
+        setObrasSociales(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+    }
+    
+    
+    public void modificarBD(){
+            
+            String tablas = "PERSONA P, EMPLEADO E";
+            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
+            + "P.DNI = " + super.getDni() + ","
+            + "P.SEXO = " + super.getSexo() + ","
+            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
+            + "P.OBSERVACIONES = "+super.getObservaciones()+ "',"
+            + "E.CUIL = '" + getCuil() + "',"
+            + "E.FECHA_INICIO_RELACION_LABORAL = '" + getFechaInicioRelacionLaboral() + "'";        
+            String condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
         
     }
     
-    public void modificarBD(ArrayList<String> cadena, String tabla, String cadenaId){
-             String set;
-             if(tabla.equals("PERSONA")){
-                 set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
-                          "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
-                        "', OBSERVACIONES = '" + cadena.get(4) + "'";
-                 sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
-             }else{
-                 set = "CUIL = '" + cadena.get(0) + 
-                        "', FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + cadena.get(1) + ")";
-                 sismain.getControladorBD().modificar(set, "EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
-             }
-             
+    public void habilitarBD(){
+        
+        
+        String tablas= "PERSONA P";
+        String set = "P.ESTADO = 'H'";
+        String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
+
+        sismain.getControladorBD().modificar(tablas,set,condicion);
+        
     }
     
-    public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminar("EMPLEADO", "PERSONA_ID_PERSONA", cadenaId);
-            sismain.getControladorBD().eliminar("PERSONA", "ID_PERSONA", cadenaId);
-    }
-    
-    public void eliminarLogicaBD(String cadenaId){
-            String set = "ESTADO = '0'";
-             
-            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
+    public void deshabilitarBD(){
+        
+        
+        String tablas= "PERSONA P";
+        String set = "P.ESTADO = 'D'";
+        String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
+        
+        sismain.getControladorBD().modificar(tablas, set, condicion);
+
     }
 }

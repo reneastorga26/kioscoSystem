@@ -72,54 +72,40 @@ public class Familiar extends Persona{
         return idPersona;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda,
-                        DefaultTableModel modeloTabla,
-                        boolean preBuscar){
-        ArrayList<String> indices = new ArrayList<>();
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            char estado, DefaultTableModel modeloTabla){
+        
+        ArrayList<Long> indices = new ArrayList<>();
 
-        String criterioBusqueda;
-        String criterioPreBusqueda;
-        if(columnaBusqueda.equals("DNI")){
-            criterioBusqueda=super.getDni();
-            criterioPreBusqueda="'"+super.getDni()+"%'";
-        }
-        else{
-            criterioBusqueda="'"+super.getNombreApellido()+"'";
-            criterioPreBusqueda="'"+super.getNombreApellido()+"%'";
-        }
-        String tablas = "PERSONA P, EMPLEADO E, FAMILIAR F";
-       
-        String columnas = "P.ID_PERSONA , E.PERSONA_ID_PERSONA , P.DNI , "
-                + "P.NOMBRE_APELLIDO, P.FECHA_NAC, F.ID_FAMILIAR, F.PARENTESCO, "
-                + "F.EMPLEADO_ID_EMPLEADO";
-        String condicion;
-        if(preBuscar){
-            condicion = "(P."+columnaBusqueda+" = "+criterioPreBusqueda+" OR P."+columnaBusqueda+" = "+ criterioBusqueda+" ) AND P.ID_PERSONA = E.PERSONA_ID_PERSONA";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND P.ID_PERSONA = E.PERSONA_ID_PERSONA AND E.ID_EMPLEADO = F.EMPLEADO_ID_EMPLEADO";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
+        String tablas = "PERSONA P, FAMILIAR F";
+        String columnas = "P.DNI, P.NOMBRE_APELLIDO, P.FECHA_NAC, F.PARENTESCO";
+        String condicion = "F."+columnaBusqueda+ " = " + criterioBusqueda ;
         
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
         
-        
+        return indices;
     }
 
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
+    public void modificarBD(){
+            
+            String tablas = "PERSONA P, FAMILIAR F";
+            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
+            + "P.DNI = " + super.getDni() + ","
+            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
+            + "F.PARENTESCO = '" + getParentesco() + "'";        
+            String condicion = "F.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado()+"'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
         
-             String set = "DNI = '" + cadena.get(0) + "', NOMBRE_APELLIDO = '" + cadena.get(1) + 
-                          "', FECHA_NAC = TO_DATE(" + cadena.get(2) + "), SEXO = '" + cadena.get(3) + 
-                        "', OBSERVACIONES = '" + cadena.get(4) + "'";
-             
-            sismain.getControladorBD().modificar(set, "PERSONA", "ID_PERSONA", cadenaId);
     }
     
-    public void eliminarBD(String cadenaId){
-            sismain.getControladorBD().eliminar("FAMILIAR", "EMPLEADO_ID_EMPLEADO", cadenaId);
+    public void eliminarBD(long id_referenciado){
+        
+        String tabla = "FAMILIAR F";
+        String condicion = "F.EMPLEADO_ID_EMPLEADO = '" + id_referenciado +"'";
+        
+        sismain.getControladorBD().eliminar(tabla, condicion);
+               
     }
     
 }

@@ -27,7 +27,6 @@ public class AProducto extends javax.swing.JFrame {
     private TipoProducto tipoProducto = new TipoProducto();
     private Fabricante fabricante = new Fabricante();
     private Precio precio = new Precio();
-    ControladorBD control = sismain.getControladorBD();
     /**
      * Creates new form ABMProducto
      */
@@ -316,7 +315,7 @@ public class AProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
         long reg;
         long aux;
-        reg = control.obtenerUltimoRegistro("producto", "id_producto");
+        reg = sismain.getControladorBD().obtenerUltimoRegistro("producto", "id_producto");
         aux = reg + 1;
         System.out.printf("Nuevo ID_PRODUCTO: %d\n",aux);
         txtCodigo.setText(String.valueOf(aux));
@@ -337,10 +336,15 @@ public class AProducto extends javax.swing.JFrame {
         //GUARDAR DATOS EN BD
         long idProducto = producto.guardarBD();
         
+        tipoProducto.setDescripcion(String.valueOf(cmbTipoProducto.getSelectedItem()));
+        tipoProducto.guardarBD();
+        
+        fabricante.setDescripcion(txtFabricante.getText());
+        fabricante.guardarBD();
+        
         precio.setIdProducto(idProducto);
         precio.setNumero(Double.valueOf(txtPrecioUnitarioVenta.getText()));
-        //precio.setFechaHoraInicio();
-        //precio.setFechaHoraFin();
+        
         precio.guardarBD();
         
         JOptionPane.showMessageDialog(null, "EL PRODUCTO SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);

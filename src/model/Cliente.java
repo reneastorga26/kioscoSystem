@@ -54,13 +54,23 @@ public class Cliente extends Persona{
     }
     
     public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
-            DefaultTableModel modeloTabla){
+            char estado, DefaultTableModel modeloTabla){
         
         ArrayList<Long> indices = new ArrayList<>();
 
         String tablas = "PERSONA P , CLIENTE C";
         String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
-        String condicion = "WHERE P."+columnaBusqueda+ " = " + criterioBusqueda;
+        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda; 
+        
+        switch(estado){
+            case 1:
+                condicion = condicion + " AND ESTADO = 'H'";
+                break;
+            case 2:
+                condicion = condicion + " AND ESTADO = 'D'";
+                break;
+            default:
+        }
         
         indices = sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
@@ -152,7 +162,7 @@ public class Cliente extends Persona{
     
     public void habilitarBD(){
         
-        long idPersona = super.getIdPersona();
+        
         String tablas= "PERSONA P";
         String set = "P.ESTADO = 'H'";
         String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
@@ -163,7 +173,7 @@ public class Cliente extends Persona{
     
     public void deshabilitarBD(){
         
-        long idPersona = super.getIdPersona();
+        
         String tablas= "PERSONA P";
         String set = "P.ESTADO = 'D'";
         String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";

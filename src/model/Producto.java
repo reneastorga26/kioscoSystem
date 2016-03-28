@@ -28,6 +28,9 @@ public class Producto {
     private int unidadesPackMayorista;
     private long idTipoProducto;
     private long idFabricante;
+    private ArrayList<TipoProducto> tiposProductos = new ArrayList<>();
+    private ArrayList<Fabricante> fabricantes = new ArrayList<>();
+    private ArrayList<Precio> precios = new ArrayList<>();
     
     public Producto(){
         
@@ -117,7 +120,29 @@ public class Producto {
         this.idFabricante = idFabricante;
     }
 
-    
+    public ArrayList<TipoProducto> getTiposProductos() {
+        return tiposProductos;
+    }
+
+    public void setTiposProductos(ArrayList<TipoProducto> tiposProductos) {
+        this.tiposProductos = tiposProductos;
+    }
+
+    public ArrayList<Fabricante> getFabricantes() {
+        return fabricantes;
+    }
+
+    public void setFabricantes(ArrayList<Fabricante> fabricantes) {
+        this.fabricantes = fabricantes;
+    }
+
+    public ArrayList<Precio> getPrecios() {
+        return precios;
+    }
+
+    public void setPrecios(ArrayList<Precio> precios) {
+        this.precios = precios;
+    }
 
     public long guardarBD(){
         long idProducto=-1;
@@ -136,60 +161,129 @@ public class Producto {
         return idProducto;
     }
     
-    public ArrayList buscarBD(String columnaBusqueda, 
-                              DefaultTableModel modeloTabla,
-                              boolean busquedaRapida){
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            char estado, DefaultTableModel modeloTabla){
         
-        ArrayList<String> indices = new ArrayList<>();
+        ArrayList<Long> indices = new ArrayList<>();
 
-        String criterioBusqueda;
-        String tablas;      
+        String tablas = "PRODUCTO P";
+        String columnas = "P.ID_PRODUCTO, P.DESCRIPCION";
+        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
+        
+        switch(estado){
+            case 1:
+                condicion = condicion + " AND ESTADO = 'H'";
+                break;
+            case 2:
+                condicion = condicion + " AND ESTADO = 'D'";
+                break;
+            default:
+        }
+        
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
+        
+        return indices;
+    }
+    
+    public void ampliarInfoBD(long idProducto){
+        
+        ArrayList<Object> camposProducto = new ArrayList<>();
+
+        String tablas;
         String columnas;
         String condicion;
+        this.idProducto = idProducto;
+        tablas = "PRODUCTO P";
+        columnas = "P.ID_PRODUCTO , P.DESCRIPCION , P.STOCK_ACTUAL , "
+                + "P.STOCK_CRITICO_MINIMO , P.PUNTO_PEDIDO , "
+                + "P.TIPO_PRODUCTO_ID_TIPO_PRODUCTO , P.FABRICANTE_ID_FABRICANTE";
+        condicion = "ID_PRODUCTO = "+ idProducto;
         
-        //if(columnaBusqueda.equals("ID_PRODUCTO") || columnaBusqueda.equals("DESCRIPCION")){
-        if(busquedaRapida){
-            criterioBusqueda="'"+getIdProducto()+"'";
-            tablas  = "PRODUCTO";
-            columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO, ESTADO";
-            condicion = columnaBusqueda+" = "+ criterioBusqueda + " AND AND ESTADO = '1'";
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-            return indices;
-        }
-        else{
-            criterioBusqueda="'"+getIdProducto()+"'";
-            tablas = "PRODUCTO PRO, TIPO_PRODUCTO T, FABRICANTE F, PRECIO PRE";
-            columnas = "PRO.ID_PRODUCTO , PRO.DESCRIPCION , PRO.STOCK_ACTUAL , "
-                + "PRO.STOCK_CRITICO_MINIMO, PRO.PUNTO_PEDIDO, PRO.ESTADO, "
-                + "T.ID_TIPO_PRODUCTO, T.DESCRIPCION, F.ID_FABRICANTE, F.DESCRIPCION,"
-                + "PRE.NUMERO, PRE.PRODUCTO_ID_PRODUCTO";
-            condicion = "P."+columnaBusqueda+" = "+criterioBusqueda+
-                    " AND PRO.ID_PRODUCTO = T.PRODUCTO_ID_PRODUCTO AND PRO.ID_PRODUCTO = F.PRODUCTO_ID_PRODUCTO "
-                    + "AND PRO.ID_PRODUCTO = PRE.ID_PRECIO AND PRO.ESTADO = '1'"; // CRUZAR PRODUCTO Y PRECIO
-            indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, null);
-            return indices;
-        }
         
+        camposProducto = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        setIdProducto(Long.parseLong(camposProducto.get(1).toString()));
+        setDescripcion(camposProducto.get(2).toString());
+        setStockActual(Integer.valueOf(camposProducto.get(3).toString()));
+        setStockCriticoMinimo(Integer.valueOf(camposProducto.get(4).toString()));
+        setPuntoPedido(Integer.valueOf(camposProducto.get(5).toString()));
+        setIdTipoProducto(Long.valueOf(camposProducto.get(6).toString()));
+        setIdFabricante(Long.valueOf(camposProducto.get(7).toString()));
+        
+        
+        //TIPO_PRODUCTO;
+        
+        tablas =  "TIPO_PRODUCTO ";
+        columnas = "DESCRIPCION ";
+        condicion = "ID_TIPO_PRODUCTO = "+ getIdTipoProducto();
+        
+        setTiposProductos(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        //FABRICANTE;
+        
+        tablas = "FABRICANTE ";
+        columnas = "DESCRIPCION ";
+        condicion = "ID_FABRICANTE = "+getIdFabricante();
+        
+        setFabricantes(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+        
+        //PRECIO;
+        
+        tablas = "PRECIO ";
+        columnas = "NUMERO ";
+        condicion = "PRODUCTO_ID_PRODUCTO = "+getIdProducto();
+        
+        setPrecios(sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion));
+                
+        /*
+        ArrayList InfoAmpliada:
+            Primer Elemento, clase Cliente,
+            Segundo Elemento, ArrayList de Telefonos
+            Tercer Elemento, ArrayList de Domicilios
+            Cuarto Elemento, ArrayList de Correos Electronicos
+        */
+        
+     
+    }
+    
+    public void modificarBD(){
+        
+                     
+            String tablas = "PRODUCTO P";
+            String set = "P.DESCRIPCION = '"+ getDescripcion()+"', "
+            + "P.STOCK_ACTUAL = '" + getStockActual() + "', "
+            + "P.STOCK_CRITICO_MINIMO = '" + getStockCriticoMinimo() + "', "
+            + "P.PUNTO_PEDIDO = '" + getPuntoPedido() + "'";
+            String condicion = "P.ID_PRODUCTO = '"+ getIdProducto()+"'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
         
     }
     
+    public void habilitarBD(){
+        
+        
+        String tablas= "PRODUCTO P";
+        String set = "P.ESTADO = 'H'";
+        String condicion = "P.ID_PRODUCTO = '"+getIdProducto()+"'";
 
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
-             
-             String set = "DESCRIPCION = '" + cadena.get(0) + "', STOCK_ACTUAL = " + cadena.get(1) + 
-                          ", STOCK_CRITICO_MINIMO = " + cadena.get(2) + ", PUNTO_PEDIDO = " + cadena.get(3);
-             
-             sismain.getControladorBD().modificar(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
+        sismain.getControladorBD().modificar(tablas,set,condicion);
+        
     }
     
-    public void eliminarFisicaBD(String cadenaId){
-            sismain.getControladorBD().eliminar("PRODUCTO", "ID_PRODUCTO", cadenaId);
-    }
-    
-    public void eliminarLogicaBD(String cadenaId){
-            String set = "ESTADO = '0'";
-             
-            sismain.getControladorBD().modificar(set, "PRODUCTO", "ID_PRODUCTO", cadenaId);
+    public void deshabilitarBD(){
+        
+        
+        String tablas= "PRODUCTO P";
+        String set = "P.ESTADO = 'D'";
+        String condicion = "P.ID_PRODUCTO = '"+getIdProducto()+"'";
+        
+        sismain.getControladorBD().modificar(tablas, set, condicion);
+
     }
     
 }

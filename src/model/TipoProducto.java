@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
 /**
@@ -56,10 +57,52 @@ public class TipoProducto {
         this.refrigeracion = refrigeracion;
     }
        
-     public void modificarBD(ArrayList<String> cadena, String cadenaId){
+    
+    public long guardarBD(){
+        long idTipoProducto=-1;
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(String.valueOf(getIdTipoProducto()));
+        valores.add(getDescripcion());
+        idTipoProducto = sismain.getControladorBD().aniadir(valores, "TIPO_PRODUCTO",false);
+        valores.clear();
+        
+        return idTipoProducto;
+    }
+    
+    
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            char estado, DefaultTableModel modeloTabla){
+        
+        ArrayList<Long> indices = new ArrayList<>();
+
+        String tablas = "TIPO_PRODUCTO T";
+        String columnas = "T.ID_TIPO_PRODUCTO, T.DESCRIPCION";
+        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
+        
+               
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
+        
+        return indices;
+    }
+    
+    public void modificarBD(){
              
-             String set = "DESCRIPCION = '" + cadena.get(0) + "'";
+            String tablas = "TIPO_PRODUCTO T";
+            String set = "T.DESCRIPCION = '" + getDescripcion() + "'";
+            String condicion = "T.ID_TIPO_PRODUCTO = '"+ idTipoProducto+"'";
              
-             sismain.getControladorBD().modificar(set, "TIPO_PRODUCTO", "ID_TIPO_PRODUCTO", cadenaId); 
-     }
+             sismain.getControladorBD().modificar(tablas,set,condicion);
+    } 
+    
+    public void eliminarBD(long id_referenciado){
+        
+        String tabla = "TIPO_PRODUCTO T";
+        String condicion = " T.ID_TIPO_PRODUCTO = '"+ id_referenciado +"'";
+        
+        sismain.getControladorBD().eliminar(tabla, condicion);
+               
+    }
+    
+    
 }

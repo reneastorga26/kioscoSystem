@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
 /**
@@ -56,14 +57,50 @@ public class Fabricante {
         this.tipoFabricante = tipoFabricante;
     }
     
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
-             
-             String set = "DESCRIPCION = '" + cadena.get(0) + "'";
-             
-             sismain.getControladorBD().modificar(set, "FABRICANTE", "ID_FABRICANTE", cadenaId);
+    
+    public long guardarBD(){
+        long idFabricante=-1;
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(String.valueOf(getIdFabricante()));
+        valores.add(getDescripcion());
+        idFabricante = sismain.getControladorBD().aniadir(valores, "FABRICANTE",false);
+        valores.clear();
+        
+        return idFabricante;
     }
     
-    public void eliminarBD(String cadenaId){
-            sismain.getControladorBD().eliminar("FABRICANTE", "ID_FABRICANTE", cadenaId);
+    
+    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+            char estado, DefaultTableModel modeloTabla){
+        
+        ArrayList<Long> indices = new ArrayList<>();
+
+        String tablas = "FABRICANTE F";
+        String columnas = "F.ID_FABRICANTE, F.DESCRIPCION";
+        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
+        
+               
+        indices = sismain.getControladorBD().buscar(columnas, 
+                tablas, condicion, modeloTabla);
+        
+        return indices;
+    }
+    
+    public void modificarBD(){
+             
+            String tablas = "FABRICANTE F";
+            String set = "F.DESCRIPCION = '" + getDescripcion() + "'";
+            String condicion = "T.ID_FABRICANTE = '"+ idFabricante+"'";
+             
+             sismain.getControladorBD().modificar(tablas,set,condicion);
+    } 
+    
+    public void eliminarBD(long id_referenciado){
+        
+        String tabla = "FABRICANTE F";
+        String condicion = " F.ID_FABRICANTE = '"+ id_referenciado +"'";
+        
+        sismain.getControladorBD().eliminar(tabla, condicion);
+               
     }
 }

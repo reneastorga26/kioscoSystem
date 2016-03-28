@@ -18,7 +18,7 @@ import sistemakiosco.sismain;
  */
 public class Telefono {
  
-     private int idTelefono;
+     private long idTelefono;
      private String numero;
      private char movil;
      private long idProveedor;
@@ -28,7 +28,7 @@ public class Telefono {
          
      }
      
-     public Telefono(int idTelefono, String numero, char movil,
+     public Telefono(long idTelefono, String numero, char movil,
              Proveedor idProveedor, Persona idPersona){
         this.idTelefono = idTelefono;
         this.numero = numero;
@@ -36,11 +36,11 @@ public class Telefono {
         
      }
 
-    public int getIdTelefono() {
+    public long getIdTelefono() {
         return idTelefono;
     }
 
-    public void setIdTelefono(int idTelefono) {
+    public void setIdTelefono(long idTelefono) {
         this.idTelefono = idTelefono;
     }
 
@@ -97,7 +97,7 @@ public class Telefono {
              sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
     
-    public void eliminarBD(String id_telefono,long id_referenciado, boolean persona){
+    public void eliminarBD(long id_referenciado, boolean persona){
         
         String referenciado;
         

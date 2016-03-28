@@ -86,7 +86,7 @@ public class CorreoElectronico {
              sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
     
-    public void eliminarBD(String numero,long id_referenciado, boolean persona){
+    public void eliminarBD(long id_referenciado, boolean persona){
         
         String referenciado;
         

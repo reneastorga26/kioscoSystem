@@ -31,10 +31,10 @@ import sistemakiosco.sismain;
  */
 public class BCMCliente extends javax.swing.JFrame {
 
-    private Cliente cliente = new Cliente ();
-    private Telefono telefono = new Telefono();
-    private Domicilio domicilio = new Domicilio();
-    private CorreoElectronico correoElectronico = new CorreoElectronico();
+    private Cliente cliente;
+    private Telefono telefono;
+    private Domicilio domicilio;
+    private CorreoElectronico correoElectronico;
     private DefaultTableModel model;
     private String cadenaIdPersona;
     private int filaSeleccionada;
@@ -71,138 +71,53 @@ public class BCMCliente extends javax.swing.JFrame {
     }
     
     
-
-    public void buscar(String dni){
-        ArrayList<String> datos = new ArrayList<>();            
-        cliente.setDni(dni);
-        datos = cliente.ampliarInfoBD("DNI", null);
-        Iterator iter = datos.iterator();
-            while (iter.hasNext())
-             System.out.println(iter.next());
-        
-    }
-    /*
-    public void dato(String idPersona){
-        cadenaIdPersona = idPersona;
-        try{
-                completarNombre();
-                completarFechaNac();
-                completarDomicilios();
-                completarCorreosElectronicos();
-                completarTelefonos(); 
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    } 
-    
-    public void completarNombre(){
-        
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String nombre;
-        String observaciones;
-        try{
-        res = control.buscarRegistrosSinTabla("*", "PERSONA", condicion);
-        while(res.next()){
-                    nombre = res.getString("NOMBRE_APELLIDO");
-                    txtNombre.setText(nombre);
-                    observaciones = res.getString("OBSERVACIONES");
-                    txtObservaciones.setText(observaciones);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+    public void completarCampos(){
+        completarDatosCliente();
+        completarDomicilios();
+        completarTelefonos();
+        completarCorreosElectronicos();
     }
     
-    public void completarFechaNac(){
+    public void completarDatosCliente(){
+        txtDni.setText(cliente.getDni());
+        txtNombre.setText(cliente.getNombreApellido());
         
-        ResultSet res;
-        String dni = txtDni.getText();
-        String condicion = "DNI = " + dni;
-        String fechaNac;
-        try{
-        res = control.buscarRegistrosSinTabla("FECHA_NAC", "PERSONA", condicion);
-        while(res.next()){
-                    fechaNac = res.getString("FECHA_NAC");
-                    controladorDate1.darFormatoaComboBox(fechaNac,comboDia,comboMes,comboAnio);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        sismain.getControladorDate().darFormatoaComboBox(cliente.getFechaNacimiento(), comboDia, comboMes, comboAnio);
         
+        if(cliente.getSexo()== 'M') 
+            comboSexo.addItem("Masculino");
+        else
+            comboSexo.addItem("Femenino");
+        txtObservaciones.setText(cliente.getObservaciones());
     }
-     
+    
     public void completarDomicilios(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        ResultSet res;
-        String direccion;
-        String localidad;
-        String provincia;
-        try{
-        res = control.buscarRegistrosSinTabla("*", "DOMICILIO D", "D.PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    localidad = res.getString("LOCALIDAD");
-                    provincia = res.getString("PROVINCIA");
-                    Object [] fila = new Object[3];
-                    fila[0] = direccion;
-                    fila[1] = localidad;
-                    fila[2] = provincia;
+        Object [] fila = new Object[3];
+                    fila[0] = cliente.getDomicilios().get(0).getDireccion();
+                    fila[1] = cliente.getDomicilios().get(1).getLocalidad();
+                    fila[2] = cliente.getDomicilios().get(2).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    public void completarCorreosElectronicos(){
-        
-        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        ResultSet res;
-        String direccion;
-        try{
-        res = control.buscarRegistrosSinTabla("DIRECCION", "CORREOELECTRONICO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    direccion = res.getString("DIRECCION");
-                    Object [] fila = new Object[1];
-                    fila[0] = direccion;
-                    modeloTabla.addRow(fila);
-                    tablaCorreoElectronico.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
     }
     
     public void completarTelefonos(){
-        
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        ResultSet res;
-        String telefono;
-        String tipo;
-        try{
-        res = control.buscarRegistrosSinTabla("*", "TELEFONO", "PERSONA_ID_PERSONA = " + cadenaIdPersona);
-        while(res.next()){
-                    telefono = res.getString("NUMERO");
-                    Object [] fila = new Object[2];
-                    fila[0] = telefono;
-                    tipo = res.getString("MOVIL");
-                    if(tipo.equals("F")){
-                      fila[1] = "Fijo";  
-                    }else{
-                    fila[1] = "Movil";
-                    }
+        Object [] fila = new Object[2];
+                    fila[0] = cliente.getTelefonos().get(0).getNumero();
+                    fila[1] = cliente.getTelefonos().get(1).getMovil();
                     modeloTabla.addRow(fila);
-                    tablaTelefono.setModel(modeloTabla);
-        }
-        }catch (SQLException ex) {
-            Logger.getLogger(BCMCliente.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }*/
+                    tablaDomicilio.setModel(modeloTabla);
+    }
+    
+    public void completarCorreosElectronicos(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
+        Object [] fila = new Object[1];
+                    fila[0] = cliente.getCorreosElectronicos().get(0).getDireccion();
+                    modeloTabla.addRow(fila);
+                    tablaDomicilio.setModel(modeloTabla);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -695,7 +610,12 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnEliminarDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomicilioActionPerformed
         model = (DefaultTableModel)tablaDomicilio.getModel();
-        model.removeRow(tablaDomicilio.getSelectedRow()); 
+        filaSeleccionada = tablaDomicilio.getSelectedRow();
+        domicilio.setIdDomicilio(
+                cliente.getDomicilios().get(filaSeleccionada).getIdDomicilio());
+                
+        model.removeRow(tablaDomicilio.getSelectedRow());
+        domicilio.eliminarBD(cliente.getIdCliente(),true);
     }//GEN-LAST:event_btnEliminarDomicilioActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
@@ -727,19 +647,22 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
         model = (DefaultTableModel)tablaCorreoElectronico.getModel();
-        model.removeRow(tablaCorreoElectronico.getSelectedRow()); 
+        filaSeleccionada = tablaCorreoElectronico.getSelectedRow();
+        correoElectronico.setIdCorreoElectronico(
+                cliente.getCorreosElectronicos().get(filaSeleccionada).getIdCorreoElectronico());
+                
+        model.removeRow(tablaCorreoElectronico.getSelectedRow());
+        correoElectronico.eliminarBD(cliente.getIdCliente(),true);
     }//GEN-LAST:event_btnEliminarEmailsActionPerformed
 
     private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
-        long idCliente = cliente.getIdCliente();
-        String numero;
-        filaSeleccionada=tablaTelefono.getSelectedRow();
-        telefono.setNumero(tablaTelefono.getValueAt(
-                filaSeleccionada, 0).toString());
-        numero = telefono.getNumero();
-        telefono.eliminarFisicoBD(numero,idCliente,true);
+        filaSeleccionada = tablaTelefono.getSelectedRow();
+        telefono.setIdTelefono(
+                cliente.getTelefonos().get(filaSeleccionada).getIdTelefono());
+                
         model.removeRow(tablaTelefono.getSelectedRow());
+        telefono.eliminarBD(cliente.getIdCliente(),true);
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
@@ -789,15 +712,9 @@ public class BCMCliente extends javax.swing.JFrame {
             cliente.setSexo('F');
         cliente.setObservaciones(txtObservaciones.getText());
         
-        ArrayList<String> valoresPersona = new ArrayList<>();
-        valoresPersona.add(cliente.getDni());
-        valoresPersona.add(cliente.getNombreApellido());
-        valoresPersona.add(cliente.getFechaNacimiento());
-        valoresPersona.add(String.valueOf(cliente.getSexo()));
-        valoresPersona.add(cliente.getObservaciones());
-        cliente.modificarBD(valoresPersona, cadenaIdPersona);
+        cliente.modificarBD();
         
-        ArrayList<String> valoresDomicilio = new ArrayList<>();
+        
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
             domicilio.setDireccion(
                     String.valueOf(tablaDomicilio.getValueAt(i,0)));
@@ -806,33 +723,24 @@ public class BCMCliente extends javax.swing.JFrame {
             domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
             domicilio.setIdPersona(Long.valueOf(cadenaIdPersona));
-            valoresDomicilio.add(domicilio.getDireccion());
-            valoresDomicilio.add(domicilio.getLocalidad());
-            valoresDomicilio.add(domicilio.getProvincia());
-            domicilio.modificarBD(valoresDomicilio, cadenaIdPersona);
-            valoresDomicilio.clear();
+            domicilio.modificarBD();
         }
         
-        ArrayList<String> valoresTelefono = new ArrayList<>();
+        
         for(int i = 0; i<tablaTelefono.getRowCount();i++){
             telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
             telefono.setMovil(
                     String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
             telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
-            valoresTelefono.add(telefono.getNumero());
-            valoresTelefono.add(String.valueOf(telefono.getMovil()));
-            telefono.modificarBD(valoresTelefono, cadenaIdPersona);
-            valoresTelefono.clear();
+            telefono.modificarBD();
         }
         
-        ArrayList<String> valoresEmail = new ArrayList<>();
+        
         for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
             correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
-            valoresEmail.add(correoElectronico.getDireccion());
-            correoElectronico.modificarBD(valoresEmail, cadenaIdPersona);
-            valoresEmail.clear();
+            correoElectronico.modificarBD();
         }
         
         

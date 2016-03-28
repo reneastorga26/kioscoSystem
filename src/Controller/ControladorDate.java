@@ -154,4 +154,57 @@ public class ControladorDate {
         return resultado;
     }
     
+    public void darFormatoaComboBox(String fecha, JComboBox comboDia, JComboBox comboMes, JComboBox comboAnio){    
+        String cadenaFecha = fecha;
+        String dia1 = String.valueOf(cadenaFecha.charAt(8));
+        String dia2 = String.valueOf(cadenaFecha.charAt(9));
+        String dia = dia1 + dia2;
+        String mes1 = String.valueOf(cadenaFecha.charAt(5));
+        String mes2 = String.valueOf(cadenaFecha.charAt(6));
+        String mes = mes1 + mes2;
+        String anio1 = String.valueOf(cadenaFecha.charAt(0));
+        String anio2 = String.valueOf(cadenaFecha.charAt(1));
+        String anio3 = String.valueOf(cadenaFecha.charAt(2));
+        String anio4 = String.valueOf(cadenaFecha.charAt(3));
+        String anio = anio1 + anio2 + anio3 + anio4;
+        comboDia.setSelectedItem(dia);
+        if(mes.equals("01")){
+            comboMes.setSelectedItem("Enero");
+        }
+        if(mes.equals("02")){
+            comboMes.setSelectedItem("Febrero"); 
+        }
+        if(mes.equals("03")){
+            comboMes.setSelectedItem("Marzo");
+        }
+        if(mes.equals("04")){
+            comboMes.setSelectedItem("Abril");
+        }
+        if(mes.equals("05")){
+            comboMes.setSelectedItem("Mayo");
+        }
+        if(mes.equals("06")){
+            comboMes.setSelectedItem("Junio");
+        }
+        if(mes.equals("07")){
+            comboMes.setSelectedItem("Julio");
+        }
+        if(mes.equals("08")){
+           comboMes.setSelectedItem("Agosto");
+        }
+       if(mes.equals("09")){
+            comboMes.setSelectedItem("Septiembre"); 
+        }
+        if(mes.equals("10")){
+            comboMes.setSelectedItem("Octubre"); 
+}
+        if(mes.equals("11")){
+            comboMes.setSelectedItem("Noviembre");
+}
+        if(mes.equals("12")){
+            comboMes.setSelectedItem("Diciembre");
+        }else{
+    }
+        comboAnio.setSelectedItem(anio);
+}
 }
