@@ -17,9 +17,9 @@ import sistemakiosco.sismain;
 public class Cliente extends Persona{
     
     private long idCliente;
-
+    //
     public Cliente(){
-    super ();
+    super (); 
         
     }
     public Cliente(int idPersona, String nombreApellido, String dni, char sexo,
