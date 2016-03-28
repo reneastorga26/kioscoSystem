@@ -58,6 +58,7 @@ public class Cliente extends Persona{
         
         ArrayList<Long> indices = new ArrayList<>();
 
+
         String tablas = "PERSONA P , CLIENTE C";
         String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
         String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda; 
@@ -72,6 +73,13 @@ public class Cliente extends Persona{
             default:
         }
         
+        if(estado=='H'){
+            condicion = condicion + " AND P.ESTADO = 'H'";
+        }
+        if(estado=='D'){
+            condicion = condicion + " AND P.ESTADO = 'D'";
+        }
+ 
         indices = sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
@@ -119,7 +127,7 @@ public class Cliente extends Persona{
         columnas = "D.ID_DOMICLIO, D.DIRECCION, "
                 + "D.LOCALIDAD, D.PROVINCIA, "
                 + "D.PERSONA_ID_PERSONA ";
-        condicion = "D.PERSONA_ID_PERSONA ="+super.getIdPersona()+"'";
+        condicion = "D.PERSONA_ID_PERSONA ='"+super.getIdPersona()+"'";
         
         super.setDomicilios(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
@@ -150,11 +158,11 @@ public class Cliente extends Persona{
         
                      
             String tablas = "PERSONA P";
-            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
-            + "P.DNI = " + super.getDni() + ","
-            + "P.SEXO = " + super.getSexo() + ","
-            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
-            + "P.OBSERVACIONES = "+super.getObservaciones()+ ",";
+            String set = "P.NOMBRE_APELLIDO = '"+ super.getNombreApellido()+"',"
+            + "P.DNI = '"+ super.getDni() + "',"
+            + "P.SEXO = '" + super.getSexo() + "',"
+            + "P.FECHA_NAC = '" +super.getFechaNacimiento()+ "',"
+            + "P.OBSERVACIONES = '"+super.getObservaciones()+ "',";
             String condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);
         
