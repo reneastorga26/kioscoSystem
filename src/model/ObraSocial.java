@@ -18,7 +18,7 @@ import sistemakiosco.sismain;
  */
 public class ObraSocial {
     
-     private int idObraSocial;
+     private long idObraSocial;
      private String descripcion;
      private String banco;
      private String cuentaBancaria;
@@ -27,7 +27,7 @@ public class ObraSocial {
          
      }
      
-     public ObraSocial(int idObraSocial, String descripcion, String banco,
+     public ObraSocial(long idObraSocial, String descripcion, String banco,
              String cuentaBancaria){
          this.idObraSocial = idObraSocial;
          this.descripcion = descripcion;
@@ -35,11 +35,11 @@ public class ObraSocial {
          this.cuentaBancaria = cuentaBancaria;
      }
 
-    public int getIdObraSocial() {
+    public long getIdObraSocial() {
         return idObraSocial;
     }
 
-    public void setIdObraSocial(int idObraSocial) {
+    public void setIdObraSocial(long idObraSocial) {
         this.idObraSocial = idObraSocial;
     }
 
@@ -66,20 +66,33 @@ public class ObraSocial {
     public void setCuentaBancaria(String cuentaBancaria) {
         this.cuentaBancaria = cuentaBancaria;
     }
-   /*
-
-    public void modificarBD(ArrayList<String> cadena, String cadenaId){
+   
+    public long guardarBD(){
+        long idObraSocial=-1;
+        ArrayList<String> valores= new ArrayList<>();
+        valores.add(descripcion);
+        valores.add(banco);
+        valores.add(cuentaBancaria);
+        idObraSocial = sismain.getControladorBD().aniadir(valores, "OBRA_SOCIAL",false);
+        return idObraSocial;
+    }
+    
+    public void modificarBD(){
              
-            String set = "DESCRIPCION = " + cadena.get(0) + ", BANCO = " + cadena.get(1) 
-                    + "CUENTA_BANCARIA = " + cadena.get(2);
-            
-            sismain.getControladorBD().modificar(set, "OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
-    }
+            String tablas = "OBRA_SOCIAL O";
+            String set = "O.DESCRIPCION = '" + getDescripcion() 
+                    + "', O.BANCO = '"+ getBanco() +"', CUENTA_BANCARIA = '" + getCuentaBancaria();
+            String condicion = "O.ID_OBRA_SOCIAL = '"+ idObraSocial+"'";
+             
+             sismain.getControladorBD().modificar(tablas,set,condicion);
+    } 
     
-    public void eliminarBD(String cadenaId){
-            sismain.getControladorBD().eliminar("RELACION_EMPLEADO_OS", "OBRA_SOCIAL_ID_OBRA_SOCIAL", cadenaId);
-            sismain.getControladorBD().eliminar("OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
+    public void eliminarBD(long id_referenciado){
+        
+        String tabla = "OBRA_SOCIAL O";
+        String condicion = " O.ID_OBRA_SOCIAL = '"+ idObraSocial+"'";
+        
+        sismain.getControladorBD().eliminar(tabla, condicion);
+               
     }
-    
-    */ 
 }

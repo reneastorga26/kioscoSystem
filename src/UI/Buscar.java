@@ -63,12 +63,12 @@ public class Buscar extends javax.swing.JFrame {
                  break;
              
              case 3:
-                proveedor.buscarBD("", "", 'H', modeloTabla);
+                proveedor.buscarBD("ID_PROVEEDOR", "ID_PROVEEDOR", 'H', modeloTabla);
                 valorSeleccion = 3;
                  break;
              
              case 4:
-                producto.buscarBD("","", 'H', modeloTabla);
+                producto.buscarBD("ID_PRODUCTO", "ID_PRODUCTO", 'H', modeloTabla);
                 valorSeleccion = 4;
                  break;
              }

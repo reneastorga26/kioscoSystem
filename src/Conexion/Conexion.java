@@ -74,7 +74,8 @@ public class Conexion {
                     "SISKIOS", "SIS01");
             statement = conection.
                     createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
-            
+            resultadoConexion = true;
+            /*
             perfil=new Perfil();
             resultado = perfil.check_ampliarInfoBD(usuario, password);
             switch(resultado){
@@ -90,7 +91,8 @@ public class Conexion {
                         + "\n No puede ingresar al Sistema","USUARIO BLOQUEADO",
                         JOptionPane.ERROR_MESSAGE);
                         break;
-            }   
+            }  
+            */
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

@@ -115,18 +115,15 @@ public class Proveedor {
         
         ArrayList<Long> indices = new ArrayList<>();
 
-        String tablas = "PROVEEDOR";
+        String tablas = "PROVEEDOR P";
         String columnas = "P.ID_PROVEEDOR, P.CUIT, P.RAZON_SOCIAL";
-        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda; 
+        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda; 
         
-        switch(estado){
-            case 1:
-                condicion = condicion + " AND ESTADO = 'H'";
-                break;
-            case 2:
-                condicion = condicion + " AND ESTADO = 'D'";
-                break;
-            default:
+        if(estado=='H'){
+            condicion = condicion + " AND P.ESTADO = 'H'";
+        }
+        if(estado=='D'){
+            condicion = condicion + " AND P.ESTADO = 'D'";
         }
         
         indices = sismain.getControladorBD().buscar(columnas, 

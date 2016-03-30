@@ -63,16 +63,7 @@ public class Cliente extends Persona{
         String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
         String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda; 
         
-        switch(estado){
-            case 1:
-                condicion = condicion + " AND ESTADO = 'H'";
-                break;
-            case 2:
-                condicion = condicion + " AND ESTADO = 'D'";
-                break;
-            default:
-        }
-        
+              
         if(estado=='H'){
             condicion = condicion + " AND P.ESTADO = 'H'";
         }
@@ -95,10 +86,10 @@ public class Cliente extends Persona{
         String condicion;
         this.idCliente=idCliente;
         tablas = "PERSONA P, CLIENTE C";
-        columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
-                + "P.FECHA_NAC, P.OSERVACIONES";
+        columnas ="P.ID_PERSONA, P.NOMBRE_APELLIDO, P.DNI, P.SEXO, "
+                + "P.FECHA_NAC, P.OBSERVACIONES";
         condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
-                + "C.ID_CLIENTE = "+ idCliente;
+                + "C.ID_CLIENTE = '"+ getIdCliente() + "'";
         
         
         camposCliente = sismain.getControladorBD().extenderInfo
@@ -127,7 +118,7 @@ public class Cliente extends Persona{
         columnas = "D.ID_DOMICLIO, D.DIRECCION, "
                 + "D.LOCALIDAD, D.PROVINCIA, "
                 + "D.PERSONA_ID_PERSONA ";
-        condicion = "D.PERSONA_ID_PERSONA ='"+super.getIdPersona()+"'";
+        condicion = "D.PERSONA_ID_PERSONA = '"+super.getIdPersona()+"'";
         
         super.setDomicilios(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));

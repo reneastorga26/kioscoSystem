@@ -167,17 +167,17 @@ public class Producto {
         ArrayList<Long> indices = new ArrayList<>();
 
         String tablas = "PRODUCTO P";
-        String columnas = "P.ID_PRODUCTO, P.DESCRIPCION";
-        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
+        String columnas = "P.ID_PRODUCTO, P.ID_PRODUCTO, P.DESCRIPCION";
         
-        switch(estado){
-            case 1:
-                condicion = condicion + " AND ESTADO = 'H'";
-                break;
-            case 2:
-                condicion = condicion + " AND ESTADO = 'D'";
-                break;
-            default:
+        //COMO RESOLVER NO DUPLICAR LAS COLUMNAS??
+        
+        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda ;
+        
+        if(estado=='H'){
+            condicion = condicion + " AND P.ESTADO = 'H'";
+        }
+        if(estado=='D'){
+            condicion = condicion + " AND P.ESTADO = 'D'";
         }
         
         indices = sismain.getControladorBD().buscar(columnas, 

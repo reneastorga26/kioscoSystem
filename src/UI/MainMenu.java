@@ -30,7 +30,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     public MainMenu() {
         initComponents();
-        String usuario  = sismain.getConexion().getPerfil().getUsuario();
+        /*String usuario  = sismain.getConexion().getPerfil().getUsuario();
         String tipo = sismain.getConexion().getPerfil().getTipo();
         ArrayList<JMenu> menus = new ArrayList<>();
         menus.add(menuPerfilSesion);
@@ -46,11 +46,12 @@ public class MainMenu extends javax.swing.JFrame {
         lblUsuario.setText(usuario);
         this.setTitle("SisKios - Menu Principal "
                 + "(Usuario : " + usuario + " :: Perfil : "+ tipo + ")");
+        */
         Reloj reloj = sismain.getReloj();
         reloj.setLabel(lblRelojFec);
         reloj.ejecutarReloj();
         cronometro.setLabelCronometro(lblTiempoSesion);
-        lblInicioSesion.setText(sismain.getControladorDate().obtenerFechaActual(1));
+        //lblInicioSesion.setText(sismain.getControladorDate().obtenerFechaActual(1));
         cronometro.ejecutarCronometro();
         this.setLocationRelativeTo(null);
     }
@@ -101,7 +102,9 @@ public class MainMenu extends javax.swing.JFrame {
         lblMainUsuario1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuPerfilSesion = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem21 = new javax.swing.JMenuItem();
+        jMenuItem23 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -438,13 +441,25 @@ public class MainMenu extends javax.swing.JFrame {
 
         menuPerfilSesion.setText("Perfiles y Sesiones");
 
-        jMenuItem4.setText("Administrador de Perfiles Sesiones");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        jMenu1.setText("Administración de Empleados");
+
+        jMenuItem21.setText("Nuevo Empleado");
+        jMenuItem21.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                jMenuItem21ActionPerformed(evt);
             }
         });
-        menuPerfilSesion.add(jMenuItem4);
+        jMenu1.add(jMenuItem21);
+
+        jMenuItem23.setText("Administrar Perfiles y Sesiones");
+        jMenuItem23.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem23ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem23);
+
+        menuPerfilSesion.add(jMenu1);
 
         jMenuItem1.setText("Consultar Inicios y Cierres de Sesion");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -829,21 +844,26 @@ public class MainMenu extends javax.swing.JFrame {
         sesiones.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        
+    private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
+        // TODO add your handling code here:
         Buscar buscarEmpleado = new Buscar();
         buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
         buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
         buscarEmpleado.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
-        buscarEmpleado.setTitle("Búsqueda de Empleado");
-        buscarEmpleado.lblTitulo.setText("Búsqueda de Empleado");
+        buscarEmpleado.setTitle("Búsqueda de Empleados");
+        buscarEmpleado.lblTitulo.setText("Búsqueda de Empleados");
         buscarEmpleado.jRadioButton1.setText("DNI");
         buscarEmpleado.jRadioButton1.setSelected(true);
         buscarEmpleado.jRadioButton2.setText("NOMBRE Y APELLIDO");
         buscarEmpleado.evaluar(2);
         buscarEmpleado.setVisible(true);
-        
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_jMenuItem23ActionPerformed
+
+    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
+        // TODO add your handling code here:
+        AEmpleado aEmpleado = new AEmpleado();
+        aEmpleado.setVisible(true);
+    }//GEN-LAST:event_jMenuItem21ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -890,6 +910,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
@@ -906,9 +927,10 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem20;
+    private javax.swing.JMenuItem jMenuItem21;
     private javax.swing.JMenuItem jMenuItem22;
+    private javax.swing.JMenuItem jMenuItem23;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
