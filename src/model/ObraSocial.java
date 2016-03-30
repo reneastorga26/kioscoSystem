@@ -66,7 +66,8 @@ public class ObraSocial {
     public void setCuentaBancaria(String cuentaBancaria) {
         this.cuentaBancaria = cuentaBancaria;
     }
-     
+   /*
+
     public void modificarBD(ArrayList<String> cadena, String cadenaId){
              
             String set = "DESCRIPCION = " + cadena.get(0) + ", BANCO = " + cadena.get(1) 
@@ -79,4 +80,6 @@ public class ObraSocial {
             sismain.getControladorBD().eliminar("RELACION_EMPLEADO_OS", "OBRA_SOCIAL_ID_OBRA_SOCIAL", cadenaId);
             sismain.getControladorBD().eliminar("OBRA_SOCIAL", "ID_OBRA_SOCIAL", cadenaId);
     }
+    
+    */ 
 }

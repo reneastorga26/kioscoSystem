@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.Perfil;
 import model.Sesion;
 
 /**
@@ -30,6 +32,11 @@ public class Conexion {
     private Sesion sesion;
     private Connection conection;
     private Statement statement;
+    private Perfil perfil;
+
+    public Perfil getPerfil() {
+        return perfil;
+    }
     
     public Conexion(String usuario, String password) {
         this.usuario = usuario;
@@ -51,7 +58,8 @@ public class Conexion {
     
     public boolean conectar() {
         
-        boolean resultado = false;
+        boolean resultadoConexion = false;
+        int resultado;
         long usuarioBD=0;
         protocolo="jdbc:oracle:thin";
         servidor="localhost";
@@ -66,29 +74,28 @@ public class Conexion {
                     "SISKIOS", "SIS01");
             statement = conection.
                     createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
-            String query = "SELECT ID_PERFIL,USUARIO,PASSWORD FROM PERFIL WHERE "
-                + "USUARIO = "+ usuario +" AND PASSWORD = "+ password +"; ";
-            ResultSet rs=null;
-            rs=statement.executeQuery(query);
-            while(rs.next()){
-                if(rs.getString(2).equals(usuario) && rs.getString(3).equals(password)){
-                    usuarioBD=rs.getInt(1);
-                    resultado = true;
-                    break;
-                }
-            }
-            if (resultado == true){
-                sesion = new Sesion(usuarioBD);
-            }
-            else{
-                
-            }
-    
+            
+            perfil=new Perfil();
+            resultado = perfil.check_ampliarInfoBD(usuario, password);
+            switch(resultado){
+                case 1: sesion = new Sesion(usuarioBD);
+                        resultadoConexion=true;
+                        break;
+                case 2: JOptionPane.showMessageDialog(null, 
+                        "Cliente o Contraseña Incorrecta","ERROR AL CONECTAR",
+                        JOptionPane.ERROR_MESSAGE);
+                        break;
+                case 3:JOptionPane.showMessageDialog(null, 
+                        "Su usuario se encuentra bloqueado"
+                        + "\n No puede ingresar al Sistema","USUARIO BLOQUEADO",
+                        JOptionPane.ERROR_MESSAGE);
+                        break;
+            }   
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return resultado;
+        return resultadoConexion;
     }
 }

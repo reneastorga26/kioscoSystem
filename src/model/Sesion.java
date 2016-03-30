@@ -19,6 +19,8 @@ public class Sesion {
     private String fechaHoraFin;
     private String novedades = "";
     private long idPerfil;
+
+
     
     public Sesion(){
         

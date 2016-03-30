@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
@@ -19,16 +20,25 @@ import sistemakiosco.sismain;
  */
 public class Perfil {
  
-    private int idPerfil;
+    private long idPerfil;
     private String usuario;
     private String password;
     private String tipo;
-    private int idEmpleado;
+    private long idEmpleado;
+    private char estado;
     
     public Perfil(){
         
     }
     
+    
+        public char getEstado() {
+        return estado;
+    }
+
+    public void setEstado(char estado) {
+        this.estado = estado;
+    }
     public Perfil(int idPerfil, String usuario, String password, String tipo, 
             Empleado idEmpleado){
         
@@ -39,13 +49,22 @@ public class Perfil {
         
     }
 
-    public int getIdPerfil() {
+    public long getIdPerfil() {
         return idPerfil;
     }
 
-    public void setIdPerfil(int idPerfil) {
+    public void setIdPerfil(long idPerfil) {
         this.idPerfil = idPerfil;
     }
+
+    public long getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(long idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
 
     public String getUsuario() {
         return usuario;
@@ -85,7 +104,35 @@ public class Perfil {
         
         
     }
-        
+        public int check_ampliarInfoBD(String usuario, String password){
+            int resultado=2;
+            ArrayList<Object> camposPerfil;
+            String tabla="PERFIL";
+            String columnas="*"; 
+            String condicion = "USUARIO = '"+usuario+"' AND "
+                    + "PASSWORD = '"+password+"' AND ROWNUM = 1";
+            
+            camposPerfil = sismain.getControladorBD().
+                    extenderInfo(columnas, tabla, condicion);
+            
+            if(!camposPerfil.isEmpty()){
+                idPerfil=Long.parseLong(camposPerfil.get(0).toString());
+                this.usuario=camposPerfil.get(1).toString();
+                this.password=camposPerfil.get(2).toString();
+                tipo=camposPerfil.get(3).toString();
+                idEmpleado=Long.parseLong(camposPerfil.get(4).toString());
+                estado=camposPerfil.get(5).toString().charAt(0);
+                if(usuario.equals(this.usuario) && password.equals(this.password)){
+                    if(estado=='H'){
+                        resultado = 1;
+                    }
+                    else{
+                        resultado = 3;
+                    }
+                }
+            }
+            return resultado;
+        }
         public ArrayList buscarBD(String columnaBusqueda, 
                          DefaultTableModel modeloTabla,
                          boolean preBuscar){

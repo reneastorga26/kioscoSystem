@@ -33,7 +33,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private Empleado empleado;
     private Domicilio domicilio;
     private Telefono telefono;
-    private Familiar familiar;
+  //  private Familiar familiar;
     private RelacionEmpleadoObraSocial relEmpleadoObraSocial = new RelacionEmpleadoObraSocial();
     private ObraSocial obraSocial = new ObraSocial();
     private CorreoElectronico correoElectronico;
@@ -1070,7 +1070,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 empleado.getObrasSociales().get(filaSeleccionada).getIdObraSocial());
                 
         model.removeRow(tablaObraSocial.getSelectedRow());
-        relacionEmpleadoOs.eliminarBD(empleado.getIdEmpleado(),true);
+   //     relacionEmpleadoOs.eliminarBD(empleado.getIdEmpleado(),true);
     }//GEN-LAST:event_btnEliminarObrasSocialesActionPerformed
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
@@ -1117,7 +1117,9 @@ public class BCMEmpleado extends javax.swing.JFrame {
             
             correoElectronico.modificarBD();
         }
+  /*
         
+
         for(int i = 0; i<tablaFamiliares.getRowCount();i++){
             familiar.setDni(
                     String.valueOf(tablaFamiliares.getValueAt(i,0)));
@@ -1131,6 +1133,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
             familiar.guardarBD();
         }
         
+                */
+        
         for(int i = 0; i<tablaObraSocial.getRowCount();i++){
             obraSocial.setDescripcion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
@@ -1138,7 +1142,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
             obraSocial.setCuentaBancaria(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
-            obraSocial.modificarBD();
+      //      obraSocial.modificarBD();
         }
         
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);

@@ -194,7 +194,7 @@ public class Empleado extends Persona{
             Segundo Elemento, ArrayList de Telefonos
             Tercer Elemento, ArrayList de Domicilios
             Cuarto Elemento, ArrayList de Correos Electronicos
-        */
+
         
         //OBRAS SOCIALES
         
@@ -204,6 +204,7 @@ public class Empleado extends Persona{
         
         setObrasSociales(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
+        */
     }
     
     

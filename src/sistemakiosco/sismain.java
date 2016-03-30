@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 public class sismain {
     
     private static Conexion conexion;
-    private static ControladorBD controladorBD;
+    private static ControladorBD controladorBD = new ControladorBD();
     private static ControladorDate controladorDate;
     private static Login login;
     private static Reloj reloj;
@@ -54,7 +54,6 @@ public class sismain {
             login.setVisible(false);
             System.out.println("Conexion ok");
             new MainMenu().setVisible(true); 
-            controladorBD = new ControladorBD();
             controladorDate = new ControladorDate();
             }
             else{

@@ -114,8 +114,9 @@ public class ControladorBD {
         ArrayList<Object> registros = new ArrayList<>();
         rs=null;
         
-        String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
+        String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion+" ;";
         try {
+            System.out.println(query);
             rs=sismain.getConexion().getStatement().executeQuery(query);
             Object[] campos =new Object[rs.getMetaData().getColumnCount()];
             while(rs.next()){

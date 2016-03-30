@@ -898,7 +898,7 @@ public class AEmpleado extends javax.swing.JFrame {
                     String.valueOf(tablaFamiliar.getValueAt(i,2)));
             familiar.setParentesco(
                     String.valueOf(tablaFamiliar.getValueAt(i,3)));
-            familiar.setIdEmpleado(idEmpleado); 
+ //           familiar.setIdEmpleado(idEmpleado); 
             familiar.guardarBD();
         }
         
@@ -909,8 +909,8 @@ public class AEmpleado extends javax.swing.JFrame {
                     String.valueOf(tablaObraSocial.getValueAt(i,1)));
             obraSocial.setCuentaBancaria(
                     String.valueOf(tablaObraSocial.getValueAt(i,2)));
-            relacionEmpleadoOs.setIdEmpleado(idEmpleado); 
-            obraSocial.guardarBD();
+ //           relacionEmpleadoOs.setIdEmpleado(idEmpleado); 
+//            obraSocial.guardarBD();
         }
         
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
