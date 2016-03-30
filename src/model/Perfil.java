@@ -108,15 +108,16 @@ public class Perfil {
             int resultado=2;
             ArrayList<Object> camposPerfil;
             String tabla="PERFIL";
-            String columnas="*"; 
+            String columnas="ID_PERFIL, USUARIO, PASSWORD, TIPO, EMPLEADO_ID_EMPLEADO, ESTADO"; 
             String condicion = "USUARIO = '"+usuario+"' AND "
-                    + "PASSWORD = '"+password+"' AND ROWNUM = 1";
+                    + "PASSWORD = '"+password+"'";
             
             camposPerfil = sismain.getControladorBD().
                     extenderInfo(columnas, tabla, condicion);
             
+            System.out.println("idPerfil = "+ camposPerfil.get(0).toString());
             if(!camposPerfil.isEmpty()){
-                idPerfil=Long.parseLong(camposPerfil.get(0).toString());
+                idPerfil=Long.valueOf(camposPerfil.get(0).toString());
                 this.usuario=camposPerfil.get(1).toString();
                 this.password=camposPerfil.get(2).toString();
                 tipo=camposPerfil.get(3).toString();
@@ -131,6 +132,9 @@ public class Perfil {
                     }
                 }
             }
+            System.out.println("idPerfil = " +idPerfil+ " usuario = "+
+                                this.usuario +" password = "+ this.password +
+                                " estado = " + estado);
             return resultado;
         }
         public ArrayList buscarBD(String columnaBusqueda, 

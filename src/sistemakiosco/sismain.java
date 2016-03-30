@@ -56,13 +56,6 @@ public class sismain {
             new MainMenu().setVisible(true); 
             controladorDate = new ControladorDate();
             }
-            else{
-                System.out.println("error al conectarse");
-                JOptionPane.showMessageDialog(null, "EL USUARIO Y/O PASSWORD NO SON CORRECTOS","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-            }
-     
-
-            
         }
     }
    

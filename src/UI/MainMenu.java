@@ -789,9 +789,10 @@ public class MainMenu extends javax.swing.JFrame {
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
         // TODO add your handling code here:
         Buscar buscarCliente = new Buscar();
-        buscarCliente.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
-        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
-        buscarCliente.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
+        buscarCliente.modeloTabla.setColumnIdentifiers(new String[]{"","DNI","NOMBRE Y APELLIDO"});
+        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setMaxWidth(0);
+        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setMinWidth(0);
+        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(0);
         buscarCliente.setTitle("Búsqueda de Cliente");
         buscarCliente.lblTitulo.setText("Búsqueda de Cliente");
         buscarCliente.jRadioButton1.setText("DNI");
@@ -847,9 +848,12 @@ public class MainMenu extends javax.swing.JFrame {
     private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
         // TODO add your handling code here:
         Buscar buscarEmpleado = new Buscar();
-        buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"DNI","NOMBRE Y APELLIDO"});
+        buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"","DNI","NOMBRE Y APELLIDO"});
+        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setMaxWidth(0);
+        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setMinWidth(0);
         buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
-        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
+        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(150);
+        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(2).setPreferredWidth(350);
         buscarEmpleado.setTitle("Búsqueda de Empleados");
         buscarEmpleado.lblTitulo.setText("Búsqueda de Empleados");
         buscarEmpleado.jRadioButton1.setText("DNI");

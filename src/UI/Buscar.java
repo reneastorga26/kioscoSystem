@@ -98,9 +98,10 @@ public class Buscar extends javax.swing.JFrame {
                  
         //BUSCAR CLIENTE
         
-        BCMCliente adminCliente = new BCMCliente();
+
         String datoCliente = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
         cliente.ampliarInfoBD(Long.valueOf(datoCliente));
+        BCMCliente adminCliente = new BCMCliente(cliente);
         adminCliente.setVisible(true);
         adminCliente.completarCampos();
         break;
@@ -181,7 +182,7 @@ public class Buscar extends javax.swing.JFrame {
 
             },
             new String [] {
-                "DNI", "APELLIDO Y NOMBRE"
+                "ID", "DNI", "APELLIDO Y NOMBRE"
             }
         ));
         jScrollPane1.setViewportView(tablaBuscar);

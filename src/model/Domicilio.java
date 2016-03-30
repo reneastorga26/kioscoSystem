@@ -14,7 +14,7 @@ import sistemakiosco.sismain;
  */
 public class Domicilio {
     
-    private int idDomicilio;
+    private long idDomicilio;
     private String direccion;
     private String localidad;
     private String provincia;
@@ -34,11 +34,11 @@ public class Domicilio {
     this.provincia = provincia;
     }
 
-    public int getIdDomicilio() {
+    public long getIdDomicilio() {
         return idDomicilio;
     }
 
-    public void setIdDomicilio(int idDomicilio) {
+    public void setIdDomicilio(long idDomicilio) {
         this.idDomicilio = idDomicilio;
     }
 

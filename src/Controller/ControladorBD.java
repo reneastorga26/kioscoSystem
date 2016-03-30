@@ -56,7 +56,7 @@ public class ControladorBD {
             for (int i = startField; i < rs.getMetaData().getColumnCount(); i++) {
                 String tipo= rs.getMetaData().getColumnTypeName(i+1);
                 campos = campos + rs.getMetaData().getColumnName(i+1);
-                if(tipo ==  "DATE")
+                if(tipo.equals("DATE"))
                     values = values +  "TO_DATE(" +valores.get(j)+ ")";
                     
                 else
@@ -107,32 +107,30 @@ public class ControladorBD {
     }
          
     
-    public ArrayList extenderInfo(String columnas, 
-                         String tablas, 
-                         String condicion){
-        
-        ArrayList<Object> registros = new ArrayList<>();
+public ArrayList extenderInfo(String columnas, 
+                         String tablas, String condicion){
+
+        ArrayList<ArrayList<Object>> registros = new ArrayList<ArrayList<Object>>();
         rs=null;
-        
         String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion+"";
         try {
             System.out.println(query);
             rs=sismain.getConexion().getStatement().executeQuery(query);
-            Object[] campos =new Object[rs.getMetaData().getColumnCount()];
+            int i=0;
             while(rs.next()){
-                for(int i=0;i<rs.getMetaData().getColumnCount();i++){
-                    campos[i]=rs.getObject(i+1);
-                    System.out.println(campos[i]);
+                registros.add(new ArrayList<Object>());
+                for(int j=0;j<rs.getMetaData().getColumnCount();j++){
+                    registros.get(i).add(rs.getObject(j+1));
                 }
-                registros.add(campos);
+                i++;
             }
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return registros;
     }
-    
-    public ArrayList buscar (String columnas, 
+
+    public void buscar (String columnas, 
                          String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla
@@ -141,18 +139,18 @@ public class ControladorBD {
      rs = null;
      String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
 
-     ArrayList<String> indices = new ArrayList<>();
+     //ArrayList<String> indices = new ArrayList<>();
         try {
             
             rs=sismain.getConexion().getStatement().executeQuery(query);
             System.out.println("Buscando...");
             while(rs.next()){
                 
-                indices.add(rs.getObject(1).toString());
+                //indices.add(rs.getObject(1).toString());
                 Object[] fila = new Object[rs.getMetaData().getColumnCount()]; 
                 
-                for(int i = 1; i<rs.getMetaData().getColumnCount(); i++){
-                    fila[i-1]=rs.getObject(i+1);
+                for(int i = 0; i<rs.getMetaData().getColumnCount(); i++){
+                    fila[i]=rs.getObject(i+1);
                 }
                 modeloTabla.addRow(fila);
             }
@@ -161,7 +159,7 @@ public class ControladorBD {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
      
-     return indices;
+     //return indices;
      }
      
     

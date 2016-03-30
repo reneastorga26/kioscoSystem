@@ -71,7 +71,7 @@ public class Cliente extends Persona{
             condicion = condicion + " AND P.ESTADO = 'D'";
         }
  
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;
@@ -79,7 +79,7 @@ public class Cliente extends Persona{
     
     public void ampliarInfoBD(long idCliente){
         
-        ArrayList<Object> camposCliente = new ArrayList<>();
+        ArrayList<ArrayList<Object>> registros;
 
         String tablas;
         String columnas;
@@ -92,16 +92,16 @@ public class Cliente extends Persona{
                 + "C.ID_CLIENTE = '"+ getIdCliente() + "'";
         
         
-        camposCliente = sismain.getControladorBD().extenderInfo
+        registros = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        super.setIdPersona(Long.parseLong(camposCliente.get(1).toString()));
-        super.setNombreApellido(camposCliente.get(2).toString());
-        super.setDni(camposCliente.get(3).toString());
-        super.setSexo(camposCliente.get(4).toString().charAt(5));
-        super.setFechaNacimiento(camposCliente.get(6).toString());
-        super.setObservaciones(camposCliente.get(7).toString());
-        
+        super.setIdPersona(Long.parseLong(registros.get(0).get(0).toString()));
+        super.setNombreApellido(registros.get(0).get(1).toString());
+        super.setDni(registros.get(0).get(2).toString());
+        super.setSexo(registros.get(0).get(3).toString().charAt(0));
+        super.setFechaNacimiento(registros.get(0).get(4).toString());
+        super.setObservaciones(registros.get(0).get(5).toString());
+        registros.clear();
         
         //TELEFONO;
         
@@ -109,20 +109,43 @@ public class Cliente extends Persona{
         columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PERSONA_ID_PERSONA ";
         condicion = "T.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
         
-        super.setTelefonos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
         
+        for(int i = 0; i<registros.size();i++){
+            Telefono telefono = new Telefono();
+            telefono.setIdTelefono(Long.parseLong(registros.get(i).get(0).toString()));
+            telefono.setNumero(registros.get(i).get(1).toString());
+            telefono.setMovil(registros.get(i).get(2).toString().charAt(0));
+            telefono.setIdPersona(super.getIdPersona());
+            super.getTelefonos().add(telefono);
+        }
+        
+        registros.clear();
+
         //DOMICILIO;
         
         tablas = "DOMICILIO D";
-        columnas = "D.ID_DOMICLIO, D.DIRECCION, "
+        columnas = "D.ID_DOMICILIO, D.DIRECCION, "
                 + "D.LOCALIDAD, D.PROVINCIA, "
                 + "D.PERSONA_ID_PERSONA ";
         condicion = "D.PERSONA_ID_PERSONA = '"+super.getIdPersona()+"'";
         
-        super.setDomicilios(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
         
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Domicilio domicilio = new Domicilio();
+            domicilio.setIdDomicilio(Long.parseLong(registros.get(i).get(0).toString()));
+            domicilio.setDireccion(registros.get(i).get(1).toString());
+            domicilio.setLocalidad(registros.get(i).get(2).toString());
+            domicilio.setProvincia(registros.get(i).get(3).toString());
+            domicilio.setIdPersona(super.getIdPersona());
+            super.getDomicilios().add(domicilio);
+        }
+        
+        registros.clear();
         
         //CORREO ELECTRONICO
         
@@ -130,8 +153,18 @@ public class Cliente extends Persona{
         columnas ="E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PERSONA_ID_PERSONA ";
         condicion = "E.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
         
-        super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            CorreoElectronico correoElectronico = new CorreoElectronico();
+            correoElectronico.setIdCorreoElectronico(Long.parseLong(registros.get(i).get(0).toString()));
+            correoElectronico.setDireccion(registros.get(i).get(1).toString());
+            correoElectronico.setIdPersona(Long.valueOf(registros.get(i).get(2).toString()));
+            super.getCorreosElectronicos().add(correoElectronico);
+        }
+        
+        registros.clear();
         
         
         /*

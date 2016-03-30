@@ -21,8 +21,8 @@ public class Telefono {
      private long idTelefono;
      private String numero;
      private char movil;
-     private long idProveedor;
-     private long idPersona;
+     private long idProveedor=0;
+     private long idPersona=0;
      
      public Telefono(){
          

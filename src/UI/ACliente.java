@@ -599,7 +599,8 @@ public class ACliente extends javax.swing.JFrame {
             cliente.setSexo('M');
         else
             cliente.setSexo('F');
-        cliente.setObservaciones(txtObservaciones.getText());
+        cliente.setObservaciones(txtObservaciones.getText());    
+        
         
         //GUARDAR DATOS EN BD
         long idPersona=cliente.guardarBD();

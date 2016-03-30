@@ -41,12 +41,13 @@ public class BCMCliente extends javax.swing.JFrame {
     /**
      * Creates new form ABMProducto
      */
-    public BCMCliente() {
+    public BCMCliente(Cliente cliente) {
         initComponents();
         
         sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.cliente=cliente;
         this.txtDni.setEnabled(false);
         this.txtNombre.setEnabled(false);
         this.comboSexo.setEnabled(false);
@@ -94,28 +95,42 @@ public class BCMCliente extends javax.swing.JFrame {
     public void completarDomicilios(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
         Object [] fila = new Object[3];
-                    fila[0] = cliente.getDomicilios().get(0).getDireccion();
-                    fila[1] = cliente.getDomicilios().get(1).getLocalidad();
-                    fila[2] = cliente.getDomicilios().get(2).getProvincia();
+                for(int i = 0; i<cliente.getDomicilios().size();i++){
+                    fila[0] = cliente.getDomicilios().get(i).getDireccion();
+                    fila[1] = cliente.getDomicilios().get(i).getLocalidad();
+                    fila[2] = cliente.getDomicilios().get(i).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
+                }
+                cliente.getDomicilios().clear();
     }
     
     public void completarTelefonos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         Object [] fila = new Object[2];
-                    fila[0] = cliente.getTelefonos().get(0).getNumero();
-                    fila[1] = cliente.getTelefonos().get(1).getMovil();
+                for(int i = 0; i<cliente.getTelefonos().size();i++){
+                    fila[0] = cliente.getTelefonos().get(i).getNumero();
+                    
+                    if(cliente.getTelefonos().get(i).getMovil() == 'F'){
+                       fila[1] = "FIJO"; 
+                    }else{
+                       fila[1] = "MOVIL";  
+                    }
                     modeloTabla.addRow(fila);
-                    tablaDomicilio.setModel(modeloTabla);
+                    tablaTelefono.setModel(modeloTabla);
+                }
+                cliente.getTelefonos().clear();
     }
     
     public void completarCorreosElectronicos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
         Object [] fila = new Object[1];
-                    fila[0] = cliente.getCorreosElectronicos().get(0).getDireccion();
+                for(int i = 0; i<cliente.getCorreosElectronicos().size();i++){
+                    fila[0] = cliente.getCorreosElectronicos().get(i).getDireccion();
                     modeloTabla.addRow(fila);
-                    tablaDomicilio.setModel(modeloTabla);
+                    tablaCorreoElectronico.setModel(modeloTabla);
+                }
+                cliente.getCorreosElectronicos().clear();
     }
     
 
@@ -807,11 +822,7 @@ public class BCMCliente extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BCMCliente().setVisible(true);
-            }
-        });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

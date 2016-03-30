@@ -180,7 +180,7 @@ public class Producto {
             condicion = condicion + " AND P.ESTADO = 'D'";
         }
         
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;

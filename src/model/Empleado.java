@@ -115,7 +115,7 @@ public class Empleado extends Persona{
             default:
         }
         
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;
@@ -123,7 +123,7 @@ public class Empleado extends Persona{
     
     public void ampliarInfoBD(long idEmpleado){
         
-        ArrayList<Object> camposEmpleado = new ArrayList<>();
+        ArrayList<ArrayList<Object>> registros;
 
         String tablas;
         String columnas;
@@ -133,20 +133,20 @@ public class Empleado extends Persona{
         columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
                 + "P.FECHA_NAC, P.OSERVACIONES, E.CUIL, E.FECHA_INICIO_RELACION_LABORAL";
         condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
-                + "E.ID_EMPLEADO = "+ idEmpleado;
+                + "E.ID_EMPLEADO = '"+ getIdEmpleado() + "'";
         
         
-        camposEmpleado = sismain.getControladorBD().extenderInfo
+        registros = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        super.setIdPersona(Long.parseLong(camposEmpleado.get(1).toString()));
-        super.setNombreApellido(camposEmpleado.get(2).toString());
-        super.setDni(camposEmpleado.get(3).toString());
-        super.setSexo(camposEmpleado.get(4).toString().charAt(5));
-        super.setFechaNacimiento(camposEmpleado.get(6).toString());
-        super.setObservaciones(camposEmpleado.get(7).toString());
-        setCuil(camposEmpleado.get(8).toString());
-        setFechaInicioRelacionLaboral(camposEmpleado.get(9).toString());
+        super.setIdPersona(Long.parseLong(registros.get(0).get(0).toString()));
+        super.setNombreApellido(registros.get(0).get(1).toString());
+        super.setDni(registros.get(0).get(2).toString());
+        super.setSexo(registros.get(0).get(3).toString().charAt(0));
+        super.setFechaNacimiento(registros.get(0).get(4).toString());
+        super.setObservaciones(registros.get(0).get(5).toString());
+        setCuil(registros.get(0).get(6).toString());
+        setFechaInicioRelacionLaboral(registros.get(0).get(7).toString());
         
         
         //TELEFONO;
