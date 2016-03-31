@@ -60,7 +60,6 @@ public class Conexion {
         
         boolean resultadoConexion = false;
         int resultado;
-        long usuarioBD=0;
         protocolo="jdbc:oracle:thin";
         servidor="localhost";
         port="1521";
@@ -75,11 +74,11 @@ public class Conexion {
             statement = conection.
                     createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
             resultadoConexion = true;
-            /*
+            
             perfil=new Perfil();
             resultado = perfil.check_ampliarInfoBD(usuario, password);
             switch(resultado){
-                case 1: sesion = new Sesion(usuarioBD);
+                case 1: sesion = new Sesion(perfil.getIdPerfil());
                         resultadoConexion=true;
                         break;
                 case 2: JOptionPane.showMessageDialog(null, 
@@ -92,7 +91,7 @@ public class Conexion {
                         JOptionPane.ERROR_MESSAGE);
                         break;
             }  
-            */
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

@@ -130,7 +130,7 @@ public ArrayList extenderInfo(String columnas,
         return registros;
     }
 
-    public void buscar (String columnas, 
+    public ArrayList buscar (String columnas, 
                          String tablas,
                          String condicion,
                          DefaultTableModel modeloTabla
@@ -139,27 +139,29 @@ public ArrayList extenderInfo(String columnas,
      rs = null;
      String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
 
-     //ArrayList<String> indices = new ArrayList<>();
+     ArrayList<Long> indices = new ArrayList<>();
         try {
             
             rs=sismain.getConexion().getStatement().executeQuery(query);
             System.out.println("Buscando...");
             while(rs.next()){
                 
-                //indices.add(rs.getObject(1).toString());
+                indices.add(Long.parseLong(rs.getObject(1).toString()));
+                if(modeloTabla!=null){
                 Object[] fila = new Object[rs.getMetaData().getColumnCount()]; 
                 
                 for(int i = 0; i<rs.getMetaData().getColumnCount(); i++){
                     fila[i]=rs.getObject(i+1);
                 }
                 modeloTabla.addRow(fila);
+                }
             }
             
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }
      
-     //return indices;
+     return indices;
      }
      
     

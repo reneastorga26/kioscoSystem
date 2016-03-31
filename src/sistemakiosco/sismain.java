@@ -44,11 +44,11 @@ public class sismain {
         login = new Login();
         login.setVisible(true);
         reloj=new Reloj();
+        reloj.ejecutarReloj();
     }
     
     public static void accederSISKIOS(String usuario, String password){
-        conexion = new Conexion(usuario,password);
-        
+        conexion = new Conexion(usuario,password);        
             boolean resultadoConexion = conexion.conectar();
             if(resultadoConexion){
             login.setVisible(false);

@@ -106,23 +106,23 @@ public class Perfil {
     }
         public int check_ampliarInfoBD(String usuario, String password){
             int resultado=2;
-            ArrayList<Object> camposPerfil;
+            ArrayList<ArrayList<Object>> registro;
             String tabla="PERFIL";
             String columnas="ID_PERFIL, USUARIO, PASSWORD, TIPO, EMPLEADO_ID_EMPLEADO, ESTADO"; 
             String condicion = "USUARIO = '"+usuario+"' AND "
-                    + "PASSWORD = '"+password+"'";
+                    + "PASSWORD = '"+password+"' AND ROWNUM=1";
             
-            camposPerfil = sismain.getControladorBD().
+            registro = sismain.getControladorBD().
                     extenderInfo(columnas, tabla, condicion);
             
-            System.out.println("idPerfil = "+ camposPerfil.get(0).toString());
-            if(!camposPerfil.isEmpty()){
-                idPerfil=Long.valueOf(camposPerfil.get(0).toString());
-                this.usuario=camposPerfil.get(1).toString();
-                this.password=camposPerfil.get(2).toString();
-                tipo=camposPerfil.get(3).toString();
-                idEmpleado=Long.parseLong(camposPerfil.get(4).toString());
-                estado=camposPerfil.get(5).toString().charAt(0);
+            System.out.println("idPerfil = "+ registro.get(0).get(0).toString());
+            if(!registro.isEmpty()){
+                idPerfil=Long.valueOf(registro.get(0).get(0).toString());
+                this.usuario=registro.get(0).get(1).toString();
+                this.password=registro.get(0).get(2).toString();
+                tipo=registro.get(0).get(3).toString();
+                idEmpleado=Long.parseLong(registro.get(0).get(4).toString());
+                estado=registro.get(0).get(5).toString().charAt(0);
                 if(usuario.equals(this.usuario) && password.equals(this.password)){
                     if(estado=='H'){
                         resultado = 1;
@@ -134,13 +134,14 @@ public class Perfil {
             }
             System.out.println("idPerfil = " +idPerfil+ " usuario = "+
                                 this.usuario +" password = "+ this.password +
-                                " estado = " + estado);
+                                " estado = " + estado + " Resultado conexion = "+resultado);
             return resultado;
         }
+        
         public ArrayList buscarBD(String columnaBusqueda, 
                          DefaultTableModel modeloTabla,
                          boolean preBuscar){
-        ArrayList<String> indices = new ArrayList<>();
+        ArrayList<Long> indices = new ArrayList<>();
         String criterioBusqueda;
         String criterioPreBusqueda;
             
@@ -148,7 +149,8 @@ public class Perfil {
         String columnas = "P.ID_PERFIL,P.USUARIO,P.PASSWORD,P.TIPO,P.EMPLEADO_ID_EMPLEADO";
         String condicion = "USUARIO = " + usuario;
      
-        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
+        indices = sismain.getControladorBD().buscar(columnas, tablas, condicion, null);
+        
         return indices;
     }
 

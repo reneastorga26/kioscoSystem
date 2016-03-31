@@ -67,18 +67,18 @@ public class Sesion {
         this.novedades = novedades;
     }
 
-    private void initSesion() {
-        //IniciarfechaHoraInicio
-        fechaHoraInicio=sismain.getControladorDate().obtenerFechaActual(2);
+    public void initSesion() {
+        fechaHoraInicio=sismain.getReloj().getDate()+" , "+sismain.getReloj().getHour();
+        System.out.println("fechaHoraInicio");
     }
-    
-    private void finishSesion() throws Throwable{
-        fechaHoraInicio=sismain.getControladorDate().obtenerFechaActual(2);
+   
+    public void finishSesion() throws Throwable{
+        fechaHoraInicio=sismain.getReloj().getDate()+" , "+sismain.getReloj().getHour();
         guardarBD();
         super.finalize();
     }
 
-    private long guardarBD() {
+    public long guardarBD() {
         ArrayList<String> valores= new ArrayList<>();
         valores.add(String.valueOf(idSesion));
         valores.add(fechaHoraInicio);

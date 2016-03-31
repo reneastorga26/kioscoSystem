@@ -7,6 +7,7 @@ package Controller;
 
 
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JComboBox;
 
 /**
@@ -15,7 +16,7 @@ import javax.swing.JComboBox;
  */
 public class ControladorDate {
     
-    private Calendar calendar = Calendar.getInstance();
+    private Calendar calendar;
     
     public ControladorDate(){
     
@@ -140,20 +141,7 @@ public class ControladorDate {
         return resultado;
     }
     
-    public String obtenerFechaActual(int tipo){
-        String resultado="";
-        String dia = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-        String mes = toMesNumero
-        (String.valueOf(calendar.get(Calendar.MONTH)+1));
-        String anio = String.valueOf(calendar.get(Calendar.YEAR));
-        if(tipo==1){
-            resultado=darFormatoFecha(dia,mes,anio);
-        }
-        else{
-            resultado=darFormatoStringOracle(dia,mes,anio);
-        }
-        return resultado;
-    }
+
     
     public void darFormatoaComboBox(String fecha, JComboBox comboDia, JComboBox comboMes, JComboBox comboAnio){    
         String cadenaFecha = fecha;

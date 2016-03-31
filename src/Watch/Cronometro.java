@@ -27,8 +27,6 @@ public class Cronometro {
             Timer timer = new Timer(1000,new ActionListener(){
             
             public void actionPerformed(ActionEvent e){
-                String cronometro = String.format("%02d : %02d : %02d", hs, min ,seg);
-                labelCronometro.setText(cronometro);
                 seg++;
                 if(seg==60){
                     min++;
@@ -38,8 +36,11 @@ public class Cronometro {
                     hs++;
                     min=0;
                 }
+                String cronometro = String.format("%02d:%02d:%02d", hs, min ,seg);
+                labelCronometro.setText(cronometro);
             }
         });
+        timer.start();
         
     }
 }

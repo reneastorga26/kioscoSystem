@@ -13,7 +13,7 @@ import javax.swing.Timer;
 public class Reloj {
     private Calendar calendario;
     private int dia, mes, año, segundos, minutos, hora;
-    private JLabel label;
+    private JLabel label = new JLabel();
     private String hour;
     private String date;
 
@@ -47,7 +47,7 @@ public class Reloj {
                 segundos = calendario.get(Calendar.SECOND);
                 minutos = calendario.get(Calendar.MINUTE);
                 hora = calendario.get(Calendar.HOUR_OF_DAY);
-                hour = String.format("%02d : %02d : %02d", hora, minutos,segundos);
+                hour = String.format("%02d:%02d:%02d", hora, minutos,segundos);
                 date = String.format("%02d/%02d/%02d", dia, mes, año);
                 label.setText("Fecha Actual: "+date+ " Hora Actual: " + hour );
             }
