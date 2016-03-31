@@ -43,17 +43,19 @@ public class BCMEmpleado extends javax.swing.JFrame {
     /**
      * Creates new form ABMProducto
      */
-    public BCMEmpleado() {
+    public BCMEmpleado(Empleado empleado) {
         initComponents();
         sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         sismain.getControladorDate().iniciarCombos(comboDia1, comboMes1, comboAnio1);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.empleado = empleado;
         this.btnNuevoFamiliar.setEnabled(false);
         this.btnModificarFamiliar.setEnabled(false);
         this.btnEliminarFamiliar.setEnabled(false);
-        this.txtDni.setEnabled(false);
-        this.txtNombre.setEnabled(false);
+        this.txtDni.setEditable(false);
+        this.txtNombre.setEditable(false);
+        this.txtCuil.setEditable(false);
         this.comboDia.setEnabled(false);
         this.comboMes.setEnabled(false);
         this.comboAnio.setEnabled(false);
@@ -92,49 +94,66 @@ public class BCMEmpleado extends javax.swing.JFrame {
         txtCuil.setText(empleado.getCuil());
         sismain.getControladorDate().darFormatoaComboBox(
                 empleado.getFechaNacimiento(), comboDia, comboMes, comboAnio);
+        comboSexo.removeAllItems();
         if(empleado.getSexo()== 'M') 
             comboSexo.addItem("Masculino");
         else
             comboSexo.addItem("Femenino");
-        
+        sismain.getControladorDate().darFormatoaComboBox(
+                empleado.getFechaInicioRelacionLaboral(), comboDia1, comboMes1, comboAnio1);
     }
     
     public void completarDomicilios(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
         Object [] fila = new Object[3];
-                    fila[0] = empleado.getDomicilios().get(0).getDireccion();
-                    fila[1] = empleado.getDomicilios().get(1).getLocalidad();
-                    fila[2] = empleado.getDomicilios().get(2).getProvincia();
+                for(int i = 0; i<empleado.getDomicilios().size();i++){
+                    fila[0] = empleado.getDomicilios().get(i).getDireccion();
+                    fila[1] = empleado.getDomicilios().get(i).getLocalidad();
+                    fila[2] = empleado.getDomicilios().get(i).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
+                }
+                empleado.getDomicilios().clear();
     }
     
     public void completarTelefonos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
         Object [] fila = new Object[2];
-                    fila[0] = empleado.getTelefonos().get(0).getNumero();
-                    fila[1] = empleado.getTelefonos().get(1).getMovil();
+                for(int i = 0; i<empleado.getTelefonos().size();i++){
+                    fila[0] = empleado.getTelefonos().get(i).getNumero();
+                    if(empleado.getTelefonos().get(i).getMovil() == 'F'){
+                       fila[1] = "Fijo"; 
+                    }else{
+                       fila[1] = "Móvil";  
+                    }
                     modeloTabla.addRow(fila);
-                    tablaDomicilio.setModel(modeloTabla);
+                    tablaTelefono.setModel(modeloTabla);
+                }
+                empleado.getTelefonos().clear();
     }
     
     public void completarCorreosElectronicos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
         Object [] fila = new Object[1];
-                    fila[0] = empleado.getCorreosElectronicos().get(0).getDireccion();
+                for(int i = 0; i<empleado.getCorreosElectronicos().size();i++){
+                    fila[0] = empleado.getCorreosElectronicos().get(i).getDireccion();
                     modeloTabla.addRow(fila);
-                    tablaDomicilio.setModel(modeloTabla);
+                    tablaCorreoElectronico.setModel(modeloTabla);
+                }
+                empleado.getCorreosElectronicos().clear();
     }
     
     public void completarFamiliares(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaFamiliares.getModel();
         Object [] fila = new Object[4];
-                    fila[0] = empleado.getFamiliares().get(0).getDni();
-                    fila[1] = empleado.getFamiliares().get(1).getNombreApellido();
-                    fila[2] = empleado.getFamiliares().get(2).getFechaNacimiento();
-                    fila[3] = empleado.getFamiliares().get(5).getParentesco();
+                for(int i = 0; i<empleado.getFamiliares().size();i++){
+                    fila[0] = empleado.getFamiliares().get(i).getDni();
+                    fila[1] = empleado.getFamiliares().get(i).getNombreApellido();
+                    fila[2] = empleado.getFamiliares().get(i).getFechaNacimiento();
+                    fila[3] = empleado.getFamiliares().get(i).getParentesco();
                     modeloTabla.addRow(fila);
                     tablaFamiliares.setModel(modeloTabla);
+                }
     }
     
     /**
@@ -503,7 +522,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarDomicilios.setBackground(new java.awt.Color(255, 102, 0));
         btnEliminarDomicilios.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminarDomicilios.setForeground(java.awt.Color.white);
-        btnEliminarDomicilios.setText("Eliminar Domicilios Seleccionados");
+        btnEliminarDomicilios.setText("Eliminar Domicilio Seleccionado");
         btnEliminarDomicilios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarDomiciliosActionPerformed(evt);
@@ -523,7 +542,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarCorreos.setBackground(new java.awt.Color(255, 102, 0));
         btnEliminarCorreos.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminarCorreos.setForeground(java.awt.Color.white);
-        btnEliminarCorreos.setText("Eliminar Correos Seleccionados");
+        btnEliminarCorreos.setText("Eliminar Correo Seleccionado");
         btnEliminarCorreos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarCorreosActionPerformed(evt);
@@ -543,13 +562,14 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarObrasSociales.setBackground(new java.awt.Color(255, 102, 0));
         btnEliminarObrasSociales.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminarObrasSociales.setForeground(java.awt.Color.white);
-        btnEliminarObrasSociales.setText("Eliminar Obras Sociales Seleccionadas");
+        btnEliminarObrasSociales.setText("Eliminar Obra Social Seleccionada");
         btnEliminarObrasSociales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarObrasSocialesActionPerformed(evt);
             }
         });
 
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("SEXO:");
 
         comboSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Femenino" }));
@@ -559,92 +579,82 @@ public class BCMEmpleado extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnNuevaObraSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEliminarObrasSociales))
+                    .addComponent(jSeparator5)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jSeparator5)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                    .addComponent(btnNuevaObraSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnEliminarObrasSociales))
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(31, 31, 31)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtNombre)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtCuil, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(82, 82, 82))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel18)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel11))
-                                .addGap(18, 18, 18)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(24, 24, 24)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(comboDia1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel25)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboMes1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel26)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGap(6, 6, 6)
                                         .addComponent(jLabel22)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel23)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEliminarCorreos))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel11))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(comboDia1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel25)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(comboMes1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel26)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(jLabel18)
                                     .addComponent(jLabel12)
-                                    .addComponent(jLabel27))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel27)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnEliminarDomicilios))
-                                    .addComponent(jLabel24))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(jLabel24)
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(btnNuevoCorreo)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnEliminarCorreos, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                    .addGap(14, 14, 14)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(txtCuil, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                                                .addComponent(txtDni, javax.swing.GroupLayout.Alignment.LEADING))
+                                            .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(txtNombre)))))
+                        .addGap(5, 5, 5)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -736,12 +746,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnModificarFamiliar.setBackground(new java.awt.Color(51, 0, 51));
         btnModificarFamiliar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnModificarFamiliar.setForeground(java.awt.Color.white);
-        btnModificarFamiliar.setText("Modificar Seleccionado");
+        btnModificarFamiliar.setText("Modificar");
 
         btnNuevoFamiliar.setBackground(new java.awt.Color(0, 153, 0));
         btnNuevoFamiliar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnNuevoFamiliar.setForeground(java.awt.Color.white);
-        btnNuevoFamiliar.setText("Agregar Nuevo");
+        btnNuevoFamiliar.setText("Agregar");
         btnNuevoFamiliar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoFamiliarActionPerformed(evt);
@@ -751,7 +761,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarFamiliar.setBackground(new java.awt.Color(153, 0, 0));
         btnEliminarFamiliar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminarFamiliar.setForeground(java.awt.Color.white);
-        btnEliminarFamiliar.setText("Eliminar Seleccionado");
+        btnEliminarFamiliar.setText("Eliminar");
 
         jLabel28.setForeground(new java.awt.Color(255, 255, 255));
         jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -795,14 +805,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator6)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(btnNuevoFamiliar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnModificarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                        .addComponent(btnEliminarFamiliar))
-                    .addComponent(jScrollPane7)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(btnNuevoTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
@@ -810,7 +813,14 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel19)
-                            .addComponent(jLabel28))
+                            .addComponent(jLabel28)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(btnNuevoFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnModificarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEliminarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -865,7 +875,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
@@ -910,7 +920,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -982,8 +992,9 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnModificarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarDatosActionPerformed
         // TODO add your handling code here:
-        this.txtDni.setEnabled(true);
-        this.txtNombre.setEnabled(true);
+        this.txtDni.setEditable(true);
+        this.txtNombre.setEditable(true);
+        this.txtCuil.setEditable(true);
         this.comboDia.setEnabled(true);
         this.comboMes.setEnabled(true);
         this.comboAnio.setEnabled(true);
@@ -1207,11 +1218,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BCMEmpleado().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

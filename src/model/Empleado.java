@@ -130,9 +130,9 @@ public class Empleado extends Persona{
         String condicion;
         this.idEmpleado = idEmpleado;
         tablas = "PERSONA P, EMPLEADO E";
-        columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO"
-                + "P.FECHA_NAC, P.OSERVACIONES, E.CUIL, E.FECHA_INICIO_RELACION_LABORAL";
-        condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
+        columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO, "
+                + "P.FECHA_NAC, P.OBSERVACIONES, E.CUIL, E.FECHA_INICIO_RELACION_LABORAL";
+        condicion = "P.ID_PERSONA = E.PERSONA_ID_PERSONA AND "
                 + "E.ID_EMPLEADO = '"+ getIdEmpleado() + "'";
         
         
@@ -152,34 +152,68 @@ public class Empleado extends Persona{
         //TELEFONO;
         
         tablas =  "TELEFONO T";
-        columnas = "T.NUMERO, T.MOVIL ";
+        columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PERSONA_ID_PERSONA";
         condicion = "T.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
         
-        super.setTelefonos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Telefono telefono = new Telefono();
+            telefono.setIdTelefono(Long.parseLong(registros.get(i).get(0).toString()));
+            telefono.setNumero(registros.get(i).get(1).toString());
+            telefono.setMovil(registros.get(i).get(2).toString().charAt(0));
+            telefono.setIdPersona(super.getIdPersona());
+            super.getTelefonos().add(telefono);
+        }
+        
+        registros.clear();
         
         //DOMICILIO;
         
         tablas = "DOMICILIO D";
-        columnas = "D.DIRECCION, "
-                + "D.LOCALIDAD, D.PROVINCIA ";
-        condicion = "D.PERSONA_ID_PERSONA = "+super.getIdPersona()+"'";
+        columnas = "D.ID_DOMICILIO, D.DIRECCION, "
+                + "D.LOCALIDAD, D.PROVINCIA, "
+                + "D.PERSONA_ID_PERSONA ";
+        condicion = "D.PERSONA_ID_PERSONA = '"+super.getIdPersona()+"'";
         
-        super.setDomicilios(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Domicilio domicilio = new Domicilio();
+            domicilio.setIdDomicilio(Long.parseLong(registros.get(i).get(0).toString()));
+            domicilio.setDireccion(registros.get(i).get(1).toString());
+            domicilio.setLocalidad(registros.get(i).get(2).toString());
+            domicilio.setProvincia(registros.get(i).get(3).toString());
+            domicilio.setIdPersona(super.getIdPersona());
+            super.getDomicilios().add(domicilio);
+        }
+        
+        registros.clear();
         
         
         //CORREO ELECTRONICO
         
         tablas= "CORREOELECTRONICO E";
-        columnas ="E.DIRECCION ";
+        columnas = "E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PERSONA_ID_PERSONA ";
         condicion = "E.PERSONA_ID_PERSONA = '"+ super.getIdPersona()+"'";
         
-        super.setCorreosElectronicos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            CorreoElectronico correoElectronico = new CorreoElectronico();
+            correoElectronico.setIdCorreoElectronico(Long.parseLong(registros.get(i).get(0).toString()));
+            correoElectronico.setDireccion(registros.get(i).get(1).toString());
+            correoElectronico.setIdPersona(Long.valueOf(registros.get(i).get(2).toString()));
+            super.getCorreosElectronicos().add(correoElectronico);
+        }
+        
+        registros.clear();
         
         //FAMILIARES
-        
+        /*
         tablas= "PERSONA P, FAMILIAR F";
         columnas ="P.DNI, P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P. OBSERVACIONES, "
                 + "F.PARENTESCO ";
@@ -188,6 +222,7 @@ public class Empleado extends Persona{
         
         setFamiliares(sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion));
+        */
         /*
         ArrayList InfoAmpliada:
             Primer Elemento, clase Cliente,

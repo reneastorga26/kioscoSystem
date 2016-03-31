@@ -42,10 +42,25 @@ public class Buscar extends javax.swing.JFrame {
     /**
      * Creates new form BuscarCliente
      */
-    public Buscar() {
+    public Buscar(String titulo, String parametro1, String parametro2, int opcion) {
         initComponents();
         this.setLocationRelativeTo(null);
         modeloTabla = (DefaultTableModel) tablaBuscar.getModel();
+        this.modeloTabla.setColumnIdentifiers(new String[]{"",parametro1,parametro2});
+        this.tablaBuscar.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaBuscar.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(0);
+        this.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(150);
+        this.tablaBuscar.getColumnModel().getColumn(2).setPreferredWidth(350);
+        this.setTitle("Búsqueda de " + titulo);
+        this.lblTitulo.setText("Búsqueda de " + titulo);
+        this.jRadioButton1.setText(parametro1);
+        this.jRadioButton1.setSelected(true);
+        this.jRadioButton2.setText(parametro2);
+        this.evaluar(opcion);
+        this.setVisible(true);
+        this.btnAmpliarInfo.setText("Ampliar Informacion y Opciones sobre "+ 
+                                    titulo + " seleccionado");
         
     }
     
@@ -110,9 +125,10 @@ public class Buscar extends javax.swing.JFrame {
             
         //BUSCAR EMPLEADO
         
-        BCMEmpleado adminEmpleado = new BCMEmpleado();
+        
         String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
         empleado.ampliarInfoBD(Long.valueOf(datoEmpleado));
+        BCMEmpleado adminEmpleado = new BCMEmpleado(empleado);
         adminEmpleado.setVisible(true);
         adminEmpleado.completarCampos();
         break;
@@ -122,9 +138,10 @@ public class Buscar extends javax.swing.JFrame {
             case 3:
         //BUSCAR PROVEEDOR
         
-        BCMProveedor adminProveedor = new BCMProveedor();
+        
         String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
         proveedor.ampliarInfoBD(Long.valueOf(datoProveedor));
+        BCMProveedor adminProveedor = new BCMProveedor(proveedor);
         adminProveedor.setVisible(true);
         adminProveedor.completarCampos();
         break;
@@ -133,9 +150,10 @@ public class Buscar extends javax.swing.JFrame {
             case 4:
         //BUSCAR PRODUCTO
         
-        BCMProducto adminProducto = new BCMProducto();
+        
         String datoProducto = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
         producto.ampliarInfoBD(Long.valueOf(datoProducto));
+        BCMProducto adminProducto = new BCMProducto(producto);
         adminProducto.setVisible(true);
         adminProducto.completarCampos();
         break;
@@ -241,18 +259,19 @@ public class Buscar extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jRadioButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jRadioButton2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(

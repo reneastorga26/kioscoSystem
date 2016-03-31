@@ -19,7 +19,7 @@ import sistemakiosco.sismain;
  */
 public class Fabricante {
     
-    private int idFabricante;
+    private long idFabricante;
     private String descripcion;
     private char tipoFabricante;
     
@@ -27,17 +27,17 @@ public class Fabricante {
         
     }
     
-    public Fabricante(int idFabricante, String descripcion, char tipoFabricante){
+    public Fabricante(long idFabricante, String descripcion, char tipoFabricante){
     this.idFabricante = idFabricante;
     this.descripcion = descripcion;
     this.tipoFabricante = tipoFabricante;
     }
 
-    public int getIdFabricante() {
+    public long getIdFabricante() {
         return idFabricante;
     }
 
-    public void setIdFabricante(int idFabricante) {
+    public void setIdFabricante(long idFabricante) {
         this.idFabricante = idFabricante;
     }
 
@@ -80,7 +80,7 @@ public class Fabricante {
         String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
         
                
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;

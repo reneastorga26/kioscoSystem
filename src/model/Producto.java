@@ -188,7 +188,7 @@ public class Producto {
     
     public void ampliarInfoBD(long idProducto){
         
-        ArrayList<Object> camposProducto = new ArrayList<>();
+        ArrayList<ArrayList<Object>> registros;
 
         String tablas;
         String columnas;
@@ -198,48 +198,71 @@ public class Producto {
         columnas = "P.ID_PRODUCTO , P.DESCRIPCION , P.STOCK_ACTUAL , "
                 + "P.STOCK_CRITICO_MINIMO , P.PUNTO_PEDIDO , "
                 + "P.TIPO_PRODUCTO_ID_TIPO_PRODUCTO , P.FABRICANTE_ID_FABRICANTE";
-        condicion = "ID_PRODUCTO = "+ idProducto;
+        condicion = "ID_PRODUCTO = '"+ getIdProducto() + "'";
         
         
-        camposProducto = sismain.getControladorBD().extenderInfo
+        registros = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        setIdProducto(Long.parseLong(camposProducto.get(1).toString()));
-        setDescripcion(camposProducto.get(2).toString());
-        setStockActual(Integer.valueOf(camposProducto.get(3).toString()));
-        setStockCriticoMinimo(Integer.valueOf(camposProducto.get(4).toString()));
-        setPuntoPedido(Integer.valueOf(camposProducto.get(5).toString()));
-        setIdTipoProducto(Long.valueOf(camposProducto.get(6).toString()));
-        setIdFabricante(Long.valueOf(camposProducto.get(7).toString()));
+        setIdProducto(Long.parseLong(registros.get(0).get(0).toString()));
+        setDescripcion(registros.get(0).get(1).toString());
+        setStockActual(Integer.valueOf(registros.get(0).get(2).toString()));
+        setStockCriticoMinimo(Integer.valueOf(registros.get(0).get(3).toString()));
+        setPuntoPedido(Integer.valueOf(registros.get(0).get(4).toString()));
+        setIdTipoProducto(Long.valueOf(registros.get(0).get(5).toString()));
+        setIdFabricante(Long.valueOf(registros.get(0).get(6).toString()));
         
         
         //TIPO_PRODUCTO;
         
-        tablas =  "TIPO_PRODUCTO ";
-        columnas = "DESCRIPCION ";
-        condicion = "ID_TIPO_PRODUCTO = "+ getIdTipoProducto();
+        tablas =  "TIPO_PRODUCTO T";
+        columnas = "T.ID_TIPO_PRODUCTO, T.DESCRIPCION ";
+        condicion = "T.ID_TIPO_PRODUCTO = '"+ getIdTipoProducto() + "'";
         
-        setTiposProductos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
         
+        for(int i = 0; i<registros.size();i++){
+            TipoProducto tipoProducto = new TipoProducto();
+            tipoProducto.setIdTipoProducto(Long.parseLong(registros.get(i).get(0).toString()));
+            tipoProducto.setDescripcion(registros.get(i).get(1).toString());
+            getTiposProductos().add(tipoProducto);
+        }
+        
+        registros.clear();
         //FABRICANTE;
         
-        tablas = "FABRICANTE ";
-        columnas = "DESCRIPCION ";
-        condicion = "ID_FABRICANTE = "+getIdFabricante();
+        tablas = "FABRICANTE F";
+        columnas = "F.ID_FABRICANTE, F.DESCRIPCION ";
+        condicion = "F.ID_FABRICANTE = '"+getIdFabricante() + "'";
         
-        setFabricantes(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Fabricante fabricante = new Fabricante();
+            fabricante.setIdFabricante(Long.parseLong(registros.get(i).get(0).toString()));
+            fabricante.setDescripcion(registros.get(i).get(1).toString());
+            getFabricantes().add(fabricante);
+        }
+        
+        registros.clear();
         
         //PRECIO;
         
-        tablas = "PRECIO ";
-        columnas = "NUMERO ";
-        condicion = "PRODUCTO_ID_PRODUCTO = "+getIdProducto();
+        tablas = "PRECIO P";
+        columnas = "P.ID_PRECIO, P.NUMERO, P.PRODUCTO_ID_PRODUCTO ";
+        condicion = "PRODUCTO_ID_PRODUCTO = '"+ getIdProducto() + "'";
         
-        setPrecios(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
-                
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Precio precio = new Precio();
+            precio.setIdPrecio(Long.parseLong(registros.get(i).get(0).toString()));
+            precio.setNumero(Double.valueOf(registros.get(i).get(1).toString()));
+            getPrecios().add(precio);
+        }       
         /*
         ArrayList InfoAmpliada:
             Primer Elemento, clase Cliente,

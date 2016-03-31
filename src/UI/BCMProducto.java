@@ -36,8 +36,9 @@ public class BCMProducto extends javax.swing.JFrame {
     /**
      * Creates new form BCMProducto
      */
-    public BCMProducto() {
+    public BCMProducto(Producto producto) {
         initComponents();
+        this.producto = producto;
         txtCodigo.setEnabled(false);
         txtDescripcion.setEnabled(false);
         cmbTipoProducto.setEnabled(false);
@@ -462,11 +463,7 @@ public class BCMProducto extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BCMProducto().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -81,7 +81,7 @@ public class Familiar extends Persona{
         String columnas = "P.DNI, P.NOMBRE_APELLIDO, P.FECHA_NAC, F.PARENTESCO";
         String condicion = "F."+columnaBusqueda+ " = " + criterioBusqueda ;
         
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;

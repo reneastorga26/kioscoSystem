@@ -19,7 +19,7 @@ import sistemakiosco.sismain;
  */
 public class Precio {
     
-    private int idPrecio;
+    private long idPrecio;
     private double numero;
     private String fechaHoraInicio;
     private String fechaHoraFin;
@@ -29,7 +29,7 @@ public class Precio {
         
     }
     
-    public Precio(int idPrecio, double numero, String fechaHoraInicio, 
+    public Precio(long idPrecio, double numero, String fechaHoraInicio, 
             String fechaHoraFin, long idProducto){
         this.idPrecio = idPrecio;
         this.numero = numero;
@@ -38,11 +38,11 @@ public class Precio {
         this.idProducto = idProducto;
     }
 
-    public int getIdPrecio() {
+    public long getIdPrecio() {
         return idPrecio;
     }
 
-    public void setIdPrecio(int idPrecio) {
+    public void setIdPrecio(long idPrecio) {
         this.idPrecio = idPrecio;
     }
 

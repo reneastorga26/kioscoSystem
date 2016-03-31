@@ -25,6 +25,7 @@ import model.Domicilio;
 import model.Persona;
 import model.Telefono;
 import sistemakiosco.sismain;
+import sun.swing.DefaultLookup;
 /**
  *
  * @author IgnacioMatias
@@ -48,8 +49,8 @@ public class BCMCliente extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.cliente=cliente;
-        this.txtDni.setEnabled(false);
-        this.txtNombre.setEnabled(false);
+        this.txtDni.setEditable(false);
+        this.txtNombre.setEditable(false);
         this.comboSexo.setEnabled(false);
         this.comboDia.setEnabled(false);
         this.comboMes.setEnabled(false);
@@ -64,7 +65,7 @@ public class BCMCliente extends javax.swing.JFrame {
         this.btnEliminarEmails.setEnabled(false);
         this.btnEliminarDomicilio.setEnabled(false);
         this.btnEliminarTels.setEnabled(false);
-        this.txtObservaciones.setEnabled(false);
+        this.txtObservaciones.setEditable(false);
     }
 
     public JTable getTablaTelefono() {
@@ -84,7 +85,7 @@ public class BCMCliente extends javax.swing.JFrame {
         txtNombre.setText(cliente.getNombreApellido());
         
         sismain.getControladorDate().darFormatoaComboBox(cliente.getFechaNacimiento(), comboDia, comboMes, comboAnio);
-        
+        comboSexo.removeAllItems();
         if(cliente.getSexo()== 'M') 
             comboSexo.addItem("Masculino");
         else
@@ -112,9 +113,9 @@ public class BCMCliente extends javax.swing.JFrame {
                     fila[0] = cliente.getTelefonos().get(i).getNumero();
                     
                     if(cliente.getTelefonos().get(i).getMovil() == 'F'){
-                       fila[1] = "FIJO"; 
+                       fila[1] = "Fijo"; 
                     }else{
-                       fila[1] = "MOVIL";  
+                       fila[1] = "Móvil";  
                     }
                     modeloTabla.addRow(fila);
                     tablaTelefono.setModel(modeloTabla);
@@ -435,7 +436,7 @@ public class BCMCliente extends javax.swing.JFrame {
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addGap(0, 42, Short.MAX_VALUE)
                                                 .addComponent(jLabel10)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -468,15 +469,15 @@ public class BCMCliente extends javax.swing.JFrame {
                                         .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(1, 1, 1))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 772, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEliminarDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(16, 16, 16)))
+                        .addGap(36, 36, 36)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -554,11 +555,11 @@ public class BCMCliente extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnNuevoDomicilio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEliminarDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(5, 5, 5))
         );
 
         jButton1.setBackground(new java.awt.Color(51, 0, 51));
@@ -681,12 +682,12 @@ public class BCMCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        this.txtDni.setEnabled(true);
-        this.txtNombre.setEnabled(true);
-        this.comboDia.setEnabled(true);
-        this.comboSexo.setEnabled(true);
-        this.comboMes.setEnabled(true);
-        this.comboAnio.setEnabled(true);
+        this.txtDni.setEditable(true);
+        this.txtNombre.setEditable(true);
+        this.comboDia.setEditable(true);
+        this.comboSexo.setEditable(true);
+        this.comboMes.setEditable(true);
+        this.comboAnio.setEditable(true);
         this.tablaTelefono.setEnabled(true);
         this.tablaDomicilio.setEnabled(true);
         this.tablaCorreoElectronico.setEnabled(true);
@@ -697,7 +698,7 @@ public class BCMCliente extends javax.swing.JFrame {
         this.btnEliminarEmails.setEnabled(true);
         this.btnEliminarDomicilio.setEnabled(true);
         this.btnEliminarTels.setEnabled(true);   
-        this.txtObservaciones.setEnabled(true);
+        this.txtObservaciones.setEditable(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed

@@ -126,7 +126,7 @@ public class Proveedor {
             condicion = condicion + " AND P.ESTADO = 'D'";
         }
         
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;
@@ -134,7 +134,7 @@ public class Proveedor {
     
     public void ampliarInfoBD(long idProveedor){
         
-        ArrayList<Object> camposProveedor = new ArrayList<>();
+        ArrayList<ArrayList<Object>> registros;
 
         String tablas;
         String columnas;
@@ -142,47 +142,81 @@ public class Proveedor {
         this.idProveedor = idProveedor;
         tablas = "PROVEEDOR P";
         columnas ="P.ID_PROVEEDOR , P.RAZON_SOCIAL , P.CUIT, P.OBSERVACIONES";
-        condicion = "P.ID_PROVEEDOR = '" + idProveedor + "'";
+        condicion = "P.ID_PROVEEDOR = '" + getIdProveedor() + "'";
         
         
-        camposProveedor = sismain.getControladorBD().extenderInfo
+        registros = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        setIdProveedor(Long.parseLong(camposProveedor.get(1).toString()));
-        setRazonSocial(camposProveedor.get(2).toString());
-        setCuit(camposProveedor.get(3).toString());
-        setObservaciones(camposProveedor.get(4).toString());
+        for(int i = 0; i<registros.size();i++){
+            setIdProveedor(Long.parseLong(registros.get(i).get(0).toString()));
+            setRazonSocial(registros.get(i).get(1).toString());
+            setCuit(registros.get(i).get(2).toString());
+            setObservaciones(registros.get(i).get(3).toString());
+        }
+        
+        registros.clear();
         
         
         //TELEFONO;
         
         tablas =  "TELEFONO T";
-        columnas = "T.NUMERO, T.MOVIL ";
+        columnas = "T.ID_TELEFONO, T.NUMERO, T.MOVIL, T.PROVEEDOR_ID_PROVEEDOR";
         condicion = "T.PROVEEDOR_ID_PROVEEDOR = '"+ getIdProveedor()+"'";
         
-        setTelefonos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Telefono telefono = new Telefono();
+            telefono.setIdTelefono(Long.parseLong(registros.get(i).get(0).toString()));
+            telefono.setNumero(registros.get(i).get(1).toString());
+            telefono.setMovil(registros.get(i).get(2).toString().charAt(0));
+            telefono.setIdProveedor(getIdProveedor());
+            getTelefonos().add(telefono);
+        }
+        registros.clear();
         
         //DOMICILIO;
         
         tablas = "DOMICILIO D";
-        columnas = "D.DIRECCION, "
-                + "D.LOCALIDAD, D.PROVINCIA ";
-        condicion = "D.PROVEEDOR_ID_PROVEEDOR ="+ getIdProveedor()+"'";
+        columnas = "D.ID_DOMICILIO, D.DIRECCION, "
+                + "D.LOCALIDAD, D.PROVINCIA, "
+                + "D.PROVEEDOR_ID_PROVEEDOR ";
+        condicion = "D.PROVEEDOR_ID_PROVEEDOR = '"+ getIdProveedor()+"'";
         
-        setDomicilios(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
         
+        for(int i = 0; i<registros.size();i++){
+            Domicilio domicilio = new Domicilio();
+            domicilio.setIdDomicilio(Long.parseLong(registros.get(i).get(0).toString()));
+            domicilio.setDireccion(registros.get(i).get(1).toString());
+            domicilio.setLocalidad(registros.get(i).get(2).toString());
+            domicilio.setProvincia(registros.get(i).get(3).toString());
+            domicilio.setIdProveedor(getIdProveedor());
+            getDomicilios().add(domicilio);
+        }
+        
+        registros.clear();
         
         //CORREO ELECTRONICO
         
         tablas= "CORREOELECTRONICO E";
-        columnas ="E.DIRECCION ";
+        columnas = "E.ID_CORREO_ELECTRONICO, E.DIRECCION, E.PROVEEDOR_ID_PROVEEDOR ";
         condicion = "E.PROVEEDOR_ID_PROVEEDOR = '"+ getIdProveedor()+"'";
         
-        setCorreosElectronicos(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
         
+        for(int i = 0; i<registros.size();i++){
+            CorreoElectronico correoElectronico = new CorreoElectronico();
+            correoElectronico.setIdCorreoElectronico(Long.parseLong(registros.get(i).get(0).toString()));
+            correoElectronico.setDireccion(registros.get(i).get(1).toString());
+            correoElectronico.setIdProveedor(Long.valueOf(registros.get(i).get(2).toString()));
+            getCorreosElectronicos().add(correoElectronico);
+        }
+        registros.clear();
         
         /*
         ArrayList InfoAmpliada:

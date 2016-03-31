@@ -104,6 +104,7 @@ public class MainMenu extends javax.swing.JFrame {
         menuPerfilSesion = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem21 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem23 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -451,6 +452,14 @@ public class MainMenu extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem21);
 
+        jMenuItem4.setText("Consultar Empleados");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
         jMenuItem23.setText("Administrar Perfiles y Sesiones");
         jMenuItem23.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -673,17 +682,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-        Buscar buscarProducto = new Buscar();
-        buscarProducto.modeloTabla.setColumnIdentifiers(new String[]{"CODIGO","DESCRIPCION"});
-        buscarProducto.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
-        buscarProducto.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
-        buscarProducto.setTitle("Búsqueda de Producto");
-        buscarProducto.lblTitulo.setText("Búsqueda de Producto");
-        buscarProducto.jRadioButton1.setText("CODIGO");
-        buscarProducto.jRadioButton1.setSelected(true);
-        buscarProducto.jRadioButton2.setText("DESCRIPCION");
-        buscarProducto.evaluar(4);
+        Buscar buscarProducto = new Buscar("Producto", "CODIGO", "DESCRIPCION", 4);
         buscarProducto.setVisible(true);
+        
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
@@ -740,17 +741,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling code here:
-        Buscar buscarProducto = new Buscar();
-        buscarProducto.modeloTabla.setColumnIdentifiers(new String[]{"CODIGO","DESCRIPCION"});
-        buscarProducto.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
-        buscarProducto.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
-        buscarProducto.setTitle("Búsqueda de Producto");
-        buscarProducto.lblTitulo.setText("Búsqueda de Producto");
-        buscarProducto.jRadioButton1.setText("CODIGO");
-        buscarProducto.jRadioButton1.setSelected(true);
-        buscarProducto.jRadioButton2.setText("DESCRIPCION");
-        buscarProducto.evaluar(4);
+        Buscar buscarProducto = new Buscar("Producto", "CODIGO", "DESCRIPCION", 4);
         buscarProducto.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
@@ -767,17 +760,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
         // TODO add your handling code here:
-        Buscar buscarProveedor = new Buscar();
-        buscarProveedor.modeloTabla.setColumnIdentifiers(new String[]{"CUIT","RAZÓN SOCIAL"});
-        buscarProveedor.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
-        buscarProveedor.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(350);
-        buscarProveedor.setTitle("Búsqueda de Proveedor");
-        buscarProveedor.lblTitulo.setText("Búsqueda de Proveedor");
-        buscarProveedor.jRadioButton1.setText("CUIT");
-        buscarProveedor.jRadioButton1.setSelected(true);
-        buscarProveedor.jRadioButton2.setText("RAZÓN SOCIAL");
-        buscarProveedor.evaluar(3);
+        Buscar buscarProveedor = new Buscar("Proveedor", "CUIT", "RAZÓN SOCIAL", 3);
         buscarProveedor.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
@@ -788,18 +773,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
         // TODO add your handling code here:
-        Buscar buscarCliente = new Buscar();
-        buscarCliente.modeloTabla.setColumnIdentifiers(new String[]{"","DNI","NOMBRE Y APELLIDO"});
-        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setMaxWidth(0);
-        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setMinWidth(0);
-        buscarCliente.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(0);
-        buscarCliente.setTitle("Búsqueda de Cliente");
-        buscarCliente.lblTitulo.setText("Búsqueda de Cliente");
-        buscarCliente.jRadioButton1.setText("DNI");
-        buscarCliente.jRadioButton1.setSelected(true);
-        buscarCliente.jRadioButton2.setText("NOMBRE Y APELLIDO");
-        buscarCliente.evaluar(1);
+        Buscar buscarCliente = new Buscar("Cliente", "DNI", "NOMBRE Y APELLIDO", 1);
         buscarCliente.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -847,20 +823,10 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
         // TODO add your handling code here:
-        Buscar buscarEmpleado = new Buscar();
-        buscarEmpleado.modeloTabla.setColumnIdentifiers(new String[]{"","DNI","NOMBRE Y APELLIDO"});
-        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setMaxWidth(0);
-        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setMinWidth(0);
-        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(150);
-        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(150);
-        buscarEmpleado.tablaBuscar.getColumnModel().getColumn(2).setPreferredWidth(350);
-        buscarEmpleado.setTitle("Búsqueda de Empleados");
-        buscarEmpleado.lblTitulo.setText("Búsqueda de Empleados");
-        buscarEmpleado.jRadioButton1.setText("DNI");
-        buscarEmpleado.jRadioButton1.setSelected(true);
-        buscarEmpleado.jRadioButton2.setText("NOMBRE Y APELLIDO");
-        buscarEmpleado.evaluar(2);
-        buscarEmpleado.setVisible(true);
+        AdministradorDePerfilesSesiones perfilesSesiones =
+                new AdministradorDePerfilesSesiones();
+        perfilesSesiones.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem23ActionPerformed
 
     private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
@@ -868,6 +834,12 @@ public class MainMenu extends javax.swing.JFrame {
         AEmpleado aEmpleado = new AEmpleado();
         aEmpleado.setVisible(true);
     }//GEN-LAST:event_jMenuItem21ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+        Buscar buscarEmpleado = new Buscar("Empleado", "DNI", "NOMBRE Y APELLIDO", 2);
+        buscarEmpleado.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -935,6 +907,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem23;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;

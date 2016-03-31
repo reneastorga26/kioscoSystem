@@ -19,7 +19,7 @@ import sistemakiosco.sismain;
  */
 public class TipoProducto {
     
-       private int idTipoProducto;
+       private long idTipoProducto;
        private String descripcion;
        private char refrigeracion;
        
@@ -27,17 +27,17 @@ public class TipoProducto {
            
        }
        
-       public TipoProducto(int idTipoProducto, String descripcion, char refrigeracion){
+       public TipoProducto(long idTipoProducto, String descripcion, char refrigeracion){
            this.idTipoProducto = idTipoProducto;
            this.descripcion = descripcion;
            this.refrigeracion = refrigeracion;
        }
 
-    public int getIdTipoProducto() {
+    public long getIdTipoProducto() {
         return idTipoProducto;
     }
 
-    public void setIdTipoProducto(int idTipoProducto) {
+    public void setIdTipoProducto(long idTipoProducto) {
         this.idTipoProducto = idTipoProducto;
     }
 
@@ -80,7 +80,7 @@ public class TipoProducto {
         String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
         
                
-        indices = sismain.getControladorBD().buscar(columnas, 
+        sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;
