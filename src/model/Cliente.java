@@ -160,7 +160,7 @@ public class Cliente extends Persona{
             CorreoElectronico correoElectronico = new CorreoElectronico();
             correoElectronico.setIdCorreoElectronico(Long.parseLong(registros.get(i).get(0).toString()));
             correoElectronico.setDireccion(registros.get(i).get(1).toString());
-            correoElectronico.setIdPersona(Long.valueOf(registros.get(i).get(2).toString()));
+            correoElectronico.setIdPersona(super.getIdPersona());
             super.getCorreosElectronicos().add(correoElectronico);
         }
         
@@ -180,14 +180,13 @@ public class Cliente extends Persona{
 
     public void modificarBD(){
         
-                     
             String tablas = "PERSONA P";
-            String set = "P.NOMBRE_APELLIDO = '"+ super.getNombreApellido()+"',"
-            + "P.DNI = '"+ super.getDni() + "',"
-            + "P.SEXO = '" + super.getSexo() + "',"
-            + "P.FECHA_NAC = '" +super.getFechaNacimiento()+ "',"
-            + "P.OBSERVACIONES = '"+super.getObservaciones()+ "',";
-            String condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"'";
+            String set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
+            + "P.DNI = '"+ getDni() + "',"
+            + "P.SEXO = '" + getSexo() + "',"
+            + "P.FECHA_NAC = " + getFechaNacimiento()+ ","
+            + "P.OBSERVACIONES = '"+getObservaciones()+ "'";
+            String condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);
         
     }
@@ -197,7 +196,7 @@ public class Cliente extends Persona{
         
         String tablas= "PERSONA P";
         String set = "P.ESTADO = 'H'";
-        String condicion = "P.ID_PERSONA = '"+super.getIdPersona()+"'";
+        String condicion = "P.ID_PERSONA = '"+getIdPersona()+"'";
 
         sismain.getControladorBD().modificar(tablas,set,condicion);
         

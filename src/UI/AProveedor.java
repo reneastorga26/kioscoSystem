@@ -206,7 +206,7 @@ public class AProveedor extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "Número", "Tipo"
             }
         ));
         jScrollPane7.setViewportView(tablaTelefono);
@@ -348,6 +348,11 @@ public class AProveedor extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Habilitar un proveedor eliminado");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -398,18 +403,9 @@ public class AProveedor extends javax.swing.JFrame {
 
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
-        int i=0;
         String cadena = txtCuit.getText();
-        ArrayList<String> datos = new ArrayList<>();
-             
-            datos = proveedor.buscarBD("","", 'H', null);
-            Iterator iter = datos.iterator();
-            while (iter.hasNext() && i<datos.size()){
-             System.out.println(iter.next());
-             if(datos.get(i).equals(cadena))   
-             JOptionPane.showMessageDialog(null, "EL CUIT INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-             i++;
-            }
+        sismain.getControladorBD().buscar("P.CUIT", "PROVEEDOR P", "CUIT = '" + cadena + "'", null);
+        
     }//GEN-LAST:event_btnComprobarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -487,6 +483,12 @@ public class AProveedor extends javax.swing.JFrame {
         model = (DefaultTableModel)tablaTelefono.getModel();
         model.removeRow(tablaTelefono.getSelectedRow());
     }//GEN-LAST:event_btnEliminarTelefonosActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Buscar buscar = new Buscar("Proveedor", "CUIT", "RAZON SOCIAL", 'D', 3);
+        buscar.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

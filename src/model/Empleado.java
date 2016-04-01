@@ -213,16 +213,28 @@ public class Empleado extends Persona{
         registros.clear();
         
         //FAMILIARES
-        /*
+        
         tablas= "PERSONA P, FAMILIAR F";
-        columnas ="P.DNI, P.NOMBRE_APELLIDO, P.FECHA_NAC, P.SEXO, P. OBSERVACIONES, "
-                + "F.PARENTESCO ";
-        condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"' AND "
+        columnas ="P.ID_PERSONA, P.DNI, P.NOMBRE_APELLIDO, P.FECHA_NAC, F.PARENTESCO, "
+                + "F.PERSONA_ID_PERSONA, F.EMPLEADO_ID_EMPLEADO";
+        condicion = "P.ID_PERSONA = F.PERSONA_ID_PERSONA AND "
                 + "F.EMPLEADO_ID_EMPLEADO = '" + getIdEmpleado() + "'";
         
-        setFamiliares(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
-        */
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            Familiar familiar = new Familiar();
+            familiar.setIdFamiliar(Long.parseLong(registros.get(i).get(0).toString()));
+            familiar.setDni(registros.get(i).get(1).toString());
+            familiar.setNombreApellido(registros.get(i).get(2).toString());
+            familiar.setFechaNacimiento(registros.get(i).get(3).toString());
+            familiar.setParentesco(registros.get(i).get(4).toString());
+            getFamiliares().add(familiar);
+        }
+        
+        registros.clear();
+        
         /*
         ArrayList InfoAmpliada:
             Primer Elemento, clase Cliente,
@@ -230,34 +242,51 @@ public class Empleado extends Persona{
             Tercer Elemento, ArrayList de Domicilios
             Cuarto Elemento, ArrayList de Correos Electronicos
 
-        
+        */
         //OBRAS SOCIALES
         
-        tablas= "OBRA_SOCIAL O";
-        columnas ="O.DESCRIPCION, O.BANCO, O.CUENTA_BANCARIA";
-        condicion = "O.ID_OBRA_SOCIAL = '"+ getIdObraSocial()+"'";
+        tablas= "RELACION_EMPLEADO_OS R, OBRA_SOCIAL O";
+        columnas ="R.EMPLEADO_ID_EMPLEADO, R.OBRA_SOCIAL_ID_OBRA_SOCIAL, "
+                + "O.ID_OBRA_SOCIAL, O.DESCRIPCION, O.BANCO, O.CUENTA_BANCARIA";
+        condicion = "R.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado()+"' AND "
+                + "R.OBRA_SOCIAL_ID_OBRA_SOCIAL = O.ID_OBRA_SOCIAL";
         
-        setObrasSociales(sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion));
-        */
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            ObraSocial obraSocial = new ObraSocial();
+            obraSocial.setIdObraSocial(Long.parseLong(registros.get(i).get(2).toString()));
+            obraSocial.setDescripcion(registros.get(i).get(3).toString());
+            obraSocial.setBanco(registros.get(i).get(4).toString());
+            obraSocial.setCuentaBancaria(registros.get(i).get(5).toString());
+            getObrasSociales().add(obraSocial);
+        }
+        
+        registros.clear();
     }
     
     
     public void modificarBD(){
             
-            String tablas = "PERSONA P, EMPLEADO E";
-            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
-            + "P.DNI = " + super.getDni() + ","
-            + "P.SEXO = " + super.getSexo() + ","
-            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
-            + "P.OBSERVACIONES = "+super.getObservaciones()+ "',"
-            + "E.CUIL = '" + getCuil() + "',"
-            + "E.FECHA_INICIO_RELACION_LABORAL = '" + getFechaInicioRelacionLaboral() + "'";        
-            String condicion = "P.ID_PERSONA = '"+ super.getIdPersona()+"'";
+            String tablas = "PERSONA P";
+            String set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
+            + "P.DNI = '" + getDni() + "',"
+            + "P.SEXO = '" + getSexo() + "',"
+            + "P.FECHA_NAC = " +getFechaNacimiento()+ ","
+            + "P.OBSERVACIONES = '"+getObservaciones()+ "'";        
+            String condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);
-        
+            
     }
     
+    public void modificarBD2(){
+            String tablas = "EMPLEADO E";
+            String set = "E.CUIL = '" + getCuil() + "',"
+            + "E.FECHA_INICIO_RELACION_LABORAL = " + getFechaInicioRelacionLaboral() + "";        
+            String condicion = "E.ID_EMPLEADO = '" + getIdEmpleado() + "'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
+    }
     public void habilitarBD(){
         
         

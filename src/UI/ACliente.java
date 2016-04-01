@@ -215,13 +215,10 @@ public class ACliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero", "Tipo"
+                "Número", "Tipo"
             }
         ));
         jScrollPane3.setViewportView(tablaTelefono);
-        if (tablaTelefono.getColumnModel().getColumnCount() > 0) {
-            tablaTelefono.getColumnModel().getColumn(1).setHeaderValue("Tipo");
-        }
 
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("DOMICILIO:");
@@ -479,8 +476,7 @@ public class ACliente extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnNuevoCorreo)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
+                                        .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addGap(7, 7, 7)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -498,6 +494,11 @@ public class ACliente extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Habilitar un cliente eliminado");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -651,22 +652,17 @@ public class ACliente extends javax.swing.JFrame {
 
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
-        int i=0;
-        String cadena = txtDni.getText();
-        ArrayList<String> datos = new ArrayList<>();
-             
-            datos = cliente.buscarBD("C.PERSONA_ID_PERSONA", "ID_PERSONA", 'H', null);
-            Iterator iter = datos.iterator();
-            while (iter.hasNext() && i<datos.size()){
-             System.out.println(iter.next());
-             if(datos.get(i).equals(cadena))   
-             JOptionPane.showMessageDialog(null, "EL DNI INGRESADO YA EXISTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-             i++;
-            }
-            
         
-
+        String cadena = txtDni.getText();
+        sismain.getControladorBD().buscar("P.DNI", "PERSONA P", "DNI = '" + cadena + "'", null);
+         
     }//GEN-LAST:event_btnComprobarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Buscar buscar = new Buscar("Cliente", "DNI", "NOMBRE Y APELLIDO", 'D', 1);
+        buscar.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -31,7 +31,6 @@ public class BCMProveedor extends javax.swing.JFrame {
     private Telefono telefono = new Telefono();
     private Domicilio domicilio = new Domicilio();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
-    private ControladorDate controladorDate = new ControladorDate();
     private DefaultTableModel model;
     private String cadenaIdProveedor;
     private int filaSeleccionada;
@@ -40,7 +39,7 @@ public class BCMProveedor extends javax.swing.JFrame {
      */
     public BCMProveedor(Proveedor proveedor) {
         initComponents();
-        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.proveedor = proveedor;
@@ -58,6 +57,18 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarEmails.setEnabled(false);
         this.btnEliminarDomicilio.setEnabled(false);
         this.btnEliminarTels.setEnabled(false);
+        
+        this.tablaTelefono.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaTelefono.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaTelefono.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaDomicilio.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaDomicilio.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaDomicilio.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
 
     public void completarCampos(){
@@ -77,11 +88,12 @@ public class BCMProveedor extends javax.swing.JFrame {
     
     public void completarDomicilios(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        Object [] fila = new Object[3];
+        Object [] fila = new Object[4];
                 for(int i = 0; i<proveedor.getDomicilios().size();i++){
-                    fila[0] = proveedor.getDomicilios().get(i).getDireccion();
-                    fila[1] = proveedor.getDomicilios().get(i).getLocalidad();
-                    fila[2] = proveedor.getDomicilios().get(i).getProvincia();
+                    fila[0] = proveedor.getDomicilios().get(i).getIdDomicilio();
+                    fila[1] = proveedor.getDomicilios().get(i).getDireccion();
+                    fila[2] = proveedor.getDomicilios().get(i).getLocalidad();
+                    fila[3] = proveedor.getDomicilios().get(i).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
                 }
@@ -90,13 +102,14 @@ public class BCMProveedor extends javax.swing.JFrame {
     
     public void completarTelefonos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        Object [] fila = new Object[2];
+        Object [] fila = new Object[3];
                 for(int i = 0; i<proveedor.getTelefonos().size();i++){
-                    fila[0] = proveedor.getTelefonos().get(i).getNumero();
+                    fila[0] = proveedor.getTelefonos().get(i).getIdTelefono();
+                    fila[1] = proveedor.getTelefonos().get(i).getNumero();
                     if(proveedor.getTelefonos().get(i).getMovil() == 'F'){
-                       fila[1] = "Fijo"; 
+                       fila[2] = "Fijo"; 
                     }else{
-                       fila[1] = "Móvil";  
+                       fila[2] = "Móvil";  
                     }
                     modeloTabla.addRow(fila);
                     tablaTelefono.setModel(modeloTabla);
@@ -106,9 +119,10 @@ public class BCMProveedor extends javax.swing.JFrame {
     
     public void completarCorreosElectronicos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        Object [] fila = new Object[1];
+        Object [] fila = new Object[2];
                 for(int i = 0; i<proveedor.getCorreosElectronicos().size();i++){
-                    fila[0] = proveedor.getCorreosElectronicos().get(i).getDireccion();
+                    fila[0] = proveedor.getCorreosElectronicos().get(i).getIdCorreoElectronico();
+                    fila[1] = proveedor.getCorreosElectronicos().get(i).getDireccion();
                     modeloTabla.addRow(fila);
                     tablaCorreoElectronico.setModel(modeloTabla);
                     }
@@ -229,7 +243,7 @@ public class BCMProveedor extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Direccion", "Localidad", "Provincia"
+                "Id", "Direccion", "Localidad", "Provincia"
             }
         ));
         jScrollPane4.setViewportView(tablaDomicilio);
@@ -239,7 +253,7 @@ public class BCMProveedor extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero", "Tipo"
+                "Id", "Numero", "Tipo"
             }
         ));
         jScrollPane6.setViewportView(tablaTelefono);
@@ -249,7 +263,7 @@ public class BCMProveedor extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "Id", "Direccion"
             }
         ));
         jScrollPane7.setViewportView(tablaCorreoElectronico);
@@ -347,7 +361,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                                 .addComponent(jLabel2)
                                                 .addComponent(jLabel3))
-                                            .addGap(26, 26, 26)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(txtCuit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -391,13 +405,15 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(txtCuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -553,7 +569,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel14)
                         .addComponent(btnBuscarFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -666,10 +682,19 @@ public class BCMProveedor extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
         // TODO add your handling code here:
+        int i =JOptionPane.showConfirmDialog(this,
+                "¿REALMENTE DESEA ELIMINAR EL PROVEEDOR?","Mensaje",JOptionPane.YES_NO_OPTION);
+        if(i==0){
+            proveedor.deshabilitarBD();
+            JOptionPane.showMessageDialog(
+                            null, "EL PROVEEDOR SE HA ELIMINADO CORRECTAMENTE",
+                            "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void txtIdCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdCompraActionPerformed
@@ -678,10 +703,8 @@ public class BCMProveedor extends javax.swing.JFrame {
 
     private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
-        filaSeleccionada = tablaTelefono.getSelectedRow();
-        telefono.setIdTelefono(
-                proveedor.getTelefonos().get(filaSeleccionada).getIdTelefono());
-                
+        
+        telefono.setIdTelefono(Long.valueOf(String.valueOf(model.getValueAt(tablaTelefono.getSelectedRow(),0))));
         model.removeRow(tablaTelefono.getSelectedRow());
         telefono.eliminarBD(proveedor.getIdProveedor(),false);
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
@@ -694,9 +717,7 @@ public class BCMProveedor extends javax.swing.JFrame {
 
     private void btnEliminarDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomicilioActionPerformed
         model = (DefaultTableModel)tablaDomicilio.getModel();
-        filaSeleccionada = tablaDomicilio.getSelectedRow();
-        domicilio.setIdDomicilio(
-                proveedor.getDomicilios().get(filaSeleccionada).getIdDomicilio());
+        domicilio.setIdDomicilio(Long.valueOf(String.valueOf(model.getValueAt(tablaDomicilio.getSelectedRow(),0))));
                 
         model.removeRow(tablaDomicilio.getSelectedRow());
         domicilio.eliminarBD(proveedor.getIdProveedor(),false);
@@ -716,9 +737,7 @@ public class BCMProveedor extends javax.swing.JFrame {
 
     private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
         model = (DefaultTableModel)tablaCorreoElectronico.getModel();
-        filaSeleccionada = tablaCorreoElectronico.getSelectedRow();
-        correoElectronico.setIdCorreoElectronico(
-                proveedor.getCorreosElectronicos().get(filaSeleccionada).getIdCorreoElectronico());
+        correoElectronico.setIdCorreoElectronico(Long.valueOf(String.valueOf(model.getValueAt(tablaCorreoElectronico.getSelectedRow(),0))));
                 
         model.removeRow(tablaCorreoElectronico.getSelectedRow());
         correoElectronico.eliminarBD(proveedor.getIdProveedor(),false);
@@ -729,12 +748,12 @@ public class BCMProveedor extends javax.swing.JFrame {
     }//GEN-LAST:event_comboDiaActionPerformed
 
     private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboMesActionPerformed
 
     private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
 
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboAnioActionPerformed
 
     private void btnModificarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarDatosActionPerformed
@@ -772,8 +791,8 @@ public class BCMProveedor extends javax.swing.JFrame {
                     String.valueOf(tablaDomicilio.getValueAt(i, 1)));
             domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
-            domicilio.setIdProveedor(Long.valueOf(cadenaIdProveedor));
-            domicilio.modificarBD();
+            domicilio.setIdProveedor(proveedor.getIdProveedor());
+            domicilio.modificarBD(proveedor.getIdProveedor(),false);
         }
         
         
@@ -781,21 +800,21 @@ public class BCMProveedor extends javax.swing.JFrame {
             telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
             telefono.setMovil(
                     String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
-            telefono.setIdProveedor(Long.valueOf(cadenaIdProveedor));
-            telefono.modificarBD();
+            telefono.setIdProveedor(proveedor.getIdProveedor());
+            telefono.modificarBD(proveedor.getIdProveedor(), false);
         }
         
         
         for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
-            correoElectronico.setIdPersona(Long.valueOf(cadenaIdProveedor));
-            correoElectronico.modificarBD();
+            correoElectronico.setIdPersona(proveedor.getIdProveedor());
+            correoElectronico.modificarBD(proveedor.getIdProveedor(), false);
         }
         
         
         JOptionPane.showMessageDialog(null, "EL PROVEEDOR SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-        this.btnSalir.setText("Salir");
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**

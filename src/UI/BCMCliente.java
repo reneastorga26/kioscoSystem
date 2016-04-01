@@ -33,9 +33,9 @@ import sun.swing.DefaultLookup;
 public class BCMCliente extends javax.swing.JFrame {
 
     private Cliente cliente;
-    private Telefono telefono;
-    private Domicilio domicilio;
-    private CorreoElectronico correoElectronico;
+    private Telefono telefono = new Telefono();
+    private Domicilio domicilio = new Domicilio();
+    private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
     private String cadenaIdPersona;
     private int filaSeleccionada;
@@ -66,6 +66,18 @@ public class BCMCliente extends javax.swing.JFrame {
         this.btnEliminarDomicilio.setEnabled(false);
         this.btnEliminarTels.setEnabled(false);
         this.txtObservaciones.setEditable(false);
+        
+        this.tablaTelefono.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaTelefono.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaTelefono.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaDomicilio.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaDomicilio.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaDomicilio.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setPreferredWidth(0);
     }
 
     public JTable getTablaTelefono() {
@@ -95,11 +107,12 @@ public class BCMCliente extends javax.swing.JFrame {
     
     public void completarDomicilios(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        Object [] fila = new Object[3];
+        Object [] fila = new Object[4];
                 for(int i = 0; i<cliente.getDomicilios().size();i++){
-                    fila[0] = cliente.getDomicilios().get(i).getDireccion();
-                    fila[1] = cliente.getDomicilios().get(i).getLocalidad();
-                    fila[2] = cliente.getDomicilios().get(i).getProvincia();
+                    fila[0] = cliente.getDomicilios().get(i).getIdDomicilio();
+                    fila[1] = cliente.getDomicilios().get(i).getDireccion();
+                    fila[2] = cliente.getDomicilios().get(i).getLocalidad();
+                    fila[3] = cliente.getDomicilios().get(i).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
                 }
@@ -108,14 +121,15 @@ public class BCMCliente extends javax.swing.JFrame {
     
     public void completarTelefonos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        Object [] fila = new Object[2];
+        Object [] fila = new Object[3];
                 for(int i = 0; i<cliente.getTelefonos().size();i++){
-                    fila[0] = cliente.getTelefonos().get(i).getNumero();
+                    fila[0] = cliente.getTelefonos().get(i).getIdTelefono();
+                    fila[1] = cliente.getTelefonos().get(i).getNumero();
                     
                     if(cliente.getTelefonos().get(i).getMovil() == 'F'){
-                       fila[1] = "Fijo"; 
+                       fila[2] = "Fijo"; 
                     }else{
-                       fila[1] = "Móvil";  
+                       fila[2] = "Móvil";  
                     }
                     modeloTabla.addRow(fila);
                     tablaTelefono.setModel(modeloTabla);
@@ -125,9 +139,10 @@ public class BCMCliente extends javax.swing.JFrame {
     
     public void completarCorreosElectronicos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        Object [] fila = new Object[1];
+        Object [] fila = new Object[2];
                 for(int i = 0; i<cliente.getCorreosElectronicos().size();i++){
-                    fila[0] = cliente.getCorreosElectronicos().get(i).getDireccion();
+                    fila[0] = cliente.getCorreosElectronicos().get(i).getIdCorreoElectronico();
+                    fila[1] = cliente.getCorreosElectronicos().get(i).getDireccion();
                     modeloTabla.addRow(fila);
                     tablaCorreoElectronico.setModel(modeloTabla);
                 }
@@ -155,7 +170,6 @@ public class BCMCliente extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         btnNuevoTelefono = new javax.swing.JButton();
         txtDni = new javax.swing.JTextField();
-        jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         comboDia = new javax.swing.JComboBox<>();
         comboMes = new javax.swing.JComboBox<>();
@@ -179,7 +193,7 @@ public class BCMCliente extends javax.swing.JFrame {
         btnNuevoCorreo = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
         btnModificar = new javax.swing.JButton();
-        btnSalir = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtObservaciones = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
@@ -190,6 +204,7 @@ public class BCMCliente extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         btnGuardarModificacion = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         jLabel7.setText("jLabel7");
 
@@ -227,10 +242,6 @@ public class BCMCliente extends javax.swing.JFrame {
                 btnNuevoTelefonoActionPerformed(evt);
             }
         });
-
-        jLabel19.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel19.setText("/");
 
         jLabel20.setBackground(new java.awt.Color(0, 0, 0));
         jLabel20.setForeground(new java.awt.Color(255, 255, 255));
@@ -280,13 +291,10 @@ public class BCMCliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero", "Tipo"
+                "Id", "Numero", "Tipo"
             }
         ));
         jScrollPane3.setViewportView(tablaTelefono);
-        if (tablaTelefono.getColumnModel().getColumnCount() > 0) {
-            tablaTelefono.getColumnModel().getColumn(1).setHeaderValue("Tipo");
-        }
 
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("DOMICILIO:");
@@ -296,7 +304,7 @@ public class BCMCliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Direccion", "Localidad", "Provincia"
+                "Id", "Direccion", "Localidad", "Provincia"
             }
         ));
         jScrollPane4.setViewportView(tablaDomicilio);
@@ -331,7 +339,7 @@ public class BCMCliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Direccion"
+                "Id", "Direccion"
             }
         ));
         jScrollPane5.setViewportView(tablaCorreoElectronico);
@@ -356,13 +364,13 @@ public class BCMCliente extends javax.swing.JFrame {
             }
         });
 
-        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
-        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnSalir.setForeground(java.awt.Color.white);
-        btnSalir.setText("Cancelar y Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setBackground(new java.awt.Color(153, 0, 0));
+        btnEliminar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminar.setForeground(java.awt.Color.white);
+        btnEliminar.setText("Eliminar Cliente");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
+                btnEliminarActionPerformed(evt);
             }
         });
 
@@ -411,8 +419,6 @@ public class BCMCliente extends javax.swing.JFrame {
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(jLabel19)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel20)
@@ -454,7 +460,7 @@ public class BCMCliente extends javax.swing.JFrame {
                                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(12, 12, 12)
@@ -501,8 +507,7 @@ public class BCMCliente extends javax.swing.JFrame {
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel20)
                                         .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel19))
+                                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel6)))
@@ -532,7 +537,7 @@ public class BCMCliente extends javax.swing.JFrame {
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                                 .addGap(10, 10, 10)
@@ -566,14 +571,29 @@ public class BCMCliente extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Habilitar un cliente eliminado");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         btnGuardarModificacion.setBackground(new java.awt.Color(51, 0, 51));
-        btnGuardarModificacion.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnGuardarModificacion.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         btnGuardarModificacion.setForeground(java.awt.Color.white);
         btnGuardarModificacion.setText("Guardar Modificacion");
         btnGuardarModificacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarModificacionActionPerformed(evt);
+            }
+        });
+
+        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
             }
         });
 
@@ -588,10 +608,12 @@ public class BCMCliente extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jLabel1)
-                        .addGap(330, 330, 330)
-                        .addComponent(btnGuardarModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardarModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -602,7 +624,8 @@ public class BCMCliente extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jButton1)
-                    .addComponent(btnGuardarModificacion))
+                    .addComponent(btnGuardarModificacion)
+                    .addComponent(btnSalir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -626,12 +649,10 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnEliminarDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomicilioActionPerformed
         model = (DefaultTableModel)tablaDomicilio.getModel();
-        filaSeleccionada = tablaDomicilio.getSelectedRow();
-        domicilio.setIdDomicilio(
-                cliente.getDomicilios().get(filaSeleccionada).getIdDomicilio());
+        domicilio.setIdDomicilio(Long.valueOf(String.valueOf(model.getValueAt(tablaDomicilio.getSelectedRow(),0))));
                 
         model.removeRow(tablaDomicilio.getSelectedRow());
-        domicilio.eliminarBD(cliente.getIdCliente(),true);
+        domicilio.eliminarBD(cliente.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarDomicilioActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
@@ -663,22 +684,20 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
         model = (DefaultTableModel)tablaCorreoElectronico.getModel();
-        filaSeleccionada = tablaCorreoElectronico.getSelectedRow();
-        correoElectronico.setIdCorreoElectronico(
-                cliente.getCorreosElectronicos().get(filaSeleccionada).getIdCorreoElectronico());
+        correoElectronico.setIdCorreoElectronico(Long.valueOf(String.valueOf(model.getValueAt(tablaCorreoElectronico.getSelectedRow(),0))));
                 
         model.removeRow(tablaCorreoElectronico.getSelectedRow());
-        correoElectronico.eliminarBD(cliente.getIdCliente(),true);
+        correoElectronico.eliminarBD(cliente.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarEmailsActionPerformed
 
     private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
-        filaSeleccionada = tablaTelefono.getSelectedRow();
-        telefono.setIdTelefono(
-                cliente.getTelefonos().get(filaSeleccionada).getIdTelefono());
+        
+        telefono.setIdTelefono(Long.valueOf(String.valueOf(model.getValueAt(tablaTelefono.getSelectedRow(),0))));
+                
                 
         model.removeRow(tablaTelefono.getSelectedRow());
-        telefono.eliminarBD(cliente.getIdCliente(),true);
+        telefono.eliminarBD(cliente.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
@@ -701,9 +720,18 @@ public class BCMCliente extends javax.swing.JFrame {
         this.txtObservaciones.setEditable(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
-    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnSalirActionPerformed
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int i =JOptionPane.showConfirmDialog(this,
+                "¿REALMENTE DESEA ELIMINAR EL CLIENTE?","Mensaje",JOptionPane.YES_NO_OPTION);
+        if(i==0){
+            cliente.deshabilitarBD();
+            JOptionPane.showMessageDialog(
+                            null, "EL CLIENTE SE HA ELIMINADO CORRECTAMENTE",
+                            "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
         
@@ -715,7 +743,6 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
         // TODO add your handling code here:
-        
         cliente.setDni(txtDni.getText());
         cliente.setNombreApellido(txtNombre.getText());
         cliente.setFechaNacimiento(sismain.getControladorDate().darFormatoStringOracle(
@@ -727,42 +754,55 @@ public class BCMCliente extends javax.swing.JFrame {
         else
             cliente.setSexo('F');
         cliente.setObservaciones(txtObservaciones.getText());
-        
         cliente.modificarBD();
         
-        
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
+            domicilio.setIdDomicilio(
+                    Long.valueOf(String.valueOf(tablaDomicilio.getValueAt(i,0))));
             domicilio.setDireccion(
-                    String.valueOf(tablaDomicilio.getValueAt(i,0)));
+                    String.valueOf(tablaDomicilio.getValueAt(i,1)));
             domicilio.setLocalidad(
-                    String.valueOf(tablaDomicilio.getValueAt(i, 1)));
-            domicilio.setProvincia(
                     String.valueOf(tablaDomicilio.getValueAt(i, 2)));
-            domicilio.setIdPersona(Long.valueOf(cadenaIdPersona));
-            domicilio.modificarBD();
+            domicilio.setProvincia(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 3)));
+            domicilio.setIdPersona(cliente.getIdPersona());
+            domicilio.modificarBD(cliente.getIdPersona(),true);
         }
         
         
         for(int i = 0; i<tablaTelefono.getRowCount();i++){
-            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
+            telefono.setIdTelefono(Long.valueOf(String.valueOf(tablaTelefono.getValueAt(i,0))));
+            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,1)));
             telefono.setMovil(
-                    String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
-            telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
-            telefono.modificarBD();
+                    String.valueOf(tablaTelefono.getValueAt(i, 2)).charAt(0));
+            telefono.setIdPersona(cliente.getIdPersona());
+            telefono.modificarBD(cliente.getIdPersona(),true);
         }
         
         
         for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
+            correoElectronico.setIdCorreoElectronico(Long.valueOf(String.valueOf(tablaCorreoElectronico.getValueAt(i,0))));
             correoElectronico.setDireccion(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
-            correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
-            correoElectronico.modificarBD();
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
+            correoElectronico.setIdPersona(cliente.getIdPersona());
+            correoElectronico.modificarBD(cliente.getIdPersona(),true);
         }
         
         
         JOptionPane.showMessageDialog(null, "EL CLIENTE SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-        this.btnSalir.setText("Salir");
+        
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Buscar buscar = new Buscar("Cliente", "DNI", "NOMBRE Y APELLIDO", 'D', 1);
+        buscar.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -827,6 +867,7 @@ public class BCMCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEliminarDomicilio;
     private javax.swing.JButton btnEliminarEmails;
     private javax.swing.JButton btnEliminarTels;
@@ -847,7 +888,6 @@ public class BCMCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;

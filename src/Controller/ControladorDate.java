@@ -16,7 +16,7 @@ import javax.swing.JComboBox;
  */
 public class ControladorDate {
     
-    private Calendar calendar;
+    private Calendar calendar = Calendar.getInstance();
     
     public ControladorDate(){
     
@@ -105,7 +105,7 @@ public class ControladorDate {
     
     public String darFormatoStringOracle(String dia, String mes, String anio){
         String resultado;
-        resultado = "'"+dia +"/"+mes+"/"+anio +"' , 'dd/mm/yyyy'";
+        resultado = "TO_DATE('"+dia +"/"+ toMesNumero(mes) +"/"+anio +"' , 'dd/mm/yyyy')";
         return resultado;
     }
     
@@ -196,4 +196,22 @@ public class ControladorDate {
     }
         comboAnio.setSelectedItem(anio);
 }
+    
+    public String darFormatoFechaATabla(String cadena){
+        String cadenaFecha = cadena;
+        String dia1 = String.valueOf(cadenaFecha.charAt(8));
+        String dia2 = String.valueOf(cadenaFecha.charAt(9));
+        String dia = dia1 + dia2;
+        String mes1 = String.valueOf(cadenaFecha.charAt(5));
+        String mes2 = String.valueOf(cadenaFecha.charAt(6));
+        String mes = mes1 + mes2;
+        String anio1 = String.valueOf(cadenaFecha.charAt(0));
+        String anio2 = String.valueOf(cadenaFecha.charAt(1));
+        String anio3 = String.valueOf(cadenaFecha.charAt(2));
+        String anio4 = String.valueOf(cadenaFecha.charAt(3));
+        String anio = anio1 + anio2 + anio3 + anio4;
+        String fecha = dia +"/"+mes+"/"+anio;
+        
+        return fecha;
+    }
 }

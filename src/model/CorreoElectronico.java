@@ -77,11 +77,16 @@ public class CorreoElectronico {
         return idCorreoElectronico;
     }
 
-    public void modificarBD(){
-             
+    public void modificarBD(long id_referenciado, boolean persona){
+            String referenciado;
+        
+            if(persona)referenciado ="E.PERSONA_ID_PERSONA"; 
+            else referenciado="E.PROVEEDOR_ID_PROVEEDOR"; 
+            
             String tablas = "CORREOELECTRONICO E";
-            String set = "E.DIRECCION = '" + direccion +"' ";
-            String condicion = "E.ID_CORREOELECTRONICO = '"+ idCorreoElectronico +"' ";
+            String set = "E.DIRECCION = '" + getDireccion() +"'";
+            String condicion = "E.ID_CORREO_ELECTRONICO = '"+ getIdCorreoElectronico() +"' AND "
+                    + referenciado + " = "+ id_referenciado;
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
@@ -90,12 +95,12 @@ public class CorreoElectronico {
         
         String referenciado;
         
-        if(persona)referenciado ="T.PERSONA_ID_PERSONA"; 
-        else referenciado="T.PROVEEDOR_ID_PROVEEDOR";
+        if(persona)referenciado ="E.PERSONA_ID_PERSONA"; 
+        else referenciado="E.PROVEEDOR_ID_PROVEEDOR";
         
-        String tabla = "CORREO ELECTRONICO E";
+        String tabla = "CORREOELECTRONICO E ";
         String condicion = referenciado + " = "+ id_referenciado +" AND "
-                +" E.ID_CORREOELECTRONICO = "+ idCorreoElectronico;
+                +" E.ID_CORREO_ELECTRONICO = '"+ getIdCorreoElectronico() + "'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                

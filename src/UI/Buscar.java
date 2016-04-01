@@ -42,7 +42,8 @@ public class Buscar extends javax.swing.JFrame {
     /**
      * Creates new form BuscarCliente
      */
-    public Buscar(String titulo, String parametro1, String parametro2, int opcion) {
+    public Buscar(String titulo, String parametro1, String parametro2, 
+                        char estado, int opcion) {
         initComponents();
         this.setLocationRelativeTo(null);
         modeloTabla = (DefaultTableModel) tablaBuscar.getModel();
@@ -57,33 +58,33 @@ public class Buscar extends javax.swing.JFrame {
         this.jRadioButton1.setText(parametro1);
         this.jRadioButton1.setSelected(true);
         this.jRadioButton2.setText(parametro2);
-        this.evaluar(opcion);
+        this.evaluar(opcion, estado);
         this.setVisible(true);
         this.btnAmpliarInfo.setText("Ampliar Informacion y Opciones sobre "+ 
                                     titulo + " seleccionado");
         
     }
     
-    public void evaluar(int opcion){
+    public void evaluar(int opcion, char estado){
         
         switch(opcion){
              case 1:
-                cliente.buscarBD("C.PERSONA_ID_PERSONA", "ID_PERSONA", 'H', modeloTabla);
+                cliente.buscarBD("C.PERSONA_ID_PERSONA", "ID_PERSONA", estado , modeloTabla);
                 valorSeleccion = 1;
                  break;
              
              case 2:
-                empleado.buscarBD("E.PERSONA_ID_PERSONA", "ID_PERSONA", 'H', modeloTabla);
+                empleado.buscarBD("E.PERSONA_ID_PERSONA", "ID_PERSONA", estado, modeloTabla);
                 valorSeleccion = 2;
                  break;
              
              case 3:
-                proveedor.buscarBD("ID_PROVEEDOR", "ID_PROVEEDOR", 'H', modeloTabla);
+                proveedor.buscarBD("0", "ID_PROVEEDOR", estado, modeloTabla);
                 valorSeleccion = 3;
                  break;
              
              case 4:
-                producto.buscarBD("ID_PRODUCTO", "ID_PRODUCTO", 'H', modeloTabla);
+                producto.buscarBD("ID_PRODUCTO", "ID_PRODUCTO", estado, modeloTabla);
                 valorSeleccion = 4;
                  break;
              }
@@ -266,7 +267,7 @@ public class Buscar extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jRadioButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jRadioButton2)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()

@@ -97,14 +97,18 @@ public class Domicilio {
         return idDomicilio;
     }
 
-    public void modificarBD(){
-             
+    public void modificarBD(long id_referenciado, boolean persona){
+            String referenciado;
+        
+            if(persona)referenciado ="D.PERSONA_ID_PERSONA"; 
+            else referenciado="D.PROVEEDOR_ID_PROVEEDOR"; 
         //HI
             String tablas = "DOMICILIO D";
-            String set = "D.DIRECCION = '" + direccion +"',"
-                       + "D.LOCALIDAD = '"+ localidad +"',"
-                       + "D.PROVINCIA = '"+ provincia +"',";
-            String condicion = "D.ID_DOMICILIO = '"+ idDomicilio +"' ";
+            String set = "D.DIRECCION = '" + getDireccion() +"',"
+                       + "D.LOCALIDAD = '"+ getLocalidad() +"',"
+                       + "D.PROVINCIA = '"+ getProvincia() +"'";
+            String condicion = "D.ID_DOMICILIO = '"+ getIdDomicilio() +"' AND "
+                    + referenciado + " = "+ id_referenciado;
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
@@ -113,12 +117,12 @@ public class Domicilio {
         
         String referenciado;
         
-        if(persona)referenciado ="T.PERSONA_ID_PERSONA"; 
-        else referenciado="T.PROVEEDOR_ID_PROVEEDOR";
+        if(persona)referenciado ="D.PERSONA_ID_PERSONA"; 
+        else referenciado="D.PROVEEDOR_ID_PROVEEDOR";
         
         String tabla = "DOMICILIO D";
         String condicion = referenciado + " = "+ id_referenciado +" AND "
-                +" D.ID_DOMICILIO = "+ idDomicilio;
+                +" D.ID_DOMICILIO = '"+ getIdDomicilio() + "'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                

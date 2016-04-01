@@ -15,7 +15,7 @@ import sistemakiosco.sismain;
  */
 public class Familiar extends Persona{
     
-    private int idFamiliar;
+    private long idFamiliar;
     private String parentesco;
     private long idEmpleado;
     
@@ -24,7 +24,7 @@ public class Familiar extends Persona{
     }
     
     public Familiar(int idPersona, String nombreApellido, String dni, char sexo,
-            String fechaNacimiento, String observaciones, int idFamiliar, 
+            String fechaNacimiento, String observaciones, long idFamiliar, 
             String parentesco, long idEmpleado){
         super(idPersona, nombreApellido, dni, sexo, fechaNacimiento, observaciones);
         this.idFamiliar = idFamiliar;
@@ -32,11 +32,11 @@ public class Familiar extends Persona{
         this.idEmpleado = idEmpleado;
     }
 
-    public int getIdFamiliar() {
+    public long getIdFamiliar() {
         return idFamiliar;
     }
 
-    public void setIdFamiliar(int idFamiliar) {
+    public void setIdFamiliar(long idFamiliar) {
         this.idFamiliar = idFamiliar;
     }
 
@@ -90,9 +90,9 @@ public class Familiar extends Persona{
     public void modificarBD(){
             
             String tablas = "PERSONA P, FAMILIAR F";
-            String set = "P.NOMBRE_APELLIDO = "+ super.getNombreApellido()+","
-            + "P.DNI = " + super.getDni() + ","
-            + "P.FECHA_NAC = " +super.getFechaNacimiento()+ ","
+            String set = "P.NOMBRE_APELLIDO = '"+ super.getNombreApellido()+"',"
+            + "P.DNI = '" + super.getDni() + "',"
+            + "P.FECHA_NAC = '" +super.getFechaNacimiento()+ "',"
             + "F.PARENTESCO = '" + getParentesco() + "'";        
             String condicion = "F.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado()+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);

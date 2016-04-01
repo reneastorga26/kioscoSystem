@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import model.CorreoElectronico;
 import model.Domicilio;
 import model.Empleado;
+import model.Familiar;
 import model.ObraSocial;
 import model.RelacionEmpleadoObraSocial;
 import model.Telefono;
@@ -31,12 +32,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     
     private Empleado empleado;
-    private Domicilio domicilio;
-    private Telefono telefono;
-  //  private Familiar familiar;
+    private Telefono telefono = new Telefono();
+    private Domicilio domicilio = new Domicilio();
+    private CorreoElectronico correoElectronico = new CorreoElectronico();
+    private Familiar familiar = new Familiar();
     private RelacionEmpleadoObraSocial relEmpleadoObraSocial = new RelacionEmpleadoObraSocial();
     private ObraSocial obraSocial = new ObraSocial();
-    private CorreoElectronico correoElectronico;
     private DefaultTableModel model;
     private String cadenaIdPersona;
     private int filaSeleccionada;
@@ -78,6 +79,26 @@ public class BCMEmpleado extends javax.swing.JFrame {
         this.btnEliminarObrasSociales.setEnabled(false);
         this.btnEliminarTelefono.setEnabled(false);
         
+        this.tablaTelefono.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaTelefono.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaTelefono.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaDomicilio.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaDomicilio.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaDomicilio.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaCorreoElectronico.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaObraSocial.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaObraSocial.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaObraSocial.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
+        this.tablaFamiliares.getColumnModel().getColumn(0).setMaxWidth(0);
+        this.tablaFamiliares.getColumnModel().getColumn(0).setMinWidth(0);
+        this.tablaFamiliares.getColumnModel().getColumn(0).setPreferredWidth(0);
+        
     }
     
     public void completarCampos(){
@@ -86,6 +107,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         completarTelefonos();
         completarCorreosElectronicos();
         completarFamiliares();
+        completarObrasSociales();
     }
     
     public void completarDatosEmpleado(){
@@ -105,11 +127,12 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
     public void completarDomicilios(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaDomicilio.getModel();
-        Object [] fila = new Object[3];
+        Object [] fila = new Object[4];
                 for(int i = 0; i<empleado.getDomicilios().size();i++){
-                    fila[0] = empleado.getDomicilios().get(i).getDireccion();
-                    fila[1] = empleado.getDomicilios().get(i).getLocalidad();
-                    fila[2] = empleado.getDomicilios().get(i).getProvincia();
+                    fila[0] = empleado.getDomicilios().get(i).getIdDomicilio();
+                    fila[1] = empleado.getDomicilios().get(i).getDireccion();
+                    fila[2] = empleado.getDomicilios().get(i).getLocalidad();
+                    fila[3] = empleado.getDomicilios().get(i).getProvincia();
                     modeloTabla.addRow(fila);
                     tablaDomicilio.setModel(modeloTabla);
                 }
@@ -118,13 +141,14 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
     public void completarTelefonos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaTelefono.getModel();
-        Object [] fila = new Object[2];
+        Object [] fila = new Object[3];
                 for(int i = 0; i<empleado.getTelefonos().size();i++){
-                    fila[0] = empleado.getTelefonos().get(i).getNumero();
+                    fila[0] = empleado.getTelefonos().get(i).getIdTelefono();
+                    fila[1] = empleado.getTelefonos().get(i).getNumero();
                     if(empleado.getTelefonos().get(i).getMovil() == 'F'){
-                       fila[1] = "Fijo"; 
+                       fila[2] = "Fijo"; 
                     }else{
-                       fila[1] = "Móvil";  
+                       fila[2] = "Móvil";  
                     }
                     modeloTabla.addRow(fila);
                     tablaTelefono.setModel(modeloTabla);
@@ -134,9 +158,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
     public void completarCorreosElectronicos(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaCorreoElectronico.getModel();
-        Object [] fila = new Object[1];
+        Object [] fila = new Object[2];
                 for(int i = 0; i<empleado.getCorreosElectronicos().size();i++){
-                    fila[0] = empleado.getCorreosElectronicos().get(i).getDireccion();
+                    fila[0] = empleado.getCorreosElectronicos().get(i).getIdCorreoElectronico();
+                    fila[1] = empleado.getCorreosElectronicos().get(i).getDireccion();
                     modeloTabla.addRow(fila);
                     tablaCorreoElectronico.setModel(modeloTabla);
                 }
@@ -145,14 +170,29 @@ public class BCMEmpleado extends javax.swing.JFrame {
     
     public void completarFamiliares(){
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaFamiliares.getModel();
-        Object [] fila = new Object[4];
+        Object [] fila = new Object[5];
                 for(int i = 0; i<empleado.getFamiliares().size();i++){
-                    fila[0] = empleado.getFamiliares().get(i).getDni();
-                    fila[1] = empleado.getFamiliares().get(i).getNombreApellido();
-                    fila[2] = empleado.getFamiliares().get(i).getFechaNacimiento();
-                    fila[3] = empleado.getFamiliares().get(i).getParentesco();
+                    fila[0] = empleado.getFamiliares().get(i).getIdFamiliar();
+                    fila[1] = empleado.getFamiliares().get(i).getDni();
+                    fila[2] = empleado.getFamiliares().get(i).getNombreApellido();
+                    fila[3] = sismain.getControladorDate().darFormatoFechaATabla(
+                            empleado.getFamiliares().get(i).getFechaNacimiento());
+                    fila[4] = empleado.getFamiliares().get(i).getParentesco();
                     modeloTabla.addRow(fila);
                     tablaFamiliares.setModel(modeloTabla);
+                }
+    }
+    
+    public void completarObrasSociales(){
+        DefaultTableModel modeloTabla = (DefaultTableModel) tablaObraSocial.getModel();
+        Object [] fila = new Object[4];
+                for(int i = 0; i<empleado.getObrasSociales().size();i++){
+                    fila[0] = empleado.getObrasSociales().get(i).getIdObraSocial();
+                    fila[1] = empleado.getObrasSociales().get(i).getDescripcion();
+                    fila[2] = empleado.getObrasSociales().get(i).getBanco();
+                    fila[3] = empleado.getObrasSociales().get(i).getCuentaBancaria();
+                    modeloTabla.addRow(fila);
+                    tablaObraSocial.setModel(modeloTabla);
                 }
     }
     
@@ -184,18 +224,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnModificarDatos = new javax.swing.JButton();
         btnEliminarEmpleado = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        txtDni = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
-        comboDia = new javax.swing.JComboBox<>();
-        jLabel22 = new javax.swing.JLabel();
-        comboMes = new javax.swing.JComboBox<>();
-        jLabel23 = new javax.swing.JLabel();
-        comboAnio = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaDomicilio = new javax.swing.JTable();
@@ -210,19 +240,22 @@ public class BCMEmpleado extends javax.swing.JFrame {
         comboMes1 = new javax.swing.JComboBox<>();
         jLabel26 = new javax.swing.JLabel();
         comboAnio1 = new javax.swing.JComboBox<>();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        tablaObraSocial = new javax.swing.JTable();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtCuil = new javax.swing.JTextField();
         btnNuevoDomicilio = new javax.swing.JButton();
         btnEliminarDomicilios = new javax.swing.JButton();
         btnNuevoCorreo = new javax.swing.JButton();
         btnEliminarCorreos = new javax.swing.JButton();
-        btnNuevaObraSocial = new javax.swing.JButton();
-        btnEliminarObrasSociales = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtDni = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtCuil = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        comboDia = new javax.swing.JComboBox<>();
+        comboMes = new javax.swing.JComboBox<>();
+        comboAnio = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
         comboSexo = new javax.swing.JComboBox<>();
+        txtNombre = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
@@ -236,6 +269,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
         tablaTelefono = new javax.swing.JTable();
         btnNuevoTelefono = new javax.swing.JButton();
         btnEliminarTelefono = new javax.swing.JButton();
+        btnNuevaObraSocial = new javax.swing.JButton();
+        btnEliminarObrasSociales = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tablaObraSocial = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
         btnGuardarModificacion = new javax.swing.JButton();
 
@@ -390,45 +428,9 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("DNI:");
-
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("APELLIDO Y NOMBRE:");
-
         jLabel18.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(0, 255, 0));
         jLabel18.setText("Datos Generales del Empleado");
-
-        comboDia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboDiaActionPerformed(evt);
-            }
-        });
-
-        jLabel22.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel22.setText("/");
-
-        comboMes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboMesActionPerformed(evt);
-            }
-        });
-
-        jLabel23.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel23.setText("/");
-
-        comboAnio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboAnioActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel4.setText("FECHA DE NACIMIENTO:");
 
         jLabel24.setForeground(new java.awt.Color(255, 255, 255));
         jLabel24.setText("DOMICILIOS:");
@@ -438,7 +440,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Direccion", "Localidad", "Provincia"
+                "Id", "Direccion", "Localidad", "Provincia"
             }
         ));
         jScrollPane4.setViewportView(tablaDomicilio);
@@ -451,7 +453,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "..."
+                "Id", "Direccion"
             }
         ));
         jScrollPane6.setViewportView(tablaCorreoElectronico);
@@ -491,23 +493,6 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 comboAnio1ActionPerformed(evt);
             }
         });
-
-        tablaObraSocial.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "DESCRIPCION", "BANCO", "CUENTA BANCARIA"
-            }
-        ));
-        jScrollPane5.setViewportView(tablaObraSocial);
-
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel12.setText("OBRAS SOCIALES:");
-
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("CUIL:");
 
         btnNuevoDomicilio.setBackground(new java.awt.Color(51, 51, 255));
         btnNuevoDomicilio.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -549,112 +534,123 @@ public class BCMEmpleado extends javax.swing.JFrame {
             }
         });
 
-        btnNuevaObraSocial.setBackground(new java.awt.Color(51, 51, 255));
-        btnNuevaObraSocial.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnNuevaObraSocial.setForeground(java.awt.Color.white);
-        btnNuevaObraSocial.setText("Nueva Obra Social");
-        btnNuevaObraSocial.addActionListener(new java.awt.event.ActionListener() {
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel2.setText("DNI:");
+
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("CUIL:");
+
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel4.setText("FECHA DE NACIMIENTO:");
+
+        comboDia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevaObraSocialActionPerformed(evt);
+                comboDiaActionPerformed(evt);
             }
         });
 
-        btnEliminarObrasSociales.setBackground(new java.awt.Color(255, 102, 0));
-        btnEliminarObrasSociales.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnEliminarObrasSociales.setForeground(java.awt.Color.white);
-        btnEliminarObrasSociales.setText("Eliminar Obra Social Seleccionada");
-        btnEliminarObrasSociales.addActionListener(new java.awt.event.ActionListener() {
+        comboMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarObrasSocialesActionPerformed(evt);
+                comboMesActionPerformed(evt);
             }
         });
 
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("SEXO:");
+        comboAnio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboAnioActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("SEXO:");
 
         comboSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masculino", "Femenino" }));
+
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("NOMBRE Y APELLIDO:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator5)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator5)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel18)
+                                        .addGap(147, 147, 147))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel11))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addComponent(comboDia1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel25)
+                                                .addGap(6, 6, 6)
+                                                .addComponent(comboMes1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel26)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(5, 5, 5))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                    .addComponent(btnNuevaObraSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnEliminarObrasSociales))
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(24, 24, 24)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(6, 6, 6)
-                                        .addComponent(jLabel22)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel23)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jLabel11))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(comboDia1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jLabel25)
-                                            .addGap(6, 6, 6)
-                                            .addComponent(comboMes1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jLabel26)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCuil, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jLabel12)
                                     .addComponent(jLabel27)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(btnNuevoCorreo)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnEliminarCorreos, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnEliminarDomicilios))
                                     .addComponent(jLabel24)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(btnNuevoCorreo)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnEliminarCorreos, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                    .addGap(14, 14, 14)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(txtCuil, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                                                .addComponent(txtDni, javax.swing.GroupLayout.Alignment.LEADING))
-                                            .addGap(0, 0, Short.MAX_VALUE))
-                                        .addComponent(txtNombre)))))
-                        .addGap(5, 5, 5)))
+                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -664,31 +660,30 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
                     .addComponent(txtCuil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel22)
-                    .addComponent(jLabel23)
-                    .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel5))
+                .addGap(12, 12, 12)
                 .addComponent(jLabel24)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -696,7 +691,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEliminarDomicilios, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevoDomicilio))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel27)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -704,11 +699,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEliminarCorreos)
                     .addComponent(btnNuevoCorreo))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(comboDia1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -716,15 +711,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
                     .addComponent(comboMes1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26)
                     .addComponent(comboAnio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEliminarObrasSociales)
-                    .addComponent(btnNuevaObraSocial))
-                .addContainerGap())
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
@@ -738,7 +725,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "DNI", "NOMBRE Y APELLIDO", "FECHA DE NACIMIENTO", "PARENTESCO"
+                "Id", "DNI", "NOMBRE Y APELLIDO", "FECHA DE NACIMIENTO", "PARENTESCO"
             }
         ));
         jScrollPane1.setViewportView(tablaFamiliares);
@@ -762,6 +749,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarFamiliar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminarFamiliar.setForeground(java.awt.Color.white);
         btnEliminarFamiliar.setText("Eliminar");
+        btnEliminarFamiliar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarFamiliarActionPerformed(evt);
+            }
+        });
 
         jLabel28.setForeground(new java.awt.Color(255, 255, 255));
         jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -772,7 +764,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero", "Tipo"
+                "Id", "Numero", "Tipo"
             }
         ));
         jScrollPane7.setViewportView(tablaTelefono);
@@ -790,12 +782,46 @@ public class BCMEmpleado extends javax.swing.JFrame {
         btnEliminarTelefono.setBackground(new java.awt.Color(255, 102, 0));
         btnEliminarTelefono.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnEliminarTelefono.setForeground(java.awt.Color.white);
-        btnEliminarTelefono.setText("Eliminar Telefonos Seleccionados");
+        btnEliminarTelefono.setText("Eliminar Telefono Seleccionado");
         btnEliminarTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarTelefonoActionPerformed(evt);
             }
         });
+
+        btnNuevaObraSocial.setBackground(new java.awt.Color(51, 51, 255));
+        btnNuevaObraSocial.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnNuevaObraSocial.setForeground(java.awt.Color.white);
+        btnNuevaObraSocial.setText("Nueva Obra Social");
+        btnNuevaObraSocial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaObraSocialActionPerformed(evt);
+            }
+        });
+
+        btnEliminarObrasSociales.setBackground(new java.awt.Color(255, 102, 0));
+        btnEliminarObrasSociales.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminarObrasSociales.setForeground(java.awt.Color.white);
+        btnEliminarObrasSociales.setText("Eliminar Obra Social Seleccionada");
+        btnEliminarObrasSociales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarObrasSocialesActionPerformed(evt);
+            }
+        });
+
+        tablaObraSocial.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "DESCRIPCION", "BANCO", "CUENTA BANCARIA"
+            }
+        ));
+        jScrollPane5.setViewportView(tablaObraSocial);
+
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel12.setText("OBRAS SOCIALES:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -804,25 +830,38 @@ public class BCMEmpleado extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator6)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(btnNuevoTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEliminarTelefono))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel19)
-                            .addComponent(jLabel28)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator6)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(btnNuevoFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnModificarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnEliminarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(btnNuevaObraSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEliminarObrasSociales))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel28, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(btnNuevoFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModificarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addComponent(btnEliminarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(btnNuevoTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEliminarTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -832,13 +871,13 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevoFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminarFamiliar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -846,7 +885,15 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminarTelefono)
                     .addComponent(btnNuevoTelefono))
-                .addContainerGap())
+                .addGap(31, 31, 31)
+                .addComponent(jLabel12)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminarObrasSociales)
+                    .addComponent(btnNuevaObraSocial))
+                .addGap(34, 34, 34))
         );
 
         btnSalir.setBackground(new java.awt.Color(153, 0, 0));
@@ -878,9 +925,9 @@ public class BCMEmpleado extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 12, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -918,9 +965,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 9, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -932,10 +977,19 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
         // TODO add your handling code here:
+        int i =JOptionPane.showConfirmDialog(this,
+                "¿REALMENTE DESEA ELIMINAR EL EMPLEADO?","Mensaje",JOptionPane.YES_NO_OPTION);
+        if(i==0){
+            empleado.deshabilitarBD();
+            JOptionPane.showMessageDialog(
+                            null, "EL EMPLEADO SE HA ELIMINADO CORRECTAMENTE",
+                            "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -955,19 +1009,6 @@ public class BCMEmpleado extends javax.swing.JFrame {
         HistorialVentas historialVentas = new HistorialVentas();
         historialVentas.setVisible(true);
     }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
-
-    }//GEN-LAST:event_comboDiaActionPerformed
-
-    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
-    }//GEN-LAST:event_comboMesActionPerformed
-
-    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
-
-        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
-    }//GEN-LAST:event_comboAnioActionPerformed
 
     private void comboDia1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDia1ActionPerformed
         // TODO add your handling code here:
@@ -1027,12 +1068,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelefonoActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
-        filaSeleccionada = tablaTelefono.getSelectedRow();
-        telefono.setIdTelefono(
-                empleado.getTelefonos().get(filaSeleccionada).getIdTelefono());
-                
+        
+        telefono.setIdTelefono(Long.valueOf(String.valueOf(model.getValueAt(tablaTelefono.getSelectedRow(),0))));
         model.removeRow(tablaTelefono.getSelectedRow());
-        telefono.eliminarBD(empleado.getIdEmpleado(),true);
+        telefono.eliminarBD(empleado.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarTelefonoActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
@@ -1043,12 +1082,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarDomiciliosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomiciliosActionPerformed
         model = (DefaultTableModel)tablaDomicilio.getModel();
-        filaSeleccionada = tablaDomicilio.getSelectedRow();
-        domicilio.setIdDomicilio(
-                empleado.getDomicilios().get(filaSeleccionada).getIdDomicilio());
+        domicilio.setIdDomicilio(Long.valueOf(String.valueOf(model.getValueAt(tablaDomicilio.getSelectedRow(),0))));
                 
         model.removeRow(tablaDomicilio.getSelectedRow());
-        domicilio.eliminarBD(empleado.getIdEmpleado(),true);
+        domicilio.eliminarBD(empleado.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarDomiciliosActionPerformed
 
     private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
@@ -1060,12 +1097,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarCorreosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCorreosActionPerformed
         model = (DefaultTableModel)tablaCorreoElectronico.getModel();
-        filaSeleccionada = tablaCorreoElectronico.getSelectedRow();
-        correoElectronico.setIdCorreoElectronico(
-                empleado.getCorreosElectronicos().get(filaSeleccionada).getIdCorreoElectronico());
+        correoElectronico.setIdCorreoElectronico(Long.valueOf(String.valueOf(model.getValueAt(tablaCorreoElectronico.getSelectedRow(),0))));
                 
         model.removeRow(tablaCorreoElectronico.getSelectedRow());
-        correoElectronico.eliminarBD(empleado.getIdEmpleado(),true);
+        correoElectronico.eliminarBD(empleado.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarCorreosActionPerformed
 
     private void btnNuevaObraSocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaObraSocialActionPerformed
@@ -1076,12 +1111,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarObrasSocialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarObrasSocialesActionPerformed
         model = (DefaultTableModel)tablaObraSocial.getModel();
-        filaSeleccionada = tablaObraSocial.getSelectedRow();
-        obraSocial.setIdObraSocial(
-                empleado.getObrasSociales().get(filaSeleccionada).getIdObraSocial());
+        obraSocial.setIdObraSocial(Long.valueOf(String.valueOf(model.getValueAt(tablaObraSocial.getSelectedRow(),0))));
                 
         model.removeRow(tablaObraSocial.getSelectedRow());
-   //     relacionEmpleadoOs.eliminarBD(empleado.getIdEmpleado(),true);
+        obraSocial.eliminarBD(empleado.getIdEmpleado());
     }//GEN-LAST:event_btnEliminarObrasSocialesActionPerformed
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
@@ -1089,6 +1122,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
         empleado.setDni(txtDni.getText());
         empleado.setCuil(txtCuil.getText());
         empleado.setNombreApellido(txtNombre.getText());
+        if(comboSexo.getSelectedIndex()==0) 
+            empleado.setSexo('M');
+        else
+            empleado.setSexo('F');
         empleado.setFechaNacimiento(sismain.getControladorDate().darFormatoStringOracle(
                         comboDia.getSelectedItem().toString(),
                         comboMes.getSelectedItem().toString(),
@@ -1099,65 +1136,98 @@ public class BCMEmpleado extends javax.swing.JFrame {
                         comboAnio1.getSelectedItem().toString()));   
         
         empleado.modificarBD();
+        empleado.modificarBD2();
                 
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
+            domicilio.setIdDomicilio(Long.valueOf(
+                    String.valueOf(tablaDomicilio.getValueAt(i,0))));
             domicilio.setDireccion(
-                    String.valueOf(tablaDomicilio.getValueAt(i,0)));
+                    String.valueOf(tablaDomicilio.getValueAt(i,1)));
             domicilio.setLocalidad(
-                    String.valueOf(tablaDomicilio.getValueAt(i, 1)));
+                    String.valueOf(tablaDomicilio.getValueAt(i,2)));
             domicilio.setProvincia(
-                    String.valueOf(tablaDomicilio.getValueAt(i, 2)));
-            domicilio.setIdPersona(Long.valueOf(cadenaIdPersona));
-            domicilio.modificarBD();
+                    String.valueOf(tablaDomicilio.getValueAt(i,3)));
+            domicilio.setIdPersona(empleado.getIdPersona());
+            domicilio.modificarBD(empleado.getIdPersona(), true);
         }
         
         for(int i = 0; i<tablaTelefono.getRowCount();i++){
-            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,0)));
+            telefono.setIdTelefono(Long.valueOf(
+                    String.valueOf(tablaDomicilio.getValueAt(i,0))));
+            telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,1)));
             telefono.setMovil(
-                    String.valueOf(tablaTelefono.getValueAt(i, 1)).charAt(0));
-            telefono.setIdPersona(Long.valueOf(cadenaIdPersona));
+                    String.valueOf(tablaTelefono.getValueAt(i,2)).charAt(0));
+            telefono.setIdPersona(empleado.getIdPersona());
             
-            telefono.modificarBD();
+            telefono.modificarBD(empleado.getIdPersona(), true);
         }
         
         
         for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
+            correoElectronico.setIdCorreoElectronico(Long.valueOf(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0))));
             correoElectronico.setDireccion(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
-            correoElectronico.setIdPersona(Long.valueOf(cadenaIdPersona));
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
+            correoElectronico.setIdPersona(empleado.getIdPersona());
             
-            correoElectronico.modificarBD();
+            correoElectronico.modificarBD(empleado.getIdPersona(), true);
         }
-  /*
+  
         
 
         for(int i = 0; i<tablaFamiliares.getRowCount();i++){
+            familiar.setIdFamiliar(Long.valueOf(
+                    String.valueOf(tablaFamiliares.getValueAt(i,0))));
             familiar.setDni(
-                    String.valueOf(tablaFamiliares.getValueAt(i,0)));
-            familiar.setNombreApellido(
                     String.valueOf(tablaFamiliares.getValueAt(i,1)));
-            familiar.setFechaNacimiento(
+            familiar.setNombreApellido(
                     String.valueOf(tablaFamiliares.getValueAt(i,2)));
-            familiar.setParentesco(
+            familiar.setFechaNacimiento(
                     String.valueOf(tablaFamiliares.getValueAt(i,3)));
-            familiar.setIdEmpleado(idEmpleado); 
-            familiar.guardarBD();
+            familiar.setParentesco(
+                    String.valueOf(tablaFamiliares.getValueAt(i,4)));
+            familiar.setIdEmpleado(empleado.getIdEmpleado()); 
+            familiar.modificarBD();
         }
         
-                */
+                
         
         for(int i = 0; i<tablaObraSocial.getRowCount();i++){
+            obraSocial.setIdObraSocial(Long.valueOf(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0))));
             obraSocial.setDescripcion(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
-            obraSocial.setBanco(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
-            obraSocial.setCuentaBancaria(
+            obraSocial.setBanco(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
-      //      obraSocial.modificarBD();
+            obraSocial.setCuentaBancaria(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,3)));
+            obraSocial.modificarBD(empleado.getIdEmpleado());
         }
         
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed
+
+    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
+
+    }//GEN-LAST:event_comboDiaActionPerformed
+
+    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboMesActionPerformed
+
+    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
+
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboAnioActionPerformed
+
+    private void btnEliminarFamiliarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFamiliarActionPerformed
+        // TODO add your handling code here:
+        model = (DefaultTableModel)tablaFamiliares.getModel();
+        familiar.setIdFamiliar(Long.valueOf(String.valueOf(model.getValueAt(tablaFamiliares.getSelectedRow(),0))));
+                
+        model.removeRow(tablaFamiliares.getSelectedRow());
+        familiar.eliminarBD(empleado.getIdEmpleado());
+    }//GEN-LAST:event_btnEliminarFamiliarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1261,17 +1331,15 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

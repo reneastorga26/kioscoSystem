@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
@@ -96,7 +97,6 @@ public class ControladorBD {
     
     public void modificar(String tablas, String set, String condicion){
 
-        
         try {
             String query = "UPDATE " + tablas + " SET " + set + " WHERE " + condicion ;
             System.out.println(query);
@@ -145,18 +145,22 @@ public ArrayList extenderInfo(String columnas,
             rs=sismain.getConexion().getStatement().executeQuery(query);
             System.out.println("Buscando...");
             while(rs.next()){
-                
+                if(modeloTabla == null){
+                    JOptionPane.showMessageDialog(
+                            null, "EL DATO INGRESADO YA EXISTE EN EL SISTEMA",
+                            "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                }else{
                 indices.add(Long.parseLong(rs.getObject(1).toString()));
-                if(modeloTabla!=null){
+                
                 Object[] fila = new Object[rs.getMetaData().getColumnCount()]; 
                 
                 for(int i = 0; i<rs.getMetaData().getColumnCount(); i++){
                     fila[i]=rs.getObject(i+1);
                 }
                 modeloTabla.addRow(fila);
-                }
+                
             }
-            
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
         }

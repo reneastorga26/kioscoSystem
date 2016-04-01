@@ -212,6 +212,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtUsuario">
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtUsuarioKeyReleased"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JPasswordField" name="txtPassword">
                   <Events>

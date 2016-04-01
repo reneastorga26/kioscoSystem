@@ -117,7 +117,7 @@ public class Proveedor {
 
         String tablas = "PROVEEDOR P";
         String columnas = "P.ID_PROVEEDOR, P.CUIT, P.RAZON_SOCIAL";
-        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda; 
+        String condicion = "P."+columnaBusqueda+ " > " + criterioBusqueda; 
         
         if(estado=='H'){
             condicion = condicion + " AND P.ESTADO = 'H'";

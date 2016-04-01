@@ -38,6 +38,11 @@ public class Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
     
+    public void convertiraMayusculasEnJtextfield(javax.swing.JTextField jTextfieldS){
+        String cadena= (jTextfieldS.getText()).toUpperCase();
+        jTextfieldS.setText(cadena);
+    }
+    
     @Override
     public Image getIconImage(){
     Image rValue=Toolkit.getDefaultToolkit().
@@ -101,6 +106,12 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Password:");
+
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyReleased(evt);
+            }
+        });
 
         txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -251,6 +262,11 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_txtPasswordKeyPressed
+
+    private void txtUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyReleased
+        // TODO add your handling code here:
+        convertiraMayusculasEnJtextfield(txtUsuario);
+    }//GEN-LAST:event_txtUsuarioKeyReleased
 
     /**
      * @param args the command line arguments
