@@ -89,6 +89,7 @@ public class Empleado extends Persona{
         valores.add(String.valueOf(super.getSexo()));
         valores.add(super.getFechaNacimiento());
         valores.add(super.getObservaciones());
+        valores.add(String.valueOf('H'));
         idPersona = sismain.getControladorBD().aniadir(valores, "PERSONA",false);
         valores.clear();
         valores.add(String.valueOf(idPersona));
@@ -267,25 +268,27 @@ public class Empleado extends Persona{
     }
     
     
-    public void modificarBD(){
+    public void modificarBD(boolean empleado){
             
-            String tablas = "PERSONA P";
-            String set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
+            String tablas;
+            String set;
+            String condicion;
+            if(empleado){
+            tablas = "EMPLEADO E";
+            set = "E.CUIL = '" + getCuil() + "',"
+            + "E.FECHA_INICIO_RELACION_LABORAL = " + getFechaInicioRelacionLaboral() + "";        
+            condicion = "E.ID_EMPLEADO = '" + getIdEmpleado() + "'";    
+            }else{
+            tablas = "PERSONA P";
+            set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
             + "P.DNI = '" + getDni() + "',"
             + "P.SEXO = '" + getSexo() + "',"
             + "P.FECHA_NAC = " +getFechaNacimiento()+ ","
             + "P.OBSERVACIONES = '"+getObservaciones()+ "'";        
-            String condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
+            condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
+            }
             sismain.getControladorBD().modificar(tablas,set,condicion);
             
-    }
-    
-    public void modificarBD2(){
-            String tablas = "EMPLEADO E";
-            String set = "E.CUIL = '" + getCuil() + "',"
-            + "E.FECHA_INICIO_RELACION_LABORAL = " + getFechaInicioRelacionLaboral() + "";        
-            String condicion = "E.ID_EMPLEADO = '" + getIdEmpleado() + "'";
-            sismain.getControladorBD().modificar(tablas,set,condicion);
     }
     public void habilitarBD(){
         

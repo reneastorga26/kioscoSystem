@@ -103,10 +103,10 @@ public class Proveedor {
         valores.add(getRazonSocial());
         valores.add(getCuit());
         valores.add(getObservaciones());
+        valores.add(String.valueOf('H'));
         idProveedor = sismain.getControladorBD().aniadir(valores, "PROVEEDOR",false);
         valores.clear();
-        valores.add(String.valueOf(idProveedor));
-        sismain.getControladorBD().aniadir(valores,"PROVEEDOR",false);
+        
         return idProveedor;
     }
     

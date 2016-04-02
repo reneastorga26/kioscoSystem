@@ -87,23 +87,42 @@ public class Familiar extends Persona{
         return indices;
     }
 
-    public void modificarBD(){
+    public void modificarBD(boolean familiar){
             
-            String tablas = "PERSONA P, FAMILIAR F";
-            String set = "P.NOMBRE_APELLIDO = '"+ super.getNombreApellido()+"',"
-            + "P.DNI = '" + super.getDni() + "',"
-            + "P.FECHA_NAC = '" +super.getFechaNacimiento()+ "',"
-            + "F.PARENTESCO = '" + getParentesco() + "'";        
-            String condicion = "F.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado()+"'";
-            sismain.getControladorBD().modificar(tablas,set,condicion);
+        String tablas;
+        String set;
+        String condicion;
         
+            if(familiar){
+            tablas = "FAMILIAR F";
+            set = "F.PARENTESCO = '" + getParentesco() + "'";        
+            condicion = "F.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado()+"'";
+            //"' AND "+ "F.PERSONA_ID_PERSONA = '" + getIdPersona() + 
+            }else{
+            tablas = "PERSONA P";
+            set = "P.NOMBRE_APELLIDO = '"+ super.getNombreApellido()+"',"
+            + "P.DNI = '" + super.getDni() + "',"
+            + "P.FECHA_NAC = '" +super.getFechaNacimiento()+ "'";        
+            condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";    
+            }
+            sismain.getControladorBD().modificar(tablas,set,condicion);
     }
     
-    public void eliminarBD(long id_referenciado){
+    
+    
+    public void eliminarBD(long id_referenciado, boolean familiar){
         
-        String tabla = "FAMILIAR F";
-        String condicion = "F.EMPLEADO_ID_EMPLEADO = '" + id_referenciado +"'";
+        String tabla;
+        String set;
+        String condicion;
         
+            if(familiar){
+            tabla = "FAMILIAR F";
+            condicion = "F.PERSONA_ID_PERSONA = '" + id_referenciado +"'";
+            }else{
+            tabla = "PERSONA P";
+            condicion = "P.ID_PERSONA = '" + id_referenciado +"'";    
+            }
         sismain.getControladorBD().eliminar(tabla, condicion);
                
     }

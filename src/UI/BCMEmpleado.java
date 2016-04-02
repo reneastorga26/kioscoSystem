@@ -36,7 +36,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private Domicilio domicilio = new Domicilio();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private Familiar familiar = new Familiar();
-    private RelacionEmpleadoObraSocial relEmpleadoObraSocial = new RelacionEmpleadoObraSocial();
+    private RelacionEmpleadoObraSocial relacionEmpleadoObraSocial = new RelacionEmpleadoObraSocial();
     private ObraSocial obraSocial = new ObraSocial();
     private DefaultTableModel model;
     private String cadenaIdPersona;
@@ -1111,10 +1111,10 @@ public class BCMEmpleado extends javax.swing.JFrame {
 
     private void btnEliminarObrasSocialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarObrasSocialesActionPerformed
         model = (DefaultTableModel)tablaObraSocial.getModel();
-        obraSocial.setIdObraSocial(Long.valueOf(String.valueOf(model.getValueAt(tablaObraSocial.getSelectedRow(),0))));
+        relacionEmpleadoObraSocial.setIdObraSocial(Long.valueOf(String.valueOf(model.getValueAt(tablaObraSocial.getSelectedRow(),0))));
                 
         model.removeRow(tablaObraSocial.getSelectedRow());
-        obraSocial.eliminarBD(empleado.getIdEmpleado());
+        relacionEmpleadoObraSocial.eliminarBD(relacionEmpleadoObraSocial.getIdObraSocial());
     }//GEN-LAST:event_btnEliminarObrasSocialesActionPerformed
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
@@ -1135,8 +1135,8 @@ public class BCMEmpleado extends javax.swing.JFrame {
                         comboMes1.getSelectedItem().toString(),
                         comboAnio1.getSelectedItem().toString()));   
         
-        empleado.modificarBD();
-        empleado.modificarBD2();
+        empleado.modificarBD(false);
+        empleado.modificarBD(true);
                 
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
             domicilio.setIdDomicilio(Long.valueOf(
@@ -1176,7 +1176,7 @@ public class BCMEmpleado extends javax.swing.JFrame {
         
 
         for(int i = 0; i<tablaFamiliares.getRowCount();i++){
-            familiar.setIdFamiliar(Long.valueOf(
+            familiar.setIdPersona(Long.valueOf(
                     String.valueOf(tablaFamiliares.getValueAt(i,0))));
             familiar.setDni(
                     String.valueOf(tablaFamiliares.getValueAt(i,1)));
@@ -1187,21 +1187,22 @@ public class BCMEmpleado extends javax.swing.JFrame {
             familiar.setParentesco(
                     String.valueOf(tablaFamiliares.getValueAt(i,4)));
             familiar.setIdEmpleado(empleado.getIdEmpleado()); 
-            familiar.modificarBD();
+            familiar.modificarBD(true);
+            familiar.modificarBD(false);
         }
         
                 
         
         for(int i = 0; i<tablaObraSocial.getRowCount();i++){
             obraSocial.setIdObraSocial(Long.valueOf(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,0))));
+                    String.valueOf(tablaObraSocial.getValueAt(i,0))));
             obraSocial.setDescripcion(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
+                    String.valueOf(tablaObraSocial.getValueAt(i,1)));
             obraSocial.setBanco(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,2)));
+                    String.valueOf(tablaObraSocial.getValueAt(i,2)));
             obraSocial.setCuentaBancaria(
-                    String.valueOf(tablaCorreoElectronico.getValueAt(i,3)));
-            obraSocial.modificarBD(empleado.getIdEmpleado());
+                    String.valueOf(tablaObraSocial.getValueAt(i,3)));
+            obraSocial.modificarBD();
         }
         
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
@@ -1223,10 +1224,11 @@ public class BCMEmpleado extends javax.swing.JFrame {
     private void btnEliminarFamiliarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFamiliarActionPerformed
         // TODO add your handling code here:
         model = (DefaultTableModel)tablaFamiliares.getModel();
-        familiar.setIdFamiliar(Long.valueOf(String.valueOf(model.getValueAt(tablaFamiliares.getSelectedRow(),0))));
+        familiar.setIdPersona(Long.valueOf(String.valueOf(model.getValueAt(tablaFamiliares.getSelectedRow(),0))));
                 
         model.removeRow(tablaFamiliares.getSelectedRow());
-        familiar.eliminarBD(empleado.getIdEmpleado());
+        familiar.eliminarBD(familiar.getIdPersona(),true);
+        familiar.eliminarBD(familiar.getIdPersona(),false);
     }//GEN-LAST:event_btnEliminarFamiliarActionPerformed
 
     /**

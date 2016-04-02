@@ -442,12 +442,17 @@ public class AProveedor extends javax.swing.JFrame {
         for(int i = 0; i<tablaCorreoElectronico.getRowCount();i++){
             correoElectronico.setDireccion(
                     String.valueOf(tablaCorreoElectronico.getValueAt(i,0)));
-            correoElectronico.setIdPersona(idProveedor);
+            correoElectronico.setIdProveedor(idProveedor);
             correoElectronico.setIdPersona(0);
             correoElectronico.guardarBD();
         }   
         JOptionPane.showMessageDialog(null, "EL PROVEEDOR SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-                                           
+        txtCuit.setText("");
+        txtRazonSocial.setText("");
+        txtObservaciones.setText("");
+        tablaTelefono.setModel(new DefaultTableModel());
+        tablaDomicilio.setModel(new DefaultTableModel());
+        tablaCorreoElectronico.setModel(new DefaultTableModel());                            
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
@@ -476,6 +481,9 @@ public class AProveedor extends javax.swing.JFrame {
 
     private void btnNuevoTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTelefonoActionPerformed
         // TODO add your handling code here:
+        NDTelefono dTelefono = new NDTelefono(this, true, 
+                (DefaultTableModel) tablaTelefono.getModel());
+        dTelefono.setVisible(true);
     }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
     private void btnEliminarTelefonosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelefonosActionPerformed
