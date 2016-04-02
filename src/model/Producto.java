@@ -28,6 +28,24 @@ public class Producto {
     private int unidadesPackMayorista;
     private long idTipoProducto;
     private long idFabricante;
+    private char estadoStock;
+    private char estado;
+
+    public char getEstado() {
+        return estado;
+    }
+
+    public void setEstado(char estado) {
+        this.estado = estado;
+    }
+
+    public char getEstadoStock() {
+        return estadoStock;
+    }
+
+    public void setEstadoStock(char estadoStock) {
+        this.estadoStock = estadoStock;
+    }
     private ArrayList<TipoProducto> tiposProductos = new ArrayList<>();
     private ArrayList<Fabricante> fabricantes = new ArrayList<>();
     private ArrayList<Precio> precios = new ArrayList<>();
@@ -145,15 +163,18 @@ public class Producto {
     }
 
     public long guardarBD(){
-        long idProducto=-1;
         ArrayList<String> valores= new ArrayList<>();
-        valores.add(String.valueOf(getIdProducto()));
-        valores.add(getDescripcion());
-        valores.add(String.valueOf(getStockActual()));
-        valores.add(String.valueOf(getStockCriticoMinimo()));
-        valores.add(String.valueOf(getPuntoPedido()));
-        valores.add(String.valueOf(getIdProducto()));
-        valores.add(String.valueOf(getIdFabricante()));
+        valores.add(String.valueOf(idProducto));
+        valores.add(descripcion);
+        valores.add(String.valueOf(stockActual));
+        valores.add(String.valueOf(tipoCompraProveedor));
+        valores.add(String.valueOf(idFabricante));
+        valores.add(String.valueOf(idTipoProducto));
+        valores.add(String.valueOf(unidadesPackMayorista));
+        valores.add(String.valueOf(estado));
+        valores.add(String.valueOf(estadoStock));
+        valores.add(String.valueOf(puntoPedido));
+        valores.add(String.valueOf(stockCriticoMinimo));
         idProducto = sismain.getControladorBD().aniadir(valores, "PRODUCTO",false);
         valores.clear();
         valores.add(String.valueOf(idProducto));
@@ -168,11 +189,10 @@ public class Producto {
 
         String tablas = "PRODUCTO P";
         String columnas = "P.ID_PRODUCTO, P.ID_PRODUCTO, P.DESCRIPCION";
-        
+        String condicion= "P."+columnaBusqueda+ " = P." + criterioBusqueda;
         //COMO RESOLVER NO DUPLICAR LAS COLUMNAS??
-        
-        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda ;
-        
+
+
         if(estado=='H'){
             condicion = condicion + " AND P.ESTADO = 'H'";
         }

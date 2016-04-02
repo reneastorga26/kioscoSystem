@@ -63,6 +63,8 @@ public class Cliente extends Persona{
         String columnas = "C.ID_CLIENTE, P.DNI, P.NOMBRE_APELLIDO";
         String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda; 
         
+        
+        //Ezeiza888
               
         if(estado=='H'){
             condicion = condicion + " AND P.ESTADO = 'H'";

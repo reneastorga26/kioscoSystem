@@ -32,9 +32,6 @@ public class Buscar extends javax.swing.JFrame {
     public DefaultTableModel modeloTabla = new DefaultTableModel();
     private TableRowSorter trsFiltro;
     private int valorSeleccion;
-    private String idPersona;
-    private String idProveedor;
-    private String idProducto;
     private Cliente cliente = new Cliente();
     private Empleado empleado = new Empleado();
     private Proveedor proveedor = new Proveedor();
@@ -84,7 +81,7 @@ public class Buscar extends javax.swing.JFrame {
                  break;
              
              case 4:
-                producto.buscarBD("ID_PRODUCTO", "ID_PRODUCTO", estado, modeloTabla);
+                producto.buscarBD("ID_PRODUCTO", "ID_PRODUCTO" , estado, modeloTabla);
                 valorSeleccion = 4;
                  break;
              }
