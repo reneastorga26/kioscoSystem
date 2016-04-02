@@ -57,13 +57,11 @@ public class ControladorBD {
             for (int i = startField; i < rs.getMetaData().getColumnCount(); i++) {
                 String tipo= rs.getMetaData().getColumnTypeName(i+1);
                 campos = campos + rs.getMetaData().getColumnName(i+1);
-                if(tipo.equals("DATE")){
-                    values = values +  "" +valores.get(j)+ "";
-                    System.out.println(valores.get(j));
-                }else{
-                    System.out.println(valores.get(j));
+                if(tipo.equals("DATE"))
+                    values = values +  "TO_DATE(" +valores.get(j)+ ")";
+                    
+                else
                     values = values + "'" + valores.get(j)+"'";
-                }
                 if(i!=rs.getMetaData().getColumnCount() -1){
                     values=values+",";
                     campos=campos+",";

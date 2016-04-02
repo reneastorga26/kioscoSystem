@@ -636,14 +636,6 @@ public class ACliente extends javax.swing.JFrame {
             correoElectronico.guardarBD();
         }   
         JOptionPane.showMessageDialog(null, "EL CLIENTE SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-        txtDni.setText("");
-        txtNombre.setText("");
-        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
-        comboSexo.setSelectedIndex(0);
-        txtObservaciones.setText("");
-        tablaTelefono.setModel(new DefaultTableModel());
-        tablaDomicilio.setModel(new DefaultTableModel());
-        tablaCorreoElectronico.setModel(new DefaultTableModel());
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed

@@ -64,7 +64,7 @@ public class RelacionEmpleadoObraSocial {
     public void eliminarBD(long id_referenciado){
         
         String tabla = "RELACION_EMPLEADO_OS R";
-        String condicion = "R.OBRA_SOCIAL_ID_OBRA_SOCIAL = '"+ id_referenciado +"'";
+        String condicion = "R.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado() +"'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                

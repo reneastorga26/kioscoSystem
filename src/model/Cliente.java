@@ -46,7 +46,6 @@ public class Cliente extends Persona{
         valores.add(String.valueOf(super.getSexo()));
         valores.add(super.getFechaNacimiento());
         valores.add(super.getObservaciones());
-        valores.add(String.valueOf('H'));
         idPersona = sismain.getControladorBD().aniadir(valores, "PERSONA",false);
         valores.clear();
         valores.add(String.valueOf(idPersona));

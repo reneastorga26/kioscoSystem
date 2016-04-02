@@ -77,20 +77,22 @@ public class ObraSocial {
         return idObraSocial;
     }
     
-    public void modificarBD(){
+    public void modificarBD(long id_referenciado){
              
-            String tablas= "OBRA_SOCIAL O";
+            String tablas= "RELACION_EMPLEADO_OS R, OBRA_SOCIAL O";
             String set = "O.DESCRIPCION = '" + getDescripcion() 
                     + "', O.BANCO = '"+ getBanco() +"', O.CUENTA_BANCARIA = '" + getCuentaBancaria() + "'";
-            String condicion = "O.ID_OBRA_SOCIAL = '" + getIdObraSocial() + "'";
+            String condicion = "R.OBRA_SOCIAL_ID_OBRA_SOCIAL = '" + getIdObraSocial() + "' AND "
+                + "R.EMPLEADO_ID_EMPLEADO = '" + id_referenciado + "'";
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
     
     public void eliminarBD(long id_referenciado){
         
-        String tablas= "OBRA_SOCIAL O";
-        String condicion = "O.ID_OBRA_SOCIAL = '" + id_referenciado + "'";
+        String tablas= "RELACION_EMPLEADO_OS R, OBRA_SOCIAL O";
+        String condicion = "R.OBRA_SOCIAL_ID_OBRA_SOCIAL = '" + getIdObraSocial() + "' AND "
+                + "R.EMPLEADO_ID_EMPLEADO = '" + id_referenciado + "'";
         
         sismain.getControladorBD().eliminar(tablas, condicion);
                
