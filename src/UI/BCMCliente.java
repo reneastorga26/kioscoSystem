@@ -227,7 +227,7 @@ public class BCMCliente extends javax.swing.JFrame {
         jPanel1.setForeground(new java.awt.Color(0, 0, 102));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel1.setForeground(new java.awt.Color(0, 255, 0));
         jLabel1.setText("Datos del Cliente");
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));

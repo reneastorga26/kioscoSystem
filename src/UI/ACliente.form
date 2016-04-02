@@ -238,7 +238,7 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="btnNuevoDomicilio" min="-2" pref="271" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="btnEliminarDomicilios" min="-2" pref="262" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
