@@ -130,9 +130,6 @@ public class MainMenu extends javax.swing.JFrame {
         jMenuItem21 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem23 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
         menuLiquidaciones = new javax.swing.JMenu();
         jMenuItem17 = new javax.swing.JMenuItem();
         jMenuItem19 = new javax.swing.JMenuItem();
@@ -142,6 +139,9 @@ public class MainMenu extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenuItem20 = new javax.swing.JMenuItem();
         jMenuItem22 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         menuProductos = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -697,15 +697,14 @@ public class MainMenu extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
+                        .addGap(18, 18, 18)
                         .addComponent(jRadioButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRadioButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -817,31 +816,6 @@ public class MainMenu extends javax.swing.JFrame {
 
         menuPerfilSesion.add(jMenu1);
 
-        jMenuItem1.setText("Consultar Inicios y Cierres de Sesion");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        menuPerfilSesion.add(jMenuItem1);
-
-        jMenuItem2.setText("Cerrar Sesion y Cambiar de Usuario");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        menuPerfilSesion.add(jMenuItem2);
-
-        jMenuItem3.setText("Cerrar Sesion y Salir");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        menuPerfilSesion.add(jMenuItem3);
-
-        menuLiquidaciones.setForeground(new java.awt.Color(204, 204, 204));
         menuLiquidaciones.setText("Liquidacion");
 
         jMenuItem17.setText("Conceptos");
@@ -901,6 +875,30 @@ public class MainMenu extends javax.swing.JFrame {
         menuLiquidaciones.add(jMenu3);
 
         menuPerfilSesion.add(menuLiquidaciones);
+
+        jMenuItem1.setText("Consultar Inicios y Cierres de Sesion");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuPerfilSesion.add(jMenuItem1);
+
+        jMenuItem2.setText("Cerrar Sesion y Cambiar de Usuario");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        menuPerfilSesion.add(jMenuItem2);
+
+        jMenuItem3.setText("Cerrar Sesion y Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuPerfilSesion.add(jMenuItem3);
 
         jMenuBar1.add(menuPerfilSesion);
 
@@ -1036,6 +1034,7 @@ public class MainMenu extends javax.swing.JFrame {
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
         // TODO add your handling code here:
         LiquidacionIndividual liquidacionIndividual = new LiquidacionIndividual();
+        liquidacionIndividual.completarCampos(null, 0, true);
         liquidacionIndividual.setVisible(true);
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
@@ -1046,12 +1045,12 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
     private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
-        BCMConceptos bcmConceptos = new BCMConceptos();
+        BCConceptos bcmConceptos = new BCConceptos(false,null);
         bcmConceptos.setVisible(true);
     }//GEN-LAST:event_jMenuItem17ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
-        ConceptoAutomatico conceptoAutomatico = new ConceptoAutomatico();
+        ConformacionBoletaSueldo conceptoAutomatico = new ConformacionBoletaSueldo();
         conceptoAutomatico.setVisible(true);
     }//GEN-LAST:event_jMenuItem19ActionPerformed
 
@@ -1081,7 +1080,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         // TODO add your handling code here:
-        AProducto aProducto = new AProducto();
+        AMProducto aProducto = new AMProducto(null,1);
         aProducto.setVisible(true);
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 

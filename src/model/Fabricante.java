@@ -5,11 +5,8 @@
  */
 package model;
 
-import Controller.ControladorBD;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
@@ -21,13 +18,22 @@ public class Fabricante {
     
     private long idFabricante;
     private String descripcion;
-    private char tipoFabricante;
+    private String tipoFabricante;
+    private char estado;
+
+    public char getEstado() {
+        return estado;
+    }
+
+    public void setEstado(char estado) {
+        this.estado = estado;
+    }
     
     public Fabricante(){
         
     }
     
-    public Fabricante(long idFabricante, String descripcion, char tipoFabricante){
+    public Fabricante(long idFabricante, String descripcion, String tipoFabricante){
     this.idFabricante = idFabricante;
     this.descripcion = descripcion;
     this.tipoFabricante = tipoFabricante;
@@ -49,11 +55,11 @@ public class Fabricante {
         this.descripcion = descripcion;
     }
 
-    public char getTipoFabricante() {
+    public String getTipoFabricante() {
         return tipoFabricante;
     }
 
-    public void setTipoFabricante(char tipoFabricante) {
+    public void setTipoFabricante(String tipoFabricante) {
         this.tipoFabricante = tipoFabricante;
     }
     
@@ -61,8 +67,9 @@ public class Fabricante {
     public long guardarBD(){
         long idFabricante=-1;
         ArrayList<String> valores= new ArrayList<>();
-        valores.add(String.valueOf(getIdFabricante()));
-        valores.add(getDescripcion());
+        valores.add(descripcion);
+        valores.add(tipoFabricante);
+        valores.add(String.valueOf(estado));
         idFabricante = sismain.getControladorBD().aniadir(valores, "FABRICANTE",false);
         valores.clear();
         
@@ -70,26 +77,34 @@ public class Fabricante {
     }
     
     
-    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
+    public void ampliarInfoBD(String criterioBusqueda, String columnaBusqueda,
             char estado, DefaultTableModel modeloTabla){
         
-        ArrayList<Long> indices = new ArrayList<>();
+        ArrayList<ArrayList<Object>> registros;
 
-        String tablas = "FABRICANTE F";
-        String columnas = "F.ID_FABRICANTE, F.DESCRIPCION";
-        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
+        String tablas = "F_FABRICANTE";
+        String columnas = "F.ID_FABRICANTE, F.DESCRIPCION, "
+                + "F.TIPO_FABRICANTE , F.ESTADO";
+        String condicion = "T."+columnaBusqueda+ " = '" + criterioBusqueda 
+                +"'AND F.ESTADO = '"+ estado + "' AND ROWNUM = 1";
         
-               
-        sismain.getControladorBD().buscar(columnas, 
-                tablas, condicion, modeloTabla);
+
+        registros = sismain.getControladorBD().extenderInfo(columnas, 
+                tablas, condicion);
+ 
+        idFabricante = Long.parseLong(registros.get(0).get(0).toString());
+        descripcion = registros.get(0).get(1).toString();
+        tipoFabricante = registros.get(0).get(2).toString();
+        this.estado = estado;
         
-        return indices;
     }
     
     public void modificarBD(){
              
             String tablas = "FABRICANTE F";
-            String set = "F.DESCRIPCION = '" + getDescripcion() + "'";
+            String set = "F.DESCRIPCION = '" + descripcion + "',"+
+                    "F.TIPO_FABRICANTE = '"+ tipoFabricante+ "',"+
+                    "F.ESTADO = '"+estado+"'";
             String condicion = "T.ID_FABRICANTE = '"+ idFabricante+"'";
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
@@ -103,4 +118,16 @@ public class Fabricante {
         sismain.getControladorBD().eliminar(tabla, condicion);
                
     }
+    
+    public ArrayList obtenerDescripcionTodos(){
+       ArrayList<ArrayList<Object>> registros;
+       
+       String tablas= "FABRICANTE F";
+       String columnas="F.ID_FABRICANTE, F.DESCRIPCION";
+       String condicion="F.ID_FABRICANTE = F.ID_FABRICANTE";
+       
+       registros=sismain.getControladorBD().extenderInfo(columnas, tablas, condicion);
+       
+       return registros;
+   }
 }

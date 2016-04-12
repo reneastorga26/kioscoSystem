@@ -103,7 +103,7 @@ public class Empleado extends Persona{
 
         String tablas = "PERSONA P , EMPLEADO E";
         String columnas = "E.ID_EMPLEADO, P.DNI, P.NOMBRE_APELLIDO";
-        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda ;
+        String condicion = columnaBusqueda+ " = " + criterioBusqueda;
         
         switch(estado){
             case 1:
@@ -115,7 +115,7 @@ public class Empleado extends Persona{
             default:
         }
         
-        sismain.getControladorBD().buscar(columnas, 
+        indices = sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;
@@ -267,26 +267,30 @@ public class Empleado extends Persona{
     }
     
     
-    public void modificarBD(){
+    public void modificarBD(boolean empleado){
             
-            String tablas = "PERSONA P";
-            String set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
+            String tablas;
+            String set;
+            String condicion;
+            if(empleado){
+            tablas = "EMPLEADO E";
+            set = "E.CUIL = '" + getCuil() + "',"
+            + "E.FECHA_INICIO_RELACION_LABORAL = " + fechaInicioRelacionLaboral + "";        
+            condicion = "E.ID_EMPLEADO = '" + idEmpleado + "'";    
+            }else{
+            tablas = "PERSONA P";
+            set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
             + "P.DNI = '" + getDni() + "',"
             + "P.SEXO = '" + getSexo() + "',"
             + "P.FECHA_NAC = " +getFechaNacimiento()+ ","
             + "P.OBSERVACIONES = '"+getObservaciones()+ "'";        
-            String condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
+            condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
+            }
             sismain.getControladorBD().modificar(tablas,set,condicion);
             
     }
     
-    public void modificarBD2(){
-            String tablas = "EMPLEADO E";
-            String set = "E.CUIL = '" + getCuil() + "',"
-            + "E.FECHA_INICIO_RELACION_LABORAL = " + getFechaInicioRelacionLaboral() + "";        
-            String condicion = "E.ID_EMPLEADO = '" + getIdEmpleado() + "'";
-            sismain.getControladorBD().modificar(tablas,set,condicion);
-    }
+    
     public void habilitarBD(){
         
         

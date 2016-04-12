@@ -8,6 +8,7 @@ package UI;
 
 import Controller.ControladorBD;
 import Controller.ControladorDate;
+import java.awt.Color;
 import java.awt.image.ImageObserver;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
 import model.CorreoElectronico;
@@ -37,8 +39,13 @@ public class BCMCliente extends javax.swing.JFrame {
     private Domicilio domicilio = new Domicilio();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
     private DefaultTableModel model;
-    private String cadenaIdPersona;
-    private int filaSeleccionada;
+    private boolean estado = true;
+    private ArrayList<Object> auxiliarNuevosTelefonos = new ArrayList<>();
+    private ArrayList<Object> auxiliarNuevosCorreosElectronicos = new ArrayList<>();
+    private ArrayList<Object> auxiliarNuevosDomicilios = new ArrayList<>();
+    private ArrayList<Object> auxiliarEliminarTelefonos = new ArrayList<>();
+    private ArrayList<Object> auxiliarEliminarCorreosElectronicos = new ArrayList<>();
+    private ArrayList<Object> auxiliarEliminarDomicilios = new ArrayList<>();
     /**
      * Creates new form ABMProducto
      */
@@ -48,6 +55,7 @@ public class BCMCliente extends javax.swing.JFrame {
         sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setTitle("Datos del Cliente");
         this.cliente=cliente;
         this.txtDni.setEditable(false);
         this.txtNombre.setEditable(false);
@@ -58,7 +66,9 @@ public class BCMCliente extends javax.swing.JFrame {
         this.tablaDomicilio.setEnabled(false);
         this.tablaCorreoElectronico.setEnabled(false);
         this.tablaTelefono.setEnabled(false);
-        this.btnGuardarModificacion.setEnabled(false);
+        this.btnGuardarModificacion.setText("Modificar Datos");
+        UIManager.put("ComboBox.disabledBackground", new Color(222,222,222));
+        UIManager.put("ComboBox.disabledForeground", new Color(18,30,49));
         this.btnNuevoDomicilio.setEnabled(false);
         this.btnNuevoTelefono.setEnabled(false);
         this.btnNuevoCorreo.setEnabled(false);
@@ -192,8 +202,6 @@ public class BCMCliente extends javax.swing.JFrame {
         tablaCorreoElectronico = new javax.swing.JTable();
         btnNuevoCorreo = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
-        btnModificar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtObservaciones = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
@@ -205,6 +213,7 @@ public class BCMCliente extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         btnGuardarModificacion = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
         jLabel7.setText("jLabel7");
 
@@ -227,7 +236,7 @@ public class BCMCliente extends javax.swing.JFrame {
         jPanel1.setForeground(new java.awt.Color(0, 0, 102));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 255, 0));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Datos del Cliente");
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
@@ -354,26 +363,6 @@ public class BCMCliente extends javax.swing.JFrame {
             }
         });
 
-        btnModificar.setBackground(new java.awt.Color(51, 0, 51));
-        btnModificar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnModificar.setForeground(java.awt.Color.white);
-        btnModificar.setText("Modificar Datos");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
-            }
-        });
-
-        btnEliminar.setBackground(new java.awt.Color(153, 0, 0));
-        btnEliminar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnEliminar.setForeground(java.awt.Color.white);
-        btnEliminar.setText("Eliminar Cliente");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
-
         txtObservaciones.setColumns(20);
         txtObservaciones.setRows(5);
         jScrollPane2.setViewportView(txtObservaciones);
@@ -456,23 +445,18 @@ public class BCMCliente extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel13)
-                                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(12, 12, 12)
                                         .addComponent(jLabel12)
-                                        .addGap(40, 40, 40)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(1, 1, 1))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -533,23 +517,18 @@ public class BCMCliente extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                                 .addGap(10, 10, 10)
                                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
                                         .addComponent(jLabel12)
                                         .addGap(151, 151, 151))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(5, 5, 5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnNuevoCorreo)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -568,7 +547,7 @@ public class BCMCliente extends javax.swing.JFrame {
         );
 
         jButton1.setBackground(new java.awt.Color(51, 0, 51));
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Habilitar un cliente eliminado");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -578,7 +557,7 @@ public class BCMCliente extends javax.swing.JFrame {
         });
 
         btnGuardarModificacion.setBackground(new java.awt.Color(51, 0, 51));
-        btnGuardarModificacion.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        btnGuardarModificacion.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnGuardarModificacion.setForeground(java.awt.Color.white);
         btnGuardarModificacion.setText("Guardar Modificacion");
         btnGuardarModificacion.addActionListener(new java.awt.event.ActionListener() {
@@ -588,12 +567,22 @@ public class BCMCliente extends javax.swing.JFrame {
         });
 
         btnSalir.setBackground(new java.awt.Color(153, 0, 0));
-        btnSalir.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setBackground(new java.awt.Color(153, 0, 0));
+        btnEliminar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnEliminar.setForeground(java.awt.Color.white);
+        btnEliminar.setText("Eliminar Cliente");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
             }
         });
 
@@ -609,10 +598,12 @@ public class BCMCliente extends javax.swing.JFrame {
                         .addGap(14, 14, 14)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnGuardarModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGuardarModificacion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -625,7 +616,8 @@ public class BCMCliente extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jButton1)
                     .addComponent(btnGuardarModificacion)
-                    .addComponent(btnSalir))
+                    .addComponent(btnSalir)
+                    .addComponent(btnEliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -700,26 +692,6 @@ public class BCMCliente extends javax.swing.JFrame {
         telefono.eliminarBD(cliente.getIdPersona(),true);
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        this.txtDni.setEditable(true);
-        this.txtNombre.setEditable(true);
-        this.comboDia.setEditable(true);
-        this.comboSexo.setEditable(true);
-        this.comboMes.setEditable(true);
-        this.comboAnio.setEditable(true);
-        this.tablaTelefono.setEnabled(true);
-        this.tablaDomicilio.setEnabled(true);
-        this.tablaCorreoElectronico.setEnabled(true);
-        this.btnGuardarModificacion.setEnabled(true);
-        this.btnNuevoDomicilio.setEnabled(true);
-        this.btnNuevoTelefono.setEnabled(true);
-        this.btnNuevoCorreo.setEnabled(true);
-        this.btnEliminarEmails.setEnabled(true);
-        this.btnEliminarDomicilio.setEnabled(true);
-        this.btnEliminarTels.setEnabled(true);   
-        this.txtObservaciones.setEditable(true);
-    }//GEN-LAST:event_btnModificarActionPerformed
-
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int i =JOptionPane.showConfirmDialog(this,
                 "¿REALMENTE DESEA ELIMINAR EL CLIENTE?","Mensaje",JOptionPane.YES_NO_OPTION);
@@ -743,6 +715,30 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
         // TODO add your handling code here:
+        
+        if(estado){
+        this.btnGuardarModificacion.setText("Guardar Modificación");
+        this.txtDni.setEditable(true);
+        this.txtNombre.setEditable(true);
+        this.comboDia.setEnabled(true);
+        this.comboSexo.setEnabled(true);
+        this.comboMes.setEnabled(true);
+        this.comboAnio.setEnabled(true);
+        this.tablaTelefono.setEnabled(true);
+        this.tablaDomicilio.setEnabled(true);
+        this.tablaCorreoElectronico.setEnabled(true);
+        //this.btnGuardarModificacion.setEnabled(true);
+        this.btnNuevoDomicilio.setEnabled(true);
+        this.btnNuevoTelefono.setEnabled(true);
+        this.btnNuevoCorreo.setEnabled(true);
+        this.btnEliminarEmails.setEnabled(true);
+        this.btnEliminarDomicilio.setEnabled(true);
+        this.btnEliminarTels.setEnabled(true);   
+        this.txtObservaciones.setEditable(true);
+        estado = false;
+        
+        }else{
+        
         cliente.setDni(txtDni.getText());
         cliente.setNombreApellido(txtNombre.getText());
         cliente.setFechaNacimiento(sismain.getControladorDate().darFormatoStringOracle(
@@ -790,7 +786,7 @@ public class BCMCliente extends javax.swing.JFrame {
         
         
         JOptionPane.showMessageDialog(null, "EL CLIENTE SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-        
+        }
     }//GEN-LAST:event_btnGuardarModificacionActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -872,7 +868,6 @@ public class BCMCliente extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarEmails;
     private javax.swing.JButton btnEliminarTels;
     private javax.swing.JButton btnGuardarModificacion;
-    private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevoCorreo;
     private javax.swing.JButton btnNuevoDomicilio;
     private javax.swing.JButton btnNuevoTelefono;

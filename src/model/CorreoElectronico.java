@@ -84,8 +84,8 @@ public class CorreoElectronico {
             else referenciado="E.PROVEEDOR_ID_PROVEEDOR"; 
             
             String tablas = "CORREOELECTRONICO E";
-            String set = "E.DIRECCION = '" + getDireccion() +"'";
-            String condicion = "E.ID_CORREO_ELECTRONICO = '"+ getIdCorreoElectronico() +"' AND "
+            String set = "E.DIRECCION = '" +  direccion +"'";
+            String condicion = "E.ID_CORREO_ELECTRONICO = '"+ idCorreoElectronico +"' AND "
                     + referenciado + " = "+ id_referenciado;
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
@@ -100,7 +100,7 @@ public class CorreoElectronico {
         
         String tabla = "CORREOELECTRONICO E ";
         String condicion = referenciado + " = "+ id_referenciado +" AND "
-                +" E.ID_CORREO_ELECTRONICO = '"+ getIdCorreoElectronico() + "'";
+                +" E.ID_CORREO_ELECTRONICO = '"+ idCorreoElectronico + "'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                

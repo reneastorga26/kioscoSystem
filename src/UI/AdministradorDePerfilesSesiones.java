@@ -6,6 +6,8 @@
 package UI;
 
 import Controller.ControladorDate;
+import javax.swing.JOptionPane;
+import model.Perfil;
 import sistemakiosco.sismain;
 
 /**
@@ -13,7 +15,8 @@ import sistemakiosco.sismain;
  * @author Ignacio
  */
 public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
-
+    
+    private Perfil perfil;
         
     public AdministradorDePerfilesSesiones() {
         this.setTitle("Administrador de Perfiles y Sesiones");
@@ -69,13 +72,14 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         jLabel22 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(0, 255, 0));
         jLabel1.setText("Administrador de Perfiles y Sesiones");
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
@@ -93,6 +97,8 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jButton2.setBackground(new java.awt.Color(51, 0, 51));
+        jButton2.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton2.setText("Propiedades Perfil");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +106,8 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(0, 153, 0));
+        jButton3.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton3.setText("Crear Perfil");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -107,6 +115,8 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(153, 0, 0));
+        jButton4.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton4.setText("Eliminar Perfil");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,7 +149,7 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         );
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setForeground(new java.awt.Color(0, 255, 0));
         jLabel2.setText("Perfiles");
 
         jTextField1.setBackground(new java.awt.Color(255, 255, 255));
@@ -216,6 +226,8 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         ));
         jScrollPane3.setViewportView(jTable3);
 
+        jButton9.setBackground(new java.awt.Color(51, 0, 51));
+        jButton9.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jButton9.setText("Info. Sesion");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -241,7 +253,7 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         );
 
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setForeground(new java.awt.Color(0, 255, 0));
         jLabel4.setText("Sesiones");
 
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
@@ -406,10 +418,10 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(0, 927, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -430,26 +442,39 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnSalir.setForeground(java.awt.Color.white);
+        btnSalir.setText("Cancelar y Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 1046, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSalir))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(btnSalir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -463,7 +488,9 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -485,6 +512,14 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        int i =JOptionPane.showConfirmDialog(this,
+                "¿REALMENTE DESEA ELIMINAR EL PERFIL?","Mensaje",JOptionPane.YES_NO_OPTION);
+        if(i==0){
+            perfil.deshabilitarBD();
+            JOptionPane.showMessageDialog(
+                            null, "EL PERFIL SE HA ELIMINADO CORRECTAMENTE",
+                            "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -525,6 +560,11 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -562,6 +602,7 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> comboAnio;
     private javax.swing.JComboBox<String> comboAnio1;
     private javax.swing.JComboBox<String> comboDia;
@@ -572,9 +613,6 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel19;
@@ -594,16 +632,12 @@ public class AdministradorDePerfilesSesiones extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField4;

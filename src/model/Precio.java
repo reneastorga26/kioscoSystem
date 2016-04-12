@@ -20,23 +20,60 @@ import sistemakiosco.sismain;
 public class Precio {
     
     private long idPrecio;
-    private double numero;
+    private double montoMinorista;
+    private double montoMayorista=-1;
     private String fechaHoraInicio;
     private String fechaHoraFin;
     private long idProducto;
+    private long idProveedor;
+    private char venta;
+
     
-    public Precio(){
+    
+        public Precio(){
         
     }
-    
-    public Precio(long idPrecio, double numero, String fechaHoraInicio, 
-            String fechaHoraFin, long idProducto){
-        this.idPrecio = idPrecio;
-        this.numero = numero;
-        this.fechaHoraInicio = fechaHoraInicio;
-        this.fechaHoraFin = fechaHoraFin;
-        this.idProducto = idProducto;
+
+    public double getMontoMinorista() {
+        return montoMinorista;
     }
+
+    public void setMontoMinorista(double montoMinorista) {
+        this.montoMinorista = montoMinorista;
+    }
+
+    public double getMontoMayorista() {
+        return montoMayorista;
+    }
+
+    public void setMontoMayorista(double montoMayorista) {
+        this.montoMayorista = montoMayorista;
+    }
+
+
+    
+    
+    public char getVenta() {
+        return venta;
+    }
+
+    public void setVenta(char venta) {
+        this.venta = venta;
+    }
+    
+    
+    public long getIdProveedor() {
+        return idProveedor;
+    }
+
+    public void setIdProveedor(long idProveedor) {
+        this.idProveedor = idProveedor;
+    }
+
+
+   
+    
+
 
     public long getIdPrecio() {
         return idPrecio;
@@ -44,14 +81,6 @@ public class Precio {
 
     public void setIdPrecio(long idPrecio) {
         this.idPrecio = idPrecio;
-    }
-
-    public double getNumero() {
-        return numero;
-    }
-
-    public void setNumero(double numero) {
-        this.numero = numero;
     }
 
     public String getFechaHoraInicio() {
@@ -81,58 +110,32 @@ public class Precio {
     public long guardarBD(){
         long idPrecio=-1;
         ArrayList<String> valores= new ArrayList<>();
-        valores.add(String.valueOf(getNumero()));
-        valores.add(getFechaHoraInicio());
-        valores.add(getFechaHoraFin());
-        valores.add(String.valueOf(getIdProducto()));
-        idPrecio = sismain.getControladorBD().aniadir(valores, "PRECIO",false);
+        valores.add(fechaHoraInicio);
+        valores.add(fechaHoraFin);
+        valores.add(String.valueOf(idProducto));
+        valores.add(String.valueOf(venta));
+        valores.add(String.valueOf(idProveedor));
+        valores.add(String.valueOf(montoMayorista));
+        valores.add(String.valueOf(montoMinorista));
+        sismain.getControladorBD().aniadir(valores, "PRECIO",false);
         valores.clear();
-        valores.add(String.valueOf(idPrecio));
-        sismain.getControladorBD().aniadir(valores,"PRECIO",false);
         return idPrecio;
     }
     
-    /*public ArrayList buscarBD(String columnaBusqueda, 
-                         DefaultTableModel modeloTabla,
-                         boolean preBuscar){
-        ArrayList<String> indices = new ArrayList<>();
-
-        String criterioBusqueda;
-        String criterioPreBusqueda;
-        if(columnaBusqueda.equals("ID_PRODUCTO")){
-            criterioBusqueda=String.valueOf(getIdProducto());
-            criterioPreBusqueda="'"+String.valueOf(getIdProducto())+"%'";
-        }
-        else{
-            criterioBusqueda="'"+getDescripcion()+"'";
-            criterioPreBusqueda="'"+getDescripcion()+"%'";
-        }
-        String tablas = "PRODUCTO";
-        String columnas = "ID_PRODUCTO , DESCRIPCION , STOCK_ACTUAL , STOCK_CRITICO_MINIMO, PUNTO_PEDIDO";
-        String condicion;
-        if(preBuscar){
-            condicion = "("+columnaBusqueda+" LIKE "+criterioPreBusqueda+" OR "+columnaBusqueda+" = "+ criterioBusqueda+" )";
-        }
-        else{
-            condicion = ""+columnaBusqueda+" = "+criterioBusqueda+"";
-        }
-        indices = sismain.getControladorBD().buscar(tablas, columnas, condicion, modeloTabla);
-        return indices;
-    }*/
-
     public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
-             
-             String set = "NUMERO = " + txt.get(0);
-             try{
-
-                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id;
-                 System.out.println(query);
-                 sismain.getConexion().getStatement().execute(query);
-             }catch (SQLException ex) {
-            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        
+            String tablas = "PRECIO P";
+            String set = "P.FECHA_HORA_INICIO = '"+ fechaHoraInicio+"', "
+                    + "P.FECHA_HORA_FIN = '" + fechaHoraFin + "', "
+                    + "P.PRODUCTO_ID_PRODUCTO = '"+idProducto+"', "
+                    + "P.VENTA = '"+venta+"', "
+                    + "P.PROVEEDOR_ID_PROVEEDOR = '"+idProveedor+ "', "
+                    + "P.MONTO_MAYORISTA = '"+montoMayorista+"', "
+                    + "P.MONTO_MINORISTA = '"+montoMinorista+"', ";
+                    
+            String condicion = "P.ID_PRECIO = '"+idPrecio+"'";
+            sismain.getControladorBD().modificar(tablas,set,condicion);
+        
     }
-    
-    
     
 }

@@ -107,12 +107,14 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Password:");
 
+        txtUsuario.setText("ADMIN");
         txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtUsuarioKeyReleased(evt);
             }
         });
 
+        txtPassword.setText("4321");
         txtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPasswordKeyPressed(evt);

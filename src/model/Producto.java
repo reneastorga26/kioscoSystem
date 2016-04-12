@@ -20,18 +20,62 @@ import sistemakiosco.sismain;
 public class Producto {
 
     private long idProducto;
+    private long codigo;
     private String descripcion;
     private int stockActual;
     private int stockCriticoMinimo;
     private int puntoPedido;
-    private char tipoCompraProveedor;
     private int unidadesPackMayorista;
     private long idTipoProducto;
     private long idFabricante;
-    private ArrayList<TipoProducto> tiposProductos = new ArrayList<>();
-    private ArrayList<Fabricante> fabricantes = new ArrayList<>();
-    private ArrayList<Precio> precios = new ArrayList<>();
+    private char estadoStock;
+    private char estado;
+    private ArrayList<Precio> preciosVenta;
+    private ArrayList<Precio> preciosCompra;
+
+    public long getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(long codigo) {
+        this.codigo = codigo;
+    }
+
     
+    
+    public ArrayList<Precio> getPreciosVenta() {
+        return preciosVenta;
+    }
+
+    public void setPreciosVenta(ArrayList<Precio> preciosVenta) {
+        this.preciosVenta = preciosVenta;
+    }
+
+    public ArrayList<Precio> getPreciosCompra() {
+        return preciosCompra;
+    }
+
+    public void setPreciosCompra(ArrayList<Precio> preciosCompra) {
+        this.preciosCompra = preciosCompra;
+    }
+    
+
+    public char getEstado() {
+        return estado;
+    }
+
+    public void setEstado(char estado) {
+        this.estado = estado;
+    }
+
+    public char getEstadoStock() {
+        return estadoStock;
+    }
+
+    public void setEstadoStock(char estadoStock) {
+        this.estadoStock = estadoStock;
+    }
+
     public Producto(){
         
     }
@@ -44,7 +88,6 @@ public class Producto {
         this.stockActual = stockActual;
         this.stockCriticoMinimo = stockCriticoMinimo;
         this.puntoPedido = puntoPedido;
-        this.tipoCompraProveedor = tipoCompraProveedor;
         this.unidadesPackMayorista = unidadesPackMayorista;
     }
 
@@ -88,14 +131,6 @@ public class Producto {
         this.puntoPedido = puntoPedido;
     }
 
-    public char getTipoCompraProveedor() {
-        return tipoCompraProveedor;
-    }
-
-    public void setTipoCompraProveedor(char tipoCompraProveedor) {
-        this.tipoCompraProveedor = tipoCompraProveedor;
-    }
-
     public int getUnidadesPackMayorista() {
         return unidadesPackMayorista;
     }
@@ -120,45 +155,45 @@ public class Producto {
         this.idFabricante = idFabricante;
     }
 
-    public ArrayList<TipoProducto> getTiposProductos() {
-        return tiposProductos;
-    }
 
-    public void setTiposProductos(ArrayList<TipoProducto> tiposProductos) {
-        this.tiposProductos = tiposProductos;
-    }
-
-    public ArrayList<Fabricante> getFabricantes() {
-        return fabricantes;
-    }
-
-    public void setFabricantes(ArrayList<Fabricante> fabricantes) {
-        this.fabricantes = fabricantes;
-    }
-
-    public ArrayList<Precio> getPrecios() {
-        return precios;
-    }
-
-    public void setPrecios(ArrayList<Precio> precios) {
-        this.precios = precios;
-    }
 
     public long guardarBD(){
-        long idProducto=-1;
         ArrayList<String> valores= new ArrayList<>();
-        valores.add(String.valueOf(getIdProducto()));
-        valores.add(getDescripcion());
-        valores.add(String.valueOf(getStockActual()));
-        valores.add(String.valueOf(getStockCriticoMinimo()));
-        valores.add(String.valueOf(getPuntoPedido()));
-        valores.add(String.valueOf(getIdProducto()));
-        valores.add(String.valueOf(getIdFabricante()));
-        idProducto = sismain.getControladorBD().aniadir(valores, "PRODUCTO",false);
-        valores.clear();
         valores.add(String.valueOf(idProducto));
-        sismain.getControladorBD().aniadir(valores,"PRODUCTO",false);
+        valores.add(descripcion);
+        valores.add(String.valueOf(stockActual));
+        valores.add(String.valueOf(stockCriticoMinimo));
+        valores.add(String.valueOf(puntoPedido));
+        valores.add(String.valueOf(unidadesPackMayorista));
+        valores.add(String.valueOf(idTipoProducto));
+        valores.add(String.valueOf(idFabricante));
+        valores.add(String.valueOf(estado));
+        valores.add(String.valueOf(estadoStock));
+        valores.add(String.valueOf(codigo));
+        
+        idProducto = sismain.getControladorBD().aniadir(valores, "PRODUCTO",false);
         return idProducto;
+    }
+    
+    public String traductorEstadoStock(String estado, boolean sentido){
+        String resultado="";
+        if(sentido == true){
+        switch(estado){
+                case "Normal":resultado="A";break;
+                case "Cerca al Punto de Pedido": resultado="B";break;
+                case "Punto de Pedido Alcanzado": resultado="C";break;
+                case "Stock Critico Minimo Alcanzado": resultado="D";break;
+            }
+        }
+        else{
+            switch(estado){
+                case "A": resultado = "Normal";
+                case "B": resultado = "Cerca al Punto de Pedido";break;
+                case "C": resultado = "Punto de Pedido Alcanzado";break;
+                case "D": resultado = "Stock Ciritico Minimo Alcanzado";break;
+            }
+        }
+        return resultado;
     }
     
     public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
@@ -168,11 +203,9 @@ public class Producto {
 
         String tablas = "PRODUCTO P";
         String columnas = "P.ID_PRODUCTO, P.ID_PRODUCTO, P.DESCRIPCION";
-        
-        //COMO RESOLVER NO DUPLICAR LAS COLUMNAS??
-        
-        String condicion = "P."+columnaBusqueda+ " = " + criterioBusqueda ;
-        
+        String condicion= "P."+columnaBusqueda+ " = " + criterioBusqueda;
+
+
         if(estado=='H'){
             condicion = condicion + " AND P.ESTADO = 'H'";
         }
@@ -196,117 +229,104 @@ public class Producto {
         this.idProducto = idProducto;
         tablas = "PRODUCTO P";
         columnas = "P.ID_PRODUCTO , P.DESCRIPCION , P.STOCK_ACTUAL , "
-                + "P.STOCK_CRITICO_MINIMO , P.PUNTO_PEDIDO , "
-                + "P.TIPO_PRODUCTO_ID_TIPO_PRODUCTO , P.FABRICANTE_ID_FABRICANTE";
-        condicion = "ID_PRODUCTO = '"+ getIdProducto() + "'";
+                + "P.STOCK_CRITICO_MINIMO , P.PUNTO_PEDIDO ,"
+                + "P.UNIDADES_PACK_MAYORISTA,P.TIPO_PRODUCTO_ID_TIPO_PRODUCTO ,"
+                + " P.FABRICANTE_ID_FABRICANTE, P.ESTADO, P.ESTADO_STOCK, "
+                + "P.CODIGO";
+        condicion = "ID_PRODUCTO = '"+ this.idProducto + "' AND ROWNUM = 1";
         
         
         registros = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
-        setIdProducto(Long.parseLong(registros.get(0).get(0).toString()));
-        setDescripcion(registros.get(0).get(1).toString());
-        setStockActual(Integer.valueOf(registros.get(0).get(2).toString()));
-        setStockCriticoMinimo(Integer.valueOf(registros.get(0).get(3).toString()));
-        setPuntoPedido(Integer.valueOf(registros.get(0).get(4).toString()));
-        setIdTipoProducto(Long.valueOf(registros.get(0).get(5).toString()));
-        setIdFabricante(Long.valueOf(registros.get(0).get(6).toString()));
-        
-        
-        //TIPO_PRODUCTO;
-        
-        tablas =  "TIPO_PRODUCTO T";
-        columnas = "T.ID_TIPO_PRODUCTO, T.DESCRIPCION ";
-        condicion = "T.ID_TIPO_PRODUCTO = '"+ getIdTipoProducto() + "'";
-        
-        registros = sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion);
-        
-        for(int i = 0; i<registros.size();i++){
-            TipoProducto tipoProducto = new TipoProducto();
-            tipoProducto.setIdTipoProducto(Long.parseLong(registros.get(i).get(0).toString()));
-            tipoProducto.setDescripcion(registros.get(i).get(1).toString());
-            getTiposProductos().add(tipoProducto);
-        }
-        
-        registros.clear();
-        //FABRICANTE;
-        
-        tablas = "FABRICANTE F";
-        columnas = "F.ID_FABRICANTE, F.DESCRIPCION ";
-        condicion = "F.ID_FABRICANTE = '"+getIdFabricante() + "'";
-        
-        registros = sismain.getControladorBD().extenderInfo
-        (columnas, tablas, condicion);
-        
-        for(int i = 0; i<registros.size();i++){
-            Fabricante fabricante = new Fabricante();
-            fabricante.setIdFabricante(Long.parseLong(registros.get(i).get(0).toString()));
-            fabricante.setDescripcion(registros.get(i).get(1).toString());
-            getFabricantes().add(fabricante);
-        }
+        this.idProducto=Long.parseLong(registros.get(0).get(0).toString());
+        descripcion=registros.get(0).get(1).toString();
+        stockActual=Integer.valueOf(registros.get(0).get(2).toString());
+        stockCriticoMinimo=Integer.valueOf(registros.get(0).get(3).toString());
+        puntoPedido=Integer.valueOf(registros.get(0).get(4).toString());
+        unidadesPackMayorista=Integer.parseInt(registros.get(0).get(5).toString());
+        idTipoProducto=Long.valueOf(registros.get(0).get(6).toString());
+        idFabricante=Long.valueOf(registros.get(0).get(7).toString());
+        estado=registros.get(0).get(8).toString().charAt(0);
+        estadoStock=registros.get(0).get(9).toString().charAt(0);
+        codigo=Long.parseLong(registros.get(0).get(10).toString());
         
         registros.clear();
         
-        //PRECIO;
+        //PRECIO VENTA;
         
         tablas = "PRECIO P";
-        columnas = "P.ID_PRECIO, P.NUMERO, P.PRODUCTO_ID_PRODUCTO ";
-        condicion = "PRODUCTO_ID_PRODUCTO = '"+ getIdProducto() + "'";
+        columnas = "P.ID_PRECIO, P.MONTO_MAYORISTA, MONTO_MINORISTA, P.FECHA_HORA_INICIO,"
+                + "P.FECHA_HORA_FIN";
+        condicion = "PRODUCTO_ID_PRODUCTO = '"+ idProducto + "'"
+                + "AND VENTA = 'S'";
         
         registros = sismain.getControladorBD().extenderInfo
         (columnas, tablas, condicion);
         
         for(int i = 0; i<registros.size();i++){
             Precio precio = new Precio();
-            precio.setIdPrecio(Long.parseLong(registros.get(i).get(0).toString()));
-            precio.setNumero(Double.valueOf(registros.get(i).get(1).toString()));
-            getPrecios().add(precio);
+            precio.setIdPrecio(Long.parseLong(registros.get(i)
+            .get(0).toString()));
+            precio.setMontoMayorista(Double.valueOf(registros.get(i)
+            .get(1).toString()));
+            precio.setMontoMinorista(Double.valueOf(registros.get(i)
+            .get(2).toString()));
+            precio.setFechaHoraInicio(String.valueOf(registros.get(i)
+            .get(3).toString()));
+            precio.setFechaHoraFin(String.valueOf(registros.get(i)
+            .get(4).toString()));
+            preciosVenta.add(precio);
         }       
-        /*
-        ArrayList InfoAmpliada:
-            Primer Elemento, clase Cliente,
-            Segundo Elemento, ArrayList de Telefonos
-            Tercer Elemento, ArrayList de Domicilios
-            Cuarto Elemento, ArrayList de Correos Electronicos
-        */
         
+        registros.clear();
+        
+        //PRECIO COMPRA;
+        
+        tablas = "PRECIO P";
+        columnas = "P.ID_PRECIO, P.MONTO_MAYORISTA, P.MONTO_MINORISTA, P.FECHA_HORA_INICIO,"
+                + "P.FECHA_HORA_FIN, P.PROVEEDOR_ID_PROVEEDOR";
+        condicion = "PRODUCTO_ID_PRODUCTO = '"+ idProducto + "'"
+                + "AND VENTA = 'N'";
+        
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        for(int i = 0; i<registros.size();i++){
+            Precio precio = new Precio();
+            precio.setIdPrecio(Long.parseLong(registros.get(i).get(0).toString()));
+            precio.setMontoMayorista(Double.valueOf(registros.get(i)
+            .get(1).toString()));
+            precio.setMontoMinorista(Double.valueOf(registros.get(i)
+            .get(2).toString()));
+            precio.setFechaHoraInicio(String.valueOf(registros.get(i)
+            .get(3).toString()));
+            precio.setFechaHoraFin(String.valueOf(registros.get(i)
+            .get(4).toString()));
+            precio.setIdProveedor(Long.parseLong(registros.get(i)
+            .get(5).toString()));
+            preciosCompra.add(precio);
+        }       
+        
+        registros.clear();
      
     }
     
     public void modificarBD(){
-        
-                     
+          
             String tablas = "PRODUCTO P";
-            String set = "P.DESCRIPCION = '"+ getDescripcion()+"', "
-            + "P.STOCK_ACTUAL = '" + getStockActual() + "', "
-            + "P.STOCK_CRITICO_MINIMO = '" + getStockCriticoMinimo() + "', "
-            + "P.PUNTO_PEDIDO = '" + getPuntoPedido() + "'";
-            String condicion = "P.ID_PRODUCTO = '"+ getIdProducto()+"'";
+            String set = "P.ID_PRODUCTO = '"+idProducto+"', "                                                                                   
+                    + "P.DESCRIPCION = '"+ descripcion+"', "
+                    + "P.STOCK_ACTUAL = '" + stockActual + "', "
+                    + "P.FABRICANTE_ID_FABRICANTE = '"+idFabricante+"', "
+                    + "P.UNIDADES_PACK_MAYORISTA = '"+unidadesPackMayorista+ "', "
+                    + "P.ESTADO = '"+estado+"',"
+                    + "P.ESTADO_STOCK = '"+estadoStock+"',"
+                    + "P.STOCK_CRITICO_MINIMO = '" + stockCriticoMinimo + "', "
+                    + "P.PUNTO_PEDIDO = '" + puntoPedido + "', "
+                    + "P.CODIGO = '"+codigo+"'";
+            String condicion = "P.ID_PRODUCTO = '"+idProducto+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);
         
-    }
-    
-    public void habilitarBD(){
-        
-        
-        String tablas= "PRODUCTO P";
-        String set = "P.ESTADO = 'H'";
-        String condicion = "P.ID_PRODUCTO = '"+getIdProducto()+"'";
-
-        sismain.getControladorBD().modificar(tablas,set,condicion);
-        
-    }
-    
-    public void deshabilitarBD(){
-        
-        
-        String tablas= "PRODUCTO P";
-        String set = "P.ESTADO = 'D'";
-        String condicion = "P.ID_PRODUCTO = '"+getIdProducto()+"'";
-        
-        sismain.getControladorBD().modificar(tablas, set, condicion);
-
     }
     
 }

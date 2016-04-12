@@ -34,6 +34,7 @@ public class BCMProveedor extends javax.swing.JFrame {
     private DefaultTableModel model;
     private String cadenaIdProveedor;
     private int filaSeleccionada;
+    private boolean estado = true;
     /**
      * Creates new form ABMProducto
      */
@@ -50,7 +51,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.comboAnio.setEnabled(false);
         this.tablaDomicilio.setEnabled(false);
         this.tablaCorreoElectronico.setEnabled(false);
-        this.btnGuardar.setEnabled(false);
+        this.btnGuardar.setText("Modificar Datos");
         this.btnNuevoDomicilio.setEnabled(false);
         this.btnNuevoTelefono.setEnabled(false);
         this.btnNuevoCorreo.setEnabled(false);
@@ -143,8 +144,6 @@ public class BCMProveedor extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
-        btnModificarDatos = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txtCuit = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -186,6 +185,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         comboAnio = new javax.swing.JComboBox<>();
         btnSalir = new javax.swing.JButton();
         jButton16 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -201,26 +201,6 @@ public class BCMProveedor extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel18.setForeground(java.awt.Color.white);
         jLabel18.setText("Datos Generales del Proveedor");
-
-        btnModificarDatos.setBackground(new java.awt.Color(51, 0, 51));
-        btnModificarDatos.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnModificarDatos.setForeground(java.awt.Color.white);
-        btnModificarDatos.setText("Modificar Datos");
-        btnModificarDatos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarDatosActionPerformed(evt);
-            }
-        });
-
-        btnGuardar.setBackground(new java.awt.Color(51, 0, 51));
-        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnGuardar.setForeground(java.awt.Color.white);
-        btnGuardar.setText("Guardar Modificacion");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("CUIT:");
@@ -343,8 +323,28 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator5)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(0, 245, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnNuevoTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEliminarTels, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(btnNuevoDomicilio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -366,35 +366,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                                                 .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(txtCuit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addComponent(jLabel4))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(btnNuevoTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btnEliminarTels, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel5))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnModificarDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnEliminarEmails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel18)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -434,7 +406,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoCorreo)
                     .addComponent(btnEliminarEmails, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -442,11 +414,7 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addComponent(jLabel15)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModificarDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23))
+                .addGap(55, 55, 55))
         );
 
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
@@ -609,7 +577,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         btnSalir.setBackground(new java.awt.Color(153, 0, 0));
         btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnSalir.setForeground(java.awt.Color.white);
-        btnSalir.setText("Cancelar y Salir");
+        btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -626,6 +594,16 @@ public class BCMProveedor extends javax.swing.JFrame {
             }
         });
 
+        btnGuardar.setBackground(new java.awt.Color(51, 0, 51));
+        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnGuardar.setForeground(java.awt.Color.white);
+        btnGuardar.setText("Guardar Modificacion");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -634,9 +612,11 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -655,13 +635,14 @@ public class BCMProveedor extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnSalir)
-                        .addComponent(jButton16))
+                        .addComponent(jButton16)
+                        .addComponent(btnGuardar))
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -756,8 +737,11 @@ public class BCMProveedor extends javax.swing.JFrame {
         sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboAnioActionPerformed
 
-    private void btnModificarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarDatosActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
+        
+        if(estado){
+        this.btnGuardar.setText("Guardar Modificación");
         this.txtCuit.setEnabled(true);
         this.txtRazonSocial.setEnabled(true);
         this.comboDia.setEnabled(true);
@@ -772,12 +756,9 @@ public class BCMProveedor extends javax.swing.JFrame {
         this.btnEliminarEmails.setEnabled(true);
         this.btnEliminarDomicilio.setEnabled(true);
         this.btnEliminarTels.setEnabled(true);
-    }//GEN-LAST:event_btnModificarDatosActionPerformed
-
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-        //cliente.setDni(txtDni.getText());
-        //cliente.setNombreApellido(txtNombre.getText());
+        
+        }else{
+            
         proveedor.setCuit(txtCuit.getText());
         proveedor.setRazonSocial(txtRazonSocial.getText());
         proveedor.setObservaciones(txaObservaciones.getText());
@@ -814,7 +795,7 @@ public class BCMProveedor extends javax.swing.JFrame {
         
         
         JOptionPane.showMessageDialog(null, "EL PROVEEDOR SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
-        
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
@@ -918,7 +899,6 @@ public class BCMProveedor extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarEmails;
     private javax.swing.JButton btnEliminarTels;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnModificarDatos;
     private javax.swing.JButton btnNuevoCorreo;
     private javax.swing.JButton btnNuevoDomicilio;
     private javax.swing.JButton btnNuevoTelefono;

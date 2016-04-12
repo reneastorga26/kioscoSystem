@@ -9,6 +9,7 @@ package Controller;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 /**
  *
@@ -213,5 +214,56 @@ public class ControladorDate {
         String fecha = dia +"/"+mes+"/"+anio;
         
         return fecha;
+    }
+    
+    public void darFormatoFechaAJTextFields(String cadena, JTextField txtDia,
+                                        JTextField txtMes, JTextField txtAnio){
+        String cadenaFecha = cadena;
+        String dia1 = String.valueOf(cadenaFecha.charAt(8));
+        String dia2 = String.valueOf(cadenaFecha.charAt(9));
+        String dia = dia1 + dia2;
+        txtDia.setText(dia);
+        String mes1 = String.valueOf(cadenaFecha.charAt(5));
+        String mes2 = String.valueOf(cadenaFecha.charAt(6));
+        String mes = mes1 + mes2;
+        txtMes.setText(mes);
+        String anio1 = String.valueOf(cadenaFecha.charAt(0));
+        String anio2 = String.valueOf(cadenaFecha.charAt(1));
+        String anio3 = String.valueOf(cadenaFecha.charAt(2));
+        String anio4 = String.valueOf(cadenaFecha.charAt(3));
+        String anio = anio1 + anio2 + anio3 + anio4;
+        txtAnio.setText(anio);
+        //String fecha = dia +"/"+mes+"/"+anio;
+        
+        //return fecha;
+    }
+    
+    public void formatoHora(JComboBox comboHora){
+        comboHora.addItem("Hora");
+        comboHora.addItem("00:00");
+        comboHora.addItem("01:00");
+        comboHora.addItem("02:00");
+        comboHora.addItem("03:00");
+        comboHora.addItem("04:00");
+        comboHora.addItem("05:00");
+        comboHora.addItem("06:00");
+        comboHora.addItem("07:00");
+        comboHora.addItem("08:00");
+        comboHora.addItem("09:00");
+        comboHora.addItem("10:00");
+        comboHora.addItem("11:00");
+        comboHora.addItem("12:00");
+        comboHora.addItem("13:00");
+        comboHora.addItem("14:00");
+        comboHora.addItem("15:00");
+        comboHora.addItem("16:00");
+        comboHora.addItem("17:00");
+        comboHora.addItem("18:00");
+        comboHora.addItem("19:00");
+        comboHora.addItem("20:00");
+        comboHora.addItem("21:00");
+        comboHora.addItem("22:00");
+        comboHora.addItem("23:00");
+        
     }
 }

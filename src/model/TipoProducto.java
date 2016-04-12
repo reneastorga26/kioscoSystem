@@ -61,38 +61,42 @@ public class TipoProducto {
     public long guardarBD(){
         long idTipoProducto=-1;
         ArrayList<String> valores= new ArrayList<>();
-        valores.add(String.valueOf(getIdTipoProducto()));
-        valores.add(getDescripcion());
+        valores.add(descripcion);
+        valores.add(String.valueOf(refrigeracion));
         idTipoProducto = sismain.getControladorBD().aniadir(valores, "TIPO_PRODUCTO",false);
         valores.clear();
-        
         return idTipoProducto;
     }
     
     
-    public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
-            char estado, DefaultTableModel modeloTabla){
+    public void ampliarInfoBD(String criterioBusqueda, String columnaBusqueda, 
+            DefaultTableModel modeloTabla){
         
-        ArrayList<Long> indices = new ArrayList<>();
+        ArrayList<ArrayList<Object>> registros;
 
         String tablas = "TIPO_PRODUCTO T";
-        String columnas = "T.ID_TIPO_PRODUCTO, T.DESCRIPCION";
-        String condicion = ""+columnaBusqueda+ " = " + criterioBusqueda ;
+        String columnas = "T.ID_TIPO_PRODUCTO, T.DESCRIPCION, T.REFRIGERACION";
+        String condicion = "T."+columnaBusqueda+ " = '" + criterioBusqueda 
+                +"' AND ROWNUM = 1";
         
-               
-        sismain.getControladorBD().buscar(columnas, 
-                tablas, condicion, modeloTabla);
+
+        registros = sismain.getControladorBD().extenderInfo(columnas, 
+                tablas, condicion);
+ 
+        idTipoProducto = Long.parseLong(registros.get(0).get(0).toString());
+        descripcion = registros.get(0).get(1).toString();
+        refrigeracion = registros.get(0).get(2).toString().charAt(0);
         
-        return indices;
     }
     
     public void modificarBD(){
              
             String tablas = "TIPO_PRODUCTO T";
-            String set = "T.DESCRIPCION = '" + getDescripcion() + "'";
+            String set = "T.DESCRIPCION = '" + descripcion + "',"
+                    + "T.REFRIGERACION = ' " + refrigeracion+ "'";
             String condicion = "T.ID_TIPO_PRODUCTO = '"+ idTipoProducto+"'";
              
-             sismain.getControladorBD().modificar(tablas,set,condicion);
+            sismain.getControladorBD().modificar(tablas,set,condicion);
     } 
     
     public void eliminarBD(long id_referenciado){
@@ -104,5 +108,15 @@ public class TipoProducto {
                
     }
     
-    
+       public ArrayList obtenerDescripcionTodos(){
+       ArrayList<ArrayList<Object>> registros;
+       
+       String tablas= "TIPO_PRODUCTO T";
+       String columnas="T.ID_TIPO_PRODUCTO, T.DESCRIPCION";
+       String condicion="T.ID_TIPO_PRODUCTO = T.ID_TIPO_PRODUCTO";
+       
+       registros=sismain.getControladorBD().extenderInfo(columnas, tablas, condicion);
+       
+       return registros;
+   }
 }

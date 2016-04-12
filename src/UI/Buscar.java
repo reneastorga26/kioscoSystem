@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RowFilter;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.Cliente;
@@ -28,13 +29,9 @@ import sistemakiosco.sismain;
  */
 public class Buscar extends javax.swing.JFrame {
 
-
-    public DefaultTableModel modeloTabla = new DefaultTableModel();
+    private DefaultTableModel modeloTabla;
     private TableRowSorter trsFiltro;
     private int valorSeleccion;
-    private String idPersona;
-    private String idProveedor;
-    private String idProducto;
     private Cliente cliente = new Cliente();
     private Empleado empleado = new Empleado();
     private Proveedor proveedor = new Proveedor();
@@ -53,6 +50,8 @@ public class Buscar extends javax.swing.JFrame {
         this.tablaBuscar.getColumnModel().getColumn(0).setPreferredWidth(0);
         this.tablaBuscar.getColumnModel().getColumn(1).setPreferredWidth(150);
         this.tablaBuscar.getColumnModel().getColumn(2).setPreferredWidth(350);
+        this.tablaBuscar.setModel(modeloTabla);
+        this.tablaBuscar.setRowSorter(trsFiltro);
         this.setTitle("Búsqueda de " + titulo);
         this.lblTitulo.setText("Búsqueda de " + titulo);
         this.jRadioButton1.setText(parametro1);
@@ -74,7 +73,7 @@ public class Buscar extends javax.swing.JFrame {
                  break;
              
              case 2:
-                empleado.buscarBD("E.PERSONA_ID_PERSONA", "ID_PERSONA", estado, modeloTabla);
+                empleado.buscarBD("E.PERSONA_ID_PERSONA", "P.ID_PERSONA", estado, modeloTabla);
                 valorSeleccion = 2;
                  break;
              
@@ -88,7 +87,7 @@ public class Buscar extends javax.swing.JFrame {
                 valorSeleccion = 4;
                  break;
              }
-     } 
+    } 
     
     public void limpiarTabla(){
              for(int i=modeloTabla.getRowCount(); i>0;i--){
@@ -96,30 +95,46 @@ public class Buscar extends javax.swing.JFrame {
         }
     }
     
+    
     public void filtro() {
+        
         int columnaABuscar = 0;
         if (jRadioButton1.isSelected()) {
-            columnaABuscar = 0;
+            columnaABuscar = 1; //DNI, CODIGO O CUIT
         }
         if (jRadioButton2.isSelected()) {
-            columnaABuscar = 1;
+            columnaABuscar = 2; // NOMBRE Y APELLIDO, DESCRIPCION, RAZON SOCIAL
         }
         
         trsFiltro.setRowFilter(RowFilter.regexFilter(txtBuscar.getText(), columnaABuscar));
+        
     }
     
-    public void seleccion(int opcion){
+    public String seleccionarRegistro(){
+        int modelRow = 0;
+        String dato = "";
+        int fila = tablaBuscar.getSelectedRow();
+        if (fila >= 0){
+        modelRow = tablaBuscar.convertRowIndexToModel(fila);
+        dato = String.valueOf(modeloTabla.getValueAt(modelRow,0));
+        
+        }
+        return dato;
+    }
+    
+    public void ampliarInfoRegistro(int opcion){
         switch(opcion){
             case 1:
                  
         //BUSCAR CLIENTE
         
-
-        String datoCliente = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        
+        String datoCliente = seleccionarRegistro();
         cliente.ampliarInfoBD(Long.valueOf(datoCliente));
         BCMCliente adminCliente = new BCMCliente(cliente);
         adminCliente.setVisible(true);
         adminCliente.completarCampos();
+        
         break;
         
             case 2:
@@ -127,9 +142,9 @@ public class Buscar extends javax.swing.JFrame {
         //BUSCAR EMPLEADO
         
         
-        String datoEmpleado = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        String datoEmpleado = seleccionarRegistro();
         empleado.ampliarInfoBD(Long.valueOf(datoEmpleado));
-        BCMEmpleado adminEmpleado = new BCMEmpleado(empleado);
+        BCMEmpleado adminEmpleado = new BCMEmpleado(empleado, false);
         adminEmpleado.setVisible(true);
         adminEmpleado.completarCampos();
         break;
@@ -140,7 +155,7 @@ public class Buscar extends javax.swing.JFrame {
         //BUSCAR PROVEEDOR
         
         
-        String datoProveedor = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        String datoProveedor = seleccionarRegistro();
         proveedor.ampliarInfoBD(Long.valueOf(datoProveedor));
         BCMProveedor adminProveedor = new BCMProveedor(proveedor);
         adminProveedor.setVisible(true);
@@ -152,9 +167,9 @@ public class Buscar extends javax.swing.JFrame {
         //BUSCAR PRODUCTO
         
         
-        String datoProducto = String.valueOf(modeloTabla.getValueAt(tablaBuscar.getSelectedRow(),0));
+        String datoProducto = seleccionarRegistro();
         producto.ampliarInfoBD(Long.valueOf(datoProducto));
-        BCMProducto adminProducto = new BCMProducto(producto);
+        BCProducto adminProducto = new BCProducto(producto);
         adminProducto.setVisible(true);
         adminProducto.completarCampos();
         break;
@@ -187,6 +202,7 @@ public class Buscar extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
+        checkEstado = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -254,6 +270,13 @@ public class Buscar extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("FILTRAR POR:");
 
+        checkEstado.setText("Deshabilitados");
+        checkEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkEstadoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -269,7 +292,8 @@ public class Buscar extends javax.swing.JFrame {
                         .addComponent(jRadioButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jRadioButton2)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(checkEstado))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -286,7 +310,8 @@ public class Buscar extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton2)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(checkEstado))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -357,28 +382,41 @@ public class Buscar extends javax.swing.JFrame {
 
     private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
         // TODO add your handling code here:
+        
         txtBuscar.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyReleased(final KeyEvent e) {
                 
-                String cadena = (txtBuscar.getText());
+                String cadena = (txtBuscar.getText().toUpperCase());
                 txtBuscar.setText(cadena);
                 filtro();
-                String criterioBusqueda = txtBuscar.getText();
-                System.out.println("Criterio de Busqueda : "+ criterioBusqueda);
+                System.out.println("Criterio de Busqueda : "+ cadena);
                 
             }
+            
         });
-        trsFiltro = new TableRowSorter(tablaBuscar.getModel());
+        trsFiltro = new TableRowSorter(modeloTabla);
         tablaBuscar.setRowSorter(trsFiltro);
-        
+       
     }//GEN-LAST:event_txtBuscarKeyTyped
 
     private void btnAmpliarInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmpliarInfoActionPerformed
         // TODO add your handling code here:
-               
-        seleccion(valorSeleccion);
+        ampliarInfoRegistro(valorSeleccion);
         
     }//GEN-LAST:event_btnAmpliarInfoActionPerformed
+
+    private void checkEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkEstadoActionPerformed
+        // TODO add your handling code here:
+       
+        if(checkEstado.isSelected()){            
+            limpiarTabla();
+            evaluar(valorSeleccion, 'D');
+        }else{
+            limpiarTabla();
+            evaluar(valorSeleccion, 'H');
+        } 
+    }//GEN-LAST:event_checkEstadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -419,6 +457,7 @@ public class Buscar extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAmpliarInfo;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox checkEstado;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;

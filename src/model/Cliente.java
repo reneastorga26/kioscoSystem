@@ -71,7 +71,7 @@ public class Cliente extends Persona{
             condicion = condicion + " AND P.ESTADO = 'D'";
         }
  
-        sismain.getControladorBD().buscar(columnas, 
+        indices = sismain.getControladorBD().buscar(columnas, 
                 tablas, condicion, modeloTabla);
         
         return indices;
@@ -89,7 +89,7 @@ public class Cliente extends Persona{
         columnas ="P.ID_PERSONA, P.NOMBRE_APELLIDO, P.DNI, P.SEXO, "
                 + "P.FECHA_NAC, P.OBSERVACIONES";
         condicion = "P.ID_PERSONA = C.PERSONA_ID_PERSONA AND "
-                + "C.ID_CLIENTE = '"+ getIdCliente() + "'";
+                + "C.ID_CLIENTE = '"+ idCliente + "'";
         
         
         registros = sismain.getControladorBD().extenderInfo

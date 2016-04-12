@@ -52,19 +52,10 @@ public class RelacionEmpleadoObraSocial {
     }
     
     
-    public void modificarBD(){
-             
-            String tablas = "RELACION_EMPLEADO_OS R";
-            String set = "R.OBRA_SOCIAL_ID_OBRA_SOCIAL = '" + getIdObraSocial();
-            String condicion = "R.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado() +"'";
-             
-             sismain.getControladorBD().modificar(tablas,set,condicion);
-    } 
-    
     public void eliminarBD(long id_referenciado){
         
         String tabla = "RELACION_EMPLEADO_OS R";
-        String condicion = "R.EMPLEADO_ID_EMPLEADO = '"+ getIdEmpleado() +"'";
+        String condicion = "R.OBRA_SOCIAL_ID_OBRA_SOCIAL = '"+ id_referenciado +"'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                

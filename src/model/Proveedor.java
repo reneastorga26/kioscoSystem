@@ -5,11 +5,7 @@
  */
 package model;
 
-import Controller.ControladorBD;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import sistemakiosco.sismain;
 
@@ -261,6 +257,18 @@ public class Proveedor {
         String condicion = "P.ID_PROVEEDOR = '"+getIdProveedor()+"'";
         
         sismain.getControladorBD().modificar(tablas, set, condicion);
-
+        
     }
+    
+   public ArrayList obtenerRazonSocialTodos(){
+       ArrayList<ArrayList<Object>> registros;
+       
+       String tablas= "PROVEEDOR P";
+       String columnas="P.ID_PROVEEDOR, P.RAZON_SOCIAL";
+       String condicion="P.RAZON_SOCIAL = P.RAZON_SOCIAL";
+       
+       registros=sismain.getControladorBD().extenderInfo(columnas, tablas, condicion);
+       
+       return registros;
+   }
 }

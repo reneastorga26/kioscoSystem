@@ -36,7 +36,6 @@ public class ACliente extends javax.swing.JFrame {
     private Telefono telefono = new Telefono();
     private Domicilio domicilio = new Domicilio();
     private CorreoElectronico correoElectronico = new CorreoElectronico();
-    private ControladorDate controladorDate = new ControladorDate();
     private DefaultTableModel model;
     
     
@@ -49,6 +48,7 @@ public class ACliente extends javax.swing.JFrame {
         sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setTitle("Datos del Nuevo Cliente");
     }
 
     public JTable getTablaTelefono() {
@@ -81,8 +81,6 @@ public class ACliente extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtDni = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
         comboDia = new javax.swing.JComboBox<>();
         comboMes = new javax.swing.JComboBox<>();
         comboAnio = new javax.swing.JComboBox<>();
@@ -105,14 +103,14 @@ public class ACliente extends javax.swing.JFrame {
         tablaCorreoElectronico = new javax.swing.JTable();
         btnNuevoCorreo = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
-        btnGuardar = new javax.swing.JButton();
-        btnSalir = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtObservaciones = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
         btnEliminarEmails = new javax.swing.JButton();
         btnComprobar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         jLabel7.setText("jLabel7");
 
@@ -159,14 +157,6 @@ public class ACliente extends javax.swing.JFrame {
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("FECHA NACIMIENTO:");
-
-        jLabel19.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel19.setText("/");
-
-        jLabel20.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel20.setText("/");
 
         comboDia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -278,26 +268,6 @@ public class ACliente extends javax.swing.JFrame {
             }
         });
 
-        btnGuardar.setBackground(new java.awt.Color(0, 152, 0));
-        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnGuardar.setForeground(java.awt.Color.white);
-        btnGuardar.setText("Guardar Nuevo Cliente");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
-        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnSalir.setForeground(java.awt.Color.white);
-        btnSalir.setText("Cancelar y Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
-            }
-        });
-
         txtObservaciones.setColumns(20);
         txtObservaciones.setRows(5);
         jScrollPane2.setViewportView(txtObservaciones);
@@ -357,21 +327,17 @@ public class ACliente extends javax.swing.JFrame {
                                             .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel3Layout.createSequentialGroup()
                                                 .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(btnComprobar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(btnComprobar, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(jPanel3Layout.createSequentialGroup()
                                                 .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel19)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGap(18, 18, 18)
                                                 .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel20)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGap(21, 21, 21)
                                                 .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addComponent(comboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -389,18 +355,14 @@ public class ACliente extends javax.swing.JFrame {
                                                         .addComponent(btnEliminarEmails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(btnNuevoCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(41, 41, 41))))
+                                                .addGap(29, 29, 29))))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(10, 10, 10)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jSeparator5)
                                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                                                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addGap(12, 12, 12)))))))
+                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE)))))))
                         .addContainerGap())
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
@@ -435,10 +397,8 @@ public class ACliente extends javax.swing.JFrame {
                                 .addGap(14, 14, 14)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel19)
                                     .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel20)
                                     .addComponent(jLabel8))
                                 .addGap(14, 14, 14)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -457,13 +417,8 @@ public class ACliente extends javax.swing.JFrame {
                                     .addComponent(jLabel10)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(11, 11, 11)
@@ -491,12 +446,32 @@ public class ACliente extends javax.swing.JFrame {
         );
 
         jButton1.setBackground(new java.awt.Color(51, 0, 51));
-        jButton1.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Habilitar un cliente eliminado");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setBackground(new java.awt.Color(0, 152, 0));
+        btnGuardar.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnGuardar.setForeground(java.awt.Color.white);
+        btnGuardar.setText("Guardar Nuevo Cliente");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnSalir.setForeground(java.awt.Color.white);
+        btnSalir.setText("Cancelar y Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
             }
         });
 
@@ -509,12 +484,18 @@ public class ACliente extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabel1)
+                                .addGap(170, 170, 170)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnGuardar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                                .addComponent(btnSalir)))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -522,7 +503,9 @@ public class ACliente extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnSalir))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -544,55 +527,12 @@ public class ACliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEliminarDomiciliosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomiciliosActionPerformed
-        // TODO add your handling code here:
-        model = (DefaultTableModel)tablaDomicilio.getModel();
-        model.removeRow(tablaDomicilio.getSelectedRow()); 
-    }//GEN-LAST:event_btnEliminarDomiciliosActionPerformed
-
-    private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
-        NDDomicilio dDomicilio= new NDDomicilio(this,
-                true, (DefaultTableModel) tablaDomicilio.getModel());
-        dDomicilio.setVisible(true);
-    }//GEN-LAST:event_btnNuevoDomicilioActionPerformed
-
-    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
-        
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
-    }//GEN-LAST:event_comboAnioActionPerformed
-
-    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
-    }//GEN-LAST:event_comboMesActionPerformed
-
-    private void btnNuevoTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTelefonoActionPerformed
-        NDTelefono dTelefono= new NDTelefono(this,
-                true,(DefaultTableModel) tablaTelefono.getModel());
-        dTelefono.setVisible(true);
-    }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
-
-    private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
-        NDCorreoElectronico dCorreo= new NDCorreoElectronico(this,
-                true,(DefaultTableModel) tablaCorreoElectronico.getModel());
-        dCorreo.setVisible(true);
-    }//GEN-LAST:event_btnNuevoCorreoActionPerformed
-
-    private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
-        model = (DefaultTableModel)tablaCorreoElectronico.getModel();
-        model.removeRow(tablaCorreoElectronico.getSelectedRow()); 
-    }//GEN-LAST:event_btnEliminarEmailsActionPerformed
-
-    private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
-        model = (DefaultTableModel)tablaTelefono.getModel();
-        model.removeRow(tablaTelefono.getSelectedRow()); 
-    }//GEN-LAST:event_btnEliminarTelsActionPerformed
-
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         
         cliente.setDni(txtDni.getText());
         cliente.setNombreApellido(txtNombre.getText());
         cliente.setFechaNacimiento(
-                controladorDate.darFormatoStringOracle(
+                sismain.getControladorDate().darFormatoStringOracle(
                         comboDia.getSelectedItem().toString(),
                         comboMes.getSelectedItem().toString(),
                         comboAnio.getSelectedItem().toString()));
@@ -642,27 +582,70 @@ public class ACliente extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
-        
-    }//GEN-LAST:event_comboDiaActionPerformed
-
-    private void comboSexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSexoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboSexoActionPerformed
-
-    private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
-        // TODO add your handling code here:
-        
-        String cadena = txtDni.getText();
-        sismain.getControladorBD().buscar("P.DNI", "PERSONA P", "DNI = '" + cadena + "'", null);
-         
-    }//GEN-LAST:event_btnComprobarActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         Buscar buscar = new Buscar("Cliente", "DNI", "NOMBRE Y APELLIDO", 'D', 1);
         buscar.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
+        // TODO add your handling code here:
+
+        String cadena = txtDni.getText();
+        sismain.getControladorBD().buscar("P.DNI", "PERSONA P", "DNI = '" + cadena + "'", null);
+
+    }//GEN-LAST:event_btnComprobarActionPerformed
+
+    private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
+        model = (DefaultTableModel)tablaCorreoElectronico.getModel();
+        model.removeRow(tablaCorreoElectronico.getSelectedRow());
+    }//GEN-LAST:event_btnEliminarEmailsActionPerformed
+
+    private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
+        NDCorreoElectronico dCorreo= new NDCorreoElectronico(this,
+            true,(DefaultTableModel) tablaCorreoElectronico.getModel());
+        dCorreo.setVisible(true);
+    }//GEN-LAST:event_btnNuevoCorreoActionPerformed
+
+    private void btnEliminarDomiciliosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomiciliosActionPerformed
+        // TODO add your handling code here:
+        model = (DefaultTableModel)tablaDomicilio.getModel();
+        model.removeRow(tablaDomicilio.getSelectedRow());
+    }//GEN-LAST:event_btnEliminarDomiciliosActionPerformed
+
+    private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
+        NDDomicilio dDomicilio= new NDDomicilio(this,
+            true, (DefaultTableModel) tablaDomicilio.getModel());
+        dDomicilio.setVisible(true);
+    }//GEN-LAST:event_btnNuevoDomicilioActionPerformed
+
+    private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
+        model = (DefaultTableModel)tablaTelefono.getModel();
+        model.removeRow(tablaTelefono.getSelectedRow());
+    }//GEN-LAST:event_btnEliminarTelsActionPerformed
+
+    private void comboSexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSexoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboSexoActionPerformed
+
+    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
+
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboAnioActionPerformed
+
+    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboMesActionPerformed
+
+    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
+
+    }//GEN-LAST:event_comboDiaActionPerformed
+
+    private void btnNuevoTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoTelefonoActionPerformed
+        NDTelefono dTelefono= new NDTelefono(this,
+            true,(DefaultTableModel) tablaTelefono.getModel());
+        dTelefono.setVisible(true);
+    }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -735,9 +718,7 @@ public class ACliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;

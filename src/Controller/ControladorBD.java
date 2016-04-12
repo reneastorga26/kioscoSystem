@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import sistemakiosco.sismain;
 
 /**
@@ -70,7 +72,7 @@ public class ControladorBD {
             }
         values = "(" + values + ")";
         campos= "(" + campos + ")";
-        String query = "INSERT INTO SISKIOS." + tabla + " " + campos + " values " + values;
+        String query = "INSERT INTO SISKIOS." + tabla + " " + campos + " VALUES " + values;
         System.out.println(query);
         sismain.getConexion().getStatement().execute(query);
         } catch (SQLException ex) {
@@ -140,18 +142,14 @@ public ArrayList extenderInfo(String columnas,
      String query = "SELECT "+columnas+" FROM "+tablas+" WHERE "+ condicion;
 
      ArrayList<Long> indices = new ArrayList<>();
+     
         try {
-            
+            System.out.println(query);
             rs=sismain.getConexion().getStatement().executeQuery(query);
             System.out.println("Buscando...");
             while(rs.next()){
-                if(modeloTabla == null){
-                    JOptionPane.showMessageDialog(
-                            null, "EL DATO INGRESADO YA EXISTE EN EL SISTEMA",
-                            "Mensaje",JOptionPane.INFORMATION_MESSAGE);
-                }else{
                 indices.add(Long.parseLong(rs.getObject(1).toString()));
-                
+                if(modeloTabla!=null){
                 Object[] fila = new Object[rs.getMetaData().getColumnCount()]; 
                 
                 for(int i = 0; i<rs.getMetaData().getColumnCount(); i++){
@@ -159,7 +157,8 @@ public ArrayList extenderInfo(String columnas,
                 }
                 modeloTabla.addRow(fila);
                 
-            }
+                }
+                                
             }
         } catch (SQLException ex) {
             Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);

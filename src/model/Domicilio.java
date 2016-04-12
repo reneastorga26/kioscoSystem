@@ -104,10 +104,10 @@ public class Domicilio {
             else referenciado="D.PROVEEDOR_ID_PROVEEDOR"; 
         //HI
             String tablas = "DOMICILIO D";
-            String set = "D.DIRECCION = '" + getDireccion() +"',"
-                       + "D.LOCALIDAD = '"+ getLocalidad() +"',"
-                       + "D.PROVINCIA = '"+ getProvincia() +"'";
-            String condicion = "D.ID_DOMICILIO = '"+ getIdDomicilio() +"' AND "
+            String set = "D.DIRECCION = '" + direccion +"',"
+                       + "D.LOCALIDAD = '"+ localidad +"',"
+                       + "D.PROVINCIA = '"+ provincia +"'";
+            String condicion = "D.ID_DOMICILIO = '"+ idDomicilio +"' AND "
                     + referenciado + " = "+ id_referenciado;
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
@@ -122,7 +122,7 @@ public class Domicilio {
         
         String tabla = "DOMICILIO D";
         String condicion = referenciado + " = "+ id_referenciado +" AND "
-                +" D.ID_DOMICILIO = '"+ getIdDomicilio() + "'";
+                +" D.ID_DOMICILIO = '"+ idDomicilio + "'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                

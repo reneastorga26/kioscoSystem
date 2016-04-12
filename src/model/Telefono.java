@@ -96,8 +96,8 @@ public class Telefono {
             else referenciado="T.PROVEEDOR_ID_PROVEEDOR";
         
             String tablas = "TELEFONO T";
-            String set = "T.NUMERO = '" + getNumero() + "', T.MOVIL = '"+ getMovil() +"'";
-            String condicion = "T.ID_TELEFONO = '"+ getIdTelefono() +"' AND "
+            String set = "T.NUMERO = '" + numero + "', T.MOVIL = '"+ movil +"'";
+            String condicion = "T.ID_TELEFONO = '"+ idTelefono +"' AND "
                     + referenciado + " = "+ id_referenciado;
              
              sismain.getControladorBD().modificar(tablas,set,condicion);
@@ -112,7 +112,7 @@ public class Telefono {
         
         String tabla = "TELEFONO T";
         String condicion = referenciado + " = "+ id_referenciado +" AND "
-                +" T.ID_TELEFONO = '"+ getIdTelefono() +"'";
+                +" T.ID_TELEFONO = '"+ idTelefono +"'";
         
         sismain.getControladorBD().eliminar(tabla, condicion);
                
