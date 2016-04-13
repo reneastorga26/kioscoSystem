@@ -21,7 +21,6 @@ public class AMConceptos extends javax.swing.JDialog {
     private ConceptoSueldo concepto;
     private static DefaultTableModel modeloTabla;
     private boolean alta;
-    private ArrayList<String> valores;
     /**
      * Creates new form AConceptos
      */
@@ -314,6 +313,10 @@ public class AMConceptos extends javax.swing.JDialog {
         // TODO add your handling code here:
         long idConcepto;
         String estado;
+        
+        if(alta){
+            concepto = new ConceptoSueldo();
+        }
         concepto.setDescripcion(txtDescripcion.getText());
         concepto.setImporte(Double.valueOf(txtImporte.getText()));
         concepto.setUnidad(txtUnidad.getText());

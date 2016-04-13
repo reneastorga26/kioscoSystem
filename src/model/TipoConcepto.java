@@ -68,6 +68,25 @@ public class TipoConcepto {
         return indices;
     }
     
+    public void ampliarInfoBD(long idTipoConcepto){
+        
+        ArrayList<ArrayList<Object>> registros;
+
+        this.idTipo = idTipoConcepto;
+        
+        String tablas = "TIPOS_CONCEPTOS T";
+        String columnas = "T.ID_TIPO_CONCEPTO, T.DESCRIPCION";
+        String condicion = "T.ID_TIPO_CONCEPTO = '" + idTipo + "'" ;
+        
+        
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        setIdTipo(Long.valueOf(registros.get(0).get(0).toString()));
+        setDescripcion(registros.get(0).get(1).toString());
+        registros.clear();
+    }
+    
     public void eliminarBD(long id_referenciado){
         
         String tabla = "TIPO_CONCEPTO T";

@@ -191,13 +191,26 @@ public class ConceptoSueldo {
     }
     
     
-    
-    public void eliminarBD(long id_referenciado){
+    public void habilitarBD(){
+        
         
         String tabla = "CONCEPTO_SUELDO C";
-        String condicion = "C.ID_CONCEPTO = '" + id_referenciado +"'";    
-            
-        sismain.getControladorBD().eliminar(tabla, condicion);
-               
+        String set = "C.ESTADO = 'H'";
+        String condicion = "C.ID_CONCEPTO = '"+ idConcepto +"'";
+
+        sismain.getControladorBD().modificar(tabla,set,condicion);
+        
     }
+    
+    public void deshabilitarBD(){
+        
+        
+        String tabla = "CONCEPTO_SUELDO C";
+        String set = "C.ESTADO = 'D'";
+        String condicion = "C.ID_CONCEPTO = '"+ idConcepto +"'";
+        
+        sismain.getControladorBD().modificar(tabla, set, condicion);
+
+    }
+    
 }

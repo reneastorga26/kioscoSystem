@@ -25,6 +25,7 @@ public class BCConceptos extends javax.swing.JFrame {
     private TableRowSorter trsFiltro;
     private ConceptoSueldo conceptos = new ConceptoSueldo();
     private TipoConcepto tipoConcepto = new TipoConcepto();
+    private int filaSeleccionada;
     /**
      * Creates new form BCMConceptos
      */
@@ -34,6 +35,8 @@ public class BCConceptos extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Administración de Conceptos");
+        completarTablas();
+        
         if(estadoLiquidacion){
         this.btnAgregarConcepto.setEnabled(true);
         this.btnConformacionBoletaSueldo.setEnabled(false);
@@ -46,7 +49,7 @@ public class BCConceptos extends javax.swing.JFrame {
         this.btnLiquidacionIndividual.setEnabled(true);
         this.btnLiquidacionGlobal.setEnabled(true);
         }
-        completarTablas();
+        
         
     }
 
@@ -56,11 +59,20 @@ public class BCConceptos extends javax.swing.JFrame {
     }
     
     public void completarTablaConceptos(){
+        String aux;
         modeloTablaConceptos = (DefaultTableModel) tablaConceptos.getModel();
         this.tablaConceptos.setModel(modeloTablaConceptos);
         this.tablaConceptos.setRowSorter(trsFiltro);
         conceptos.buscarBD("'0' AND C.TIPO_CONCEPTO_ID_TIPO_CONCEPTO = "
                 + "T.ID_TIPO_CONCEPTO","ID_CONCEPTO !", 'H', modeloTablaConceptos);
+        for(int i = 0; i<tablaConceptos.getRowCount(); i++){
+            aux = String.valueOf(tablaConceptos.getValueAt(i, 6));
+            if(aux.equals("H")){
+                this.tablaConceptos.setValueAt("HABILITADO", i, 6);
+            }else{
+                this.tablaConceptos.setValueAt("DESHABILITADO", i, 6);
+            }
+        }
     }
     
     public void completarTablaTiposConceptos(){
@@ -72,15 +84,15 @@ public class BCConceptos extends javax.swing.JFrame {
     
        
     public void filtro(int opcion) {
-        int columnaABuscar = 0;
+        int columnaABuscar;
         switch(opcion){
             case 1:
         
         if (comboOpcionConceptos.getSelectedIndex()==0) {
-            columnaABuscar = 1; //CODIGO
+            columnaABuscar = 0; //CODIGO
             
         }else{
-            columnaABuscar = 2; //DESCRIPCION
+            columnaABuscar = 1; //DESCRIPCION
             
         }
         trsFiltro.setRowFilter(RowFilter.regexFilter(txtBuscarConceptos.getText(), columnaABuscar));
@@ -89,10 +101,10 @@ public class BCConceptos extends javax.swing.JFrame {
             case 2:
                 
         if (comboOpcionTipos.getSelectedIndex()==0) {
-            columnaABuscar = 1; //CODIGO
+            columnaABuscar = 0; //CODIGO
             
         }else{
-            columnaABuscar = 2; //DESCRIPCION
+            columnaABuscar = 1; //DESCRIPCION
             
         }
         trsFiltro.setRowFilter(RowFilter.regexFilter(txtBuscarTipos.getText(), columnaABuscar));
@@ -101,19 +113,25 @@ public class BCConceptos extends javax.swing.JFrame {
         }
     }
     
+    public void limpiarTabla(){
+             for(int i=modeloTablaConceptos.getRowCount(); i>0;i--){
+             modeloTablaConceptos.removeRow(i-1);
+        }
+    }
+    
+    
     public String seleccionarRegistro(int opcion){
         
         int modelRow = 0;
         String dato = "";
-        int fila = 0;
         switch(opcion){
             
             case 1:
                 
         modeloTablaConceptos = (DefaultTableModel) tablaConceptos.getModel();
-        fila = tablaConceptos.getSelectedRow();
-        if (fila >= 0){
-        modelRow = tablaConceptos.convertRowIndexToModel(fila);
+        filaSeleccionada = tablaConceptos.getSelectedRow();
+        if (filaSeleccionada != -1){
+        modelRow = tablaConceptos.convertRowIndexToModel(filaSeleccionada);
         dato = String.valueOf(modeloTablaConceptos.getValueAt(modelRow,0));
         
                       }
@@ -122,9 +140,9 @@ public class BCConceptos extends javax.swing.JFrame {
             case 2:
                 
         modeloTablaTipos = (DefaultTableModel) tablaTiposConceptos.getModel();        
-        fila = tablaTiposConceptos.getSelectedRow();
-        if (fila >= 0){
-        modelRow = tablaConceptos.convertRowIndexToModel(fila);
+        filaSeleccionada = tablaTiposConceptos.getSelectedRow();
+        if (filaSeleccionada != -1){
+        modelRow = tablaConceptos.convertRowIndexToModel(filaSeleccionada);
         dato = String.valueOf(modeloTablaTipos.getValueAt(modelRow,0));
         
                       }
@@ -246,9 +264,9 @@ public class BCConceptos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(comboOpcionTipos, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboOpcionTipos, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscarTipos)
+                .addComponent(txtBuscarTipos, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -271,7 +289,7 @@ public class BCConceptos extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel10)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -330,9 +348,9 @@ public class BCConceptos extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(comboOpcionConceptos, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboOpcionConceptos, 0, 109, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscarConceptos, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                .addComponent(txtBuscarConceptos, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -353,12 +371,12 @@ public class BCConceptos extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
                             .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 321, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -663,13 +681,12 @@ public class BCConceptos extends javax.swing.JFrame {
     private void btnModificarConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarConceptoActionPerformed
         // TODO add your handling code here:
         String indice = seleccionarRegistro(1);
-        conceptos.ampliarInfoBD(Long.valueOf(indice));
-        if(indice.isEmpty()){
+        if(indice.equals("")){
             JOptionPane.showMessageDialog(
                     null, "SELECCIONE UN CONCEPTO A MODIFICAR",
                     "Mensaje",JOptionPane.INFORMATION_MESSAGE);
         }else{
-            
+            conceptos.ampliarInfoBD(Long.valueOf(indice));
             AMConceptos adminConceptos = new AMConceptos(
                 this,true,(DefaultTableModel) tablaConceptos.getModel(),
                 false,conceptos);
@@ -690,8 +707,21 @@ public class BCConceptos extends javax.swing.JFrame {
 
     private void btnEliminarConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarConceptoActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showConfirmDialog(null, "¿ESTA SEGURO DE ELIMINAR ESTE CONCEPTO?", "Confirmacion", 0);
-                
+        filaSeleccionada = tablaConceptos.getSelectedRow();
+        if(filaSeleccionada == -1){
+            JOptionPane.showMessageDialog(
+                    null, "SELECCIONE UN TIPO DE CONCEPTO A MODIFICAR",
+                    "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            String idValor = tablaConceptos.getValueAt(filaSeleccionada, 0).toString();
+            int i = JOptionPane.showConfirmDialog(
+                    null, "¿ESTA SEGURO DE ELIMINAR ESTE CONCEPTO?", 
+                    "Confirmacion", 0);
+            if(i==0){
+                conceptos.setIdConcepto(Long.valueOf(idValor));
+                conceptos.deshabilitarBD();
+            }
+        }  
     }//GEN-LAST:event_btnEliminarConceptoActionPerformed
 
     private void txtBuscarConceptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarConceptosActionPerformed
@@ -700,7 +730,7 @@ public class BCConceptos extends javax.swing.JFrame {
 
     private void txtBuscarConceptosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarConceptosKeyTyped
         // TODO add your handling code here:
-        modeloTablaConceptos = (DefaultTableModel) tablaConceptos.getModel();
+        
         txtBuscarConceptos.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(final KeyEvent e) {
@@ -723,7 +753,7 @@ public class BCConceptos extends javax.swing.JFrame {
 
     private void txtBuscarTiposKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarTiposKeyTyped
         // TODO add your handling code here:
-        modeloTablaTipos = (DefaultTableModel) tablaTiposConceptos.getModel();
+        
         txtBuscarTipos.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(final KeyEvent e) {
@@ -744,7 +774,8 @@ public class BCConceptos extends javax.swing.JFrame {
         // TODO add your handling code here:
         modeloTablaTipos = (DefaultTableModel) tablaTiposConceptos.getModel();
         NDTipoConcepto tipoConcepto = new NDTipoConcepto(
-                this, true,(DefaultTableModel) tablaTiposConceptos.getModel());
+                this, true,(DefaultTableModel) tablaTiposConceptos.getModel(),
+                true, null);
         tipoConcepto.setTitle("Nuevo Tipo de Concepto");
         tipoConcepto.setVisible(true);
         
@@ -752,25 +783,40 @@ public class BCConceptos extends javax.swing.JFrame {
 
     private void btnModificarTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarTipoActionPerformed
         // TODO add your handling code here:
-        int fila = 0;
-        fila = tablaTiposConceptos.getSelectedRow();
-        if(fila > 0){
-        modeloTablaTipos = (DefaultTableModel) tablaTiposConceptos.getModel();
-        NDTipoConcepto tipoConcepto = new NDTipoConcepto(
-                this, true,(DefaultTableModel) tablaTiposConceptos.getModel());
-        tipoConcepto.setTitle("Modificar Tipo de Concepto");
-        tipoConcepto.setVisible(true);
-        }else{
+        String indice = seleccionarRegistro(2);
+        if(indice.equals("")){
             JOptionPane.showMessageDialog(
                     null, "SELECCIONE UN TIPO DE CONCEPTO A MODIFICAR",
                     "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        
+        }else{
+            tipoConcepto.ampliarInfoBD(Long.valueOf(indice));
+            NDTipoConcepto adminTipo = new NDTipoConcepto(
+                this, true,(DefaultTableModel) tablaTiposConceptos.getModel(),
+                false, tipoConcepto);
+            adminTipo.setTitle("Modificar Tipo de Concepto");
+            adminTipo.completarCampos();
+            adminTipo.setVisible(true);
         }
     }//GEN-LAST:event_btnModificarTipoActionPerformed
 
     private void btnEliminarTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTipoActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showConfirmDialog(
-                null, "¿ESTA SEGURO DE ELIMINAR ESTE TIPO DE CONCEPTO?", "Confirmacion", 0);
+        filaSeleccionada = tablaTiposConceptos.getSelectedRow();
+        if(filaSeleccionada == -1){
+            JOptionPane.showMessageDialog(
+                    null, "SELECCIONE UN TIPO DE CONCEPTO A MODIFICAR",
+                    "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            String idValor = tablaTiposConceptos.getValueAt(filaSeleccionada, 0).toString();
+            int i = JOptionPane.showConfirmDialog(
+                    null, "¿ESTA SEGURO DE ELIMINAR ESTE TIPO DE CONCEPTO?", 
+                    "Confirmacion", 0);
+            if(i==0){
+                tipoConcepto.eliminarBD(Long.valueOf(idValor));
+            }
+        }
+        
     }//GEN-LAST:event_btnEliminarTipoActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -780,7 +826,7 @@ public class BCConceptos extends javax.swing.JFrame {
 
     private void btnAgregarConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarConceptoActionPerformed
         // TODO add your handling code here:
-        int filaSeleccionada = tablaConceptos.getSelectedRow();
+        filaSeleccionada = tablaConceptos.getSelectedRow();
         try{
             String codigo,descripcion,tipo,unidad,importe,porcentaje;
             if(filaSeleccionada==-1){

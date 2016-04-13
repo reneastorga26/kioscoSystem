@@ -14,18 +14,26 @@ import sistemakiosco.sismain;
  */
 public class NDTipoConcepto extends javax.swing.JDialog {
 
-    private TipoConcepto tipoConcepto = new TipoConcepto();
+    private TipoConcepto tipoConcepto;
     private static DefaultTableModel modeloTabla;
+    private boolean alta;
     /**
      * Creates new form NDTipoConcepto
      */
     public NDTipoConcepto(java.awt.Frame parent, boolean modal, 
-            DefaultTableModel modeloTabla) {
+            DefaultTableModel modeloTabla, boolean alta, 
+            TipoConcepto tipoConcepto) {
         super(parent, modal);
         
         this.setLocationRelativeTo(null);
         this.modeloTabla=modeloTabla;
         initComponents();
+        this.tipoConcepto = tipoConcepto;
+        this.alta = alta;
+    }
+    
+    public void completarCampos(){
+        txtDescripcion.setText(tipoConcepto.getDescripcion());
     }
 
     /**
@@ -118,6 +126,9 @@ public class NDTipoConcepto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if(alta){
+            tipoConcepto = new TipoConcepto();
+        }
         tipoConcepto.setDescripcion(txtDescripcion.getText());
         
         long idTipoConcepto = tipoConcepto.guardarBD();
