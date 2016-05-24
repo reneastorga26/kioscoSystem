@@ -4,19 +4,209 @@
  */
 package UI;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.DetalleLiquidacion;
+import model.Empleado;
+import model.LiquidacionIndividualSueldo;
+import sistemakiosco.sismain;
+
 /**
  *
  * @author Administrador
  */
 public class LiquidacionGlobal extends javax.swing.JFrame {
 
+    private Empleado empleado = new Empleado();
+    private LiquidacionIndividualSueldo liquidacionIndividualSueldo = 
+            new LiquidacionIndividualSueldo();;
+    private DefaultTableModel modeloTabla;
+    private long ultimoIndice;
+    private DetalleLiquidacion detalleLiquidacion;
+    private ArrayList<Object> importes = new ArrayList<>();
+    private double importeRemunerativo;
+    private double importeNoRemunerativo;
+    private double importeRetencion;
+    private double totalNeto, haberesRemunerativos, haberesNoRemunerativos,
+            retenciones;
     /**
      * Creates new form LiquidacionGlobal
      */
     public LiquidacionGlobal() {
         initComponents();
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.setTitle("Liquidación Global");
+        this.modeloTabla = (DefaultTableModel) tablaEmpleados.getModel();
+        tablaEmpleados.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablaEmpleados.getColumnModel().getColumn(0).setMinWidth(0);
+        tablaEmpleados.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tablaEmpleados.setModel(modeloTabla);
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().fechaActualCombos(comboDia, 
+                comboMes, comboAnio);
+        sismain.getControladorDate().establecerPeriodo(comboPeriodo);
+        nuevaLiquidacion();
+        completarDatos();
+    }
+    
+    public void nuevaLiquidacion(){
+        ultimoIndice = sismain.getControladorBD().obtenerUltimoIndice("LIQ_IND_SUELDO");
+        String anio = sismain.getControladorDate().obtenerAnio();
+        sismain.getControladorDate().establecerPeriodo(comboPeriodo);
+        long indice = ultimoIndice +1;
+        if(ultimoIndice>0 && ultimoIndice<10){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 000000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>10 && ultimoIndice<100){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 00000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>100 && ultimoIndice<1000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 0000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>1000 && ultimoIndice<10000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>10000 && ultimoIndice<100000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 00"+indice+"/"+anio);
+        }
+        if(ultimoIndice>100000 && ultimoIndice<1000000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 0"+indice+"/"+anio);
+        }
+        if(ultimoIndice>1000000 && ultimoIndice<10000000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro "+indice+"/"+anio);
+        }
+    }
+    
+    public void completarDatos(){
+        ArrayList<Long> indices;
+        indices = empleado.buscarBD("0","P.ID_PERSONA = E.PERSONA_ID_PERSONA "
+                + " AND E.ID_EMPLEADO !" , 'H', null);
+        Object [] fila = new Object[6];
+        for(int i = 0; i<indices.size(); i++){
+            empleado.ampliarInfoBD(indices.get(i));
+            fila [0] = empleado.getIdEmpleado();
+            fila [1] = empleado.getDni();
+            fila [2] = empleado.getNombreApellido();
+            fila [3] = empleado.getCuil();
+            fila [4] = sismain.getControladorDate().darFormatoFechaATabla(
+                    empleado.getFechaInicioRelacionLaboral());
+            fila [5] = "TRABAJA DURO";
+            modeloTabla.addRow(fila);
+            tablaEmpleados.setModel(modeloTabla);
+        }
+        
+                     
     }
 
+    public void buscarEmpleado(String datoEmpleado){
+        ArrayList<Long> indices;
+        String dato,columnaBusqueda;
+        
+        empleado = new Empleado();
+        
+        dato = datoEmpleado;
+        columnaBusqueda = "E.CUIL";
+        
+        indices = empleado.buscarBD(
+                "'"+dato+"' AND P.ID_PERSONA = E.PERSONA_ID_PERSONA", 
+                columnaBusqueda , 'H', null);
+        empleado.setIdTipoLiquidacion(liquidacionIndividualSueldo.getIdTipoLiquidacion());
+        empleado.ampliarInfoBD(indices.get(0));
+        
+        for(int i = 0; i<empleado.getConceptos().size();i++){
+            dividirImportes(empleado.getConceptos().get(i).getIdTipo(),
+                            empleado.getConceptos().get(i).getImporte());
+            sumar();
+        }
+        
+    }
+    
+    
+    public void dividirImportes(long tipo, double importe){
+        
+        if(tipo == 1){
+            importeRemunerativo = importe;
+            haberesRemunerativos = haberesRemunerativos + importeRemunerativo;
+            importeNoRemunerativo = 0.0;
+            importeRetencion = 0.0;
+        }
+        if(tipo == 3 || tipo == 4 || tipo == 5){
+            importeNoRemunerativo = importe;
+            haberesNoRemunerativos = haberesNoRemunerativos + importeNoRemunerativo;
+            importeRemunerativo = 0.0;
+            importeRetencion = 0.0;
+        }
+        if(tipo == 2){
+            importeRetencion = importe;
+            retenciones = retenciones + importeRetencion;
+            importeRemunerativo = 0.0;
+            importeNoRemunerativo = 0.0;
+        }
+       
+        importes.add(importeRemunerativo);
+        importes.add(importeNoRemunerativo);
+        importes.add(importeRetencion);
+    }
+    
+    
+    public void sumar(){
+        totalNeto = haberesRemunerativos + haberesNoRemunerativos - retenciones;
+    }
+        
+    
+    public void liquidacion(long idEmpleado, String fechaLiquidacion,
+                            String periodo, long tipoLiquidacion){
+        liquidacionIndividualSueldo.setMotivo("LIQUIDACION INDIVIDUAL");
+        liquidacionIndividualSueldo.setFechaLiquidacion(fechaLiquidacion);
+        liquidacionIndividualSueldo.setIdEmpleado(idEmpleado);
+        liquidacionIndividualSueldo.setIdTipoLiquidacion(tipoLiquidacion);
+        liquidacionIndividualSueldo.setImporteNeto(totalNeto);
+        liquidacionIndividualSueldo.setPeriodo(periodo);
+        liquidacionIndividualSueldo.setTotalHaberesRemunerativos(haberesRemunerativos);
+        liquidacionIndividualSueldo.setTotalHaberesNoRemunerativos(haberesNoRemunerativos);
+        liquidacionIndividualSueldo.setTotalRetenciones(retenciones);
+        liquidacionIndividualSueldo.setTotalBruto(totalNeto);
+        long idLiquidacion = liquidacionIndividualSueldo.guardarBD();
+        
+        detalleLiquidacion = new DetalleLiquidacion();
+        int j = 0;
+        for(int i = 0; i<empleado.getConceptos().size(); i++){
+            detalleLiquidacion.setIdLiquidacionIndividual(idLiquidacion);
+            detalleLiquidacion.setIdConcepto(Long.valueOf(String.valueOf(
+                    empleado.getConceptos().get(i).getIdConcepto())));
+            detalleLiquidacion.setUnidadConcepto(String.valueOf(
+                    empleado.getConceptos().get(i).getUnidad()));
+            detalleLiquidacion.setHaberesRemunerativos(Double.valueOf(String.valueOf(
+                    importes.get(j))));
+            detalleLiquidacion.setHaberesNoRemunerativos(Double.valueOf(String.valueOf(
+                    importes.get(j+1))));
+            detalleLiquidacion.setRetenciones(Double.valueOf(String.valueOf(
+                    importes.get(j+2))));
+            detalleLiquidacion.guardarBD();
+            j = j + 3;
+        }
+        
+        
+        //REINICIAR VARIABLES
+        haberesRemunerativos = 0.0;
+        importeRemunerativo = 0.0;
+        haberesNoRemunerativos = 0.0;
+        importeNoRemunerativo = 0.0;
+        retenciones = 0.0;
+        importeRetencion = 0.0;
+        totalNeto = 0.0;
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,22 +220,22 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaEmpleados = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jButton4 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        comboTipoLiquidacion = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        comboDia = new javax.swing.JComboBox<>();
+        comboMes = new javax.swing.JComboBox<>();
+        comboAnio = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
+        comboPeriodo = new javax.swing.JComboBox();
+        btnAmpliarInfoEmpleado = new javax.swing.JButton();
+        btnIniciarLiquidacion = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
+        lblNroLiquidacion = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -53,49 +243,20 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
         jPanel1.setForeground(new java.awt.Color(51, 51, 51));
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 255, 0));
-        jLabel8.setText("Liquidacion Global");
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Liquidación Global");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "SELECCIONAR", "APELLIDO Y NOMBRE", "DNI", "CUIL", "FECHA NAC.", "TRABAJA DESDE", "TURNO"
+                "ID_EMPLEADO", "DNI", "APELLIDO Y NOMBRE", "CUIL", "TRABAJA DESDE", "TURNO"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
+        ));
+        jScrollPane1.setViewportView(tablaEmpleados);
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
-
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("FECHA:");
-
-        jTextField1.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("/");
-
-        jTextField2.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("/");
-
-        jTextField3.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField3.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("TIPO:");
@@ -103,17 +264,38 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("PERIODO:");
 
-        jComboBox1.setBackground(new java.awt.Color(0, 0, 51));
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08/2015", "07/2015", "06/2015", "05/2015", "04/2015", "03/2015", "02/2015", "01/2015" }));
+        comboTipoLiquidacion.setBackground(new java.awt.Color(0, 0, 51));
+        comboTipoLiquidacion.setForeground(new java.awt.Color(255, 255, 255));
+        comboTipoLiquidacion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1 MENSUAL", "2 VACACIONES", "3 AGUINALDO", "4 BAJAS" }));
 
-        jComboBox2.setBackground(new java.awt.Color(0, 0, 51));
-        jComboBox2.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1 PRIMERA QUINCENA", "2 SEGUNDA QUINCENA", "3 MENSUAL", "4 EXTRAORDINARIA REMUNERATIVA", "5 VACACIONES", "6 AGUINALDO", "7 EXTRAORDINARIA NO REMUNERATIVA", "8 BAJAS", "9 APORTES" }));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("FECHA:");
 
-        jCheckBox2.setBackground(new java.awt.Color(102, 102, 102));
-        jCheckBox2.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox2.setText("SELECCIONAR TODO");
+        comboDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboDiaActionPerformed(evt);
+            }
+        });
+
+        comboMes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboMesActionPerformed(evt);
+            }
+        });
+
+        comboAnio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboAnioActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Datos de la Liquidación");
+
+        comboPeriodo.setBackground(new java.awt.Color(0, 0, 51));
+        comboPeriodo.setForeground(new java.awt.Color(255, 255, 255));
+        comboPeriodo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "05/2016", "04/2016", "03/2016", "02/2016", "01/2016" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -121,67 +303,75 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCheckBox2)
-                .addGap(59, 59, 59)
+                .addComponent(jLabel13)
+                .addGap(211, 211, 211)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(jLabel5)
+                .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox2, 0, 166, Short.MAX_VALUE)
-                .addGap(311, 311, 311))
+                .addComponent(comboTipoLiquidacion, 0, 166, Short.MAX_VALUE)
+                .addGap(37, 37, 37))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(17, 17, 17)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox2)
                     .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboTipoLiquidacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(comboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jButton4.setBackground(new java.awt.Color(51, 0, 51));
-        jButton4.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Ampliar Informacion de Empleado Seleccionado");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnAmpliarInfoEmpleado.setBackground(new java.awt.Color(51, 0, 51));
+        btnAmpliarInfoEmpleado.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnAmpliarInfoEmpleado.setForeground(new java.awt.Color(255, 255, 255));
+        btnAmpliarInfoEmpleado.setText("Ampliar Informacion de Empleado Seleccionado");
+        btnAmpliarInfoEmpleado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnAmpliarInfoEmpleadoActionPerformed(evt);
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(0, 153, 0));
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton2.setForeground(java.awt.Color.white);
-        jButton2.setText("Iniciar Liquidacion");
+        btnIniciarLiquidacion.setBackground(new java.awt.Color(0, 153, 0));
+        btnIniciarLiquidacion.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnIniciarLiquidacion.setForeground(java.awt.Color.white);
+        btnIniciarLiquidacion.setText("Iniciar Liquidacion");
+        btnIniciarLiquidacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarLiquidacionActionPerformed(evt);
+            }
+        });
 
-        jButton6.setBackground(new java.awt.Color(153, 0, 0));
-        jButton6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jButton6.setForeground(java.awt.Color.white);
-        jButton6.setText("Cancelar y Salir");
+        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
+        btnSalir.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnSalir.setForeground(java.awt.Color.white);
+        btnSalir.setText("Cancelar y Salir");
+
+        lblNroLiquidacion.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
+        lblNroLiquidacion.setForeground(new java.awt.Color(255, 255, 255));
+        lblNroLiquidacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblNroLiquidacion.setText("Liquidacion Nro 0000001/2016");
+
+        jLabel9.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Datos de los Empleados");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -191,41 +381,50 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jScrollPane1)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jSeparator1)
                         .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(673, 673, 673)
+                                .addComponent(lblNroLiquidacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(btnIniciarLiquidacion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton6)
+                        .addComponent(btnSalir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4)
-                        .addGap(30, 30, 30))))
+                        .addComponent(btnAmpliarInfoEmpleado)
+                        .addGap(30, 30, 30))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(lblNroLiquidacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(14, 14, 14)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(78, 78, 78)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnIniciarLiquidacion, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAmpliarInfoEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
@@ -243,11 +442,52 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnAmpliarInfoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmpliarInfoEmpleadoActionPerformed
         // TODO add your handling code here:
         LiquidacionIndividual liquidacionIndividual = new LiquidacionIndividual();
         liquidacionIndividual.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnAmpliarInfoEmpleadoActionPerformed
+
+    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
+
+    }//GEN-LAST:event_comboDiaActionPerformed
+
+    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboMesActionPerformed
+
+    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
+
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboAnioActionPerformed
+
+    private void btnIniciarLiquidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarLiquidacionActionPerformed
+        // TODO add your handling code here:
+        liquidacionIndividualSueldo.setIdTipoLiquidacion(Long.valueOf(String.valueOf(
+                comboTipoLiquidacion.getSelectedIndex()+1)));
+        liquidacionIndividualSueldo.setPeriodo(String.valueOf(
+                comboPeriodo.getSelectedItem()));
+        
+        //POR CADA EMPLEADO DE LA TABLA REALIZAR LA LIQUIDACION INDIVIDUAL
+        for(int i = 0; i<tablaEmpleados.getRowCount();i++){
+            buscarEmpleado(
+                    String.valueOf(tablaEmpleados.getValueAt(i,3)));
+            liquidacion(Long.valueOf(
+                    String.valueOf(tablaEmpleados.getValueAt(i,0))),
+                    sismain.getControladorDate().darFormatoFecha(
+                            comboDia.getSelectedItem().toString(), 
+                            comboMes.getSelectedItem().toString(), 
+                            comboAnio.getSelectedItem().toString()),
+                    liquidacionIndividualSueldo.getPeriodo(),
+                    liquidacionIndividualSueldo.getIdTipoLiquidacion());
+            
+        }
+        JOptionPane.showMessageDialog(
+                    null, "LA LIQUIDACION DE CONCEPTOS SE HA REALIZADO CORRECTAMENTE",
+                    "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        
+        //System.out.println(importes);
+    }//GEN-LAST:event_btnIniciarLiquidacionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,25 +524,25 @@ public class LiquidacionGlobal extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JButton btnAmpliarInfoEmpleado;
+    private javax.swing.JButton btnIniciarLiquidacion;
+    private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox<String> comboAnio;
+    private javax.swing.JComboBox<String> comboDia;
+    private javax.swing.JComboBox<String> comboMes;
+    private javax.swing.JComboBox comboPeriodo;
+    private javax.swing.JComboBox comboTipoLiquidacion;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblNroLiquidacion;
+    private javax.swing.JTable tablaEmpleados;
     // End of variables declaration//GEN-END:variables
 }

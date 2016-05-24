@@ -119,9 +119,9 @@ public class NDCorreoElectronico extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String direccion = txtDireccion.getText();
         
-        Object[] fila = new Object[1];
-        fila [0] = direccion;
-        
+        Object[] fila = new Object[2];
+        fila [0] = "";
+        fila [1] = direccion;
         modeloTabla.addRow(fila);
         this.dispose();
     }//GEN-LAST:event_btnGuardarActionPerformed

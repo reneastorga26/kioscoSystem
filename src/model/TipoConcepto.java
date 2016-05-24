@@ -54,7 +54,7 @@ public class TipoConcepto {
     }
     
     public ArrayList buscarBD(String criterioBusqueda, String columnaBusqueda,
-            char estado, DefaultTableModel modeloTabla){
+                        DefaultTableModel modeloTabla){
         
         ArrayList<Long> indices = new ArrayList<>();
 

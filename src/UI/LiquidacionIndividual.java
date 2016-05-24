@@ -4,10 +4,16 @@
  */
 package UI;
 
+import java.awt.Color;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import model.DetalleLiquidacion;
 import model.Empleado;
+import model.LiquidacionIndividualSueldo;
 import sistemakiosco.sismain;
 
 /**
@@ -18,6 +24,15 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
 
     private Empleado empleado;
     private DefaultTableModel modeloTabla;
+    private LiquidacionIndividualSueldo liquidacionIndividual;
+    private DetalleLiquidacion detalleLiquidacion;
+    private double importeRemunerativo;
+    private double importeNoRemunerativo;
+    private double importeRetencion;
+    private double totalBruto;
+    private double totalNeto;
+    private long ultimoIndice;
+    
     /**
      * Creates new form LiquidacionIndividual
      */
@@ -26,9 +41,73 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Liquidación Individual");
-        this.modeloTabla = (DefaultTableModel) tablaConceptos.getModel();
+        this.modeloTabla = (DefaultTableModel) tablaConceptosCargados.getModel();
+        this.comboDia.setEnabled(false);
+        this.comboMes.setEnabled(false);
+        this.comboAnio.setEnabled(false);
+        UIManager.put("ComboBox.disabledBackground", new Color(222,222,222));
+        UIManager.put("ComboBox.disabledForeground", new Color(18,30,49));
+        sismain.getControladorDate().iniciarCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().fechaActualCombos(comboDia, 
+                comboMes, comboAnio);
+        sismain.getControladorDate().establecerPeriodo(comboPeriodo);
+        nuevaLiquidacion();
+        addActions(); 
     }
 
+    public void nuevaLiquidacion(){
+        ultimoIndice = sismain.getControladorBD().obtenerUltimoIndice("LIQ_IND_SUELDO");
+        String anio = sismain.getControladorDate().obtenerAnio();
+        long indice = ultimoIndice +1;
+        if(ultimoIndice>0 && ultimoIndice<10){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 000000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>10 && ultimoIndice<100){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 00000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>100 && ultimoIndice<1000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 0000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>1000 && ultimoIndice<10000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 000"+indice+"/"+anio);
+        }
+        if(ultimoIndice>10000 && ultimoIndice<100000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 00"+indice+"/"+anio);
+        }
+        if(ultimoIndice>100000 && ultimoIndice<1000000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro 0"+indice+"/"+anio);
+        }
+        if(ultimoIndice>1000000 && ultimoIndice<10000000){
+            lblNroLiquidacion.setText(
+                    "Liquidacion Nro "+indice+"/"+anio);
+        }
+    }
+    
+    public void addActions()
+    {
+        final ItemListener changeClick = new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e) 
+            {
+                if(comboTipoLiquidacion.getSelectedItem().equals(e.getItem()))
+                {
+                    for(int i=modeloTabla.getRowCount(); i>0;i--){
+                        modeloTabla.removeRow(i-1);
+                    }
+                    buscarEmpleado(txtBuscarEmpleado.getText());
+                }
+            }
+        };
+        
+        comboTipoLiquidacion.addItemListener(changeClick);
+    }
+    
     public void completarCampos(Empleado empleado, int indiceCombo, boolean sinDatos){
         String valorCampoBuscar;
         if(sinDatos){
@@ -45,10 +124,173 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         }
         txtBuscarEmpleado.setText(valorCampoBuscar);
         txtNombreEmpleado.setText(empleado.getNombreApellido());
-        sismain.getControladorDate().darFormatoFechaAJTextFields(
-                empleado.getFechaInicioRelacionLaboral(), txtDiaIngreso, 
-                txtMesIngreso, txtAnioIngreso);
+        txtFechaIngreso.setText(
+                sismain.getControladorDate().darFormatoFechaATabla(
+                        empleado.getFechaInicioRelacionLaboral()));
         }
+    }
+    
+    public void buscarEmpleado(String datoEmpleado){
+        ArrayList<Long> indices;
+        String dato,columnaBusqueda;
+        
+        empleado = new Empleado();
+        
+        if(comboDatoEmpleado.getSelectedIndex()==0){
+            dato = datoEmpleado;
+            columnaBusqueda = "E.CUIL";
+        }else{
+            dato = datoEmpleado;
+            columnaBusqueda = "P.DNI";
+        }
+        
+        
+        indices = empleado.buscarBD(
+                "'"+dato+"' AND P.ID_PERSONA = E.PERSONA_ID_PERSONA", 
+                columnaBusqueda , 'H', null);
+        empleado.setIdTipoLiquidacion(Long.valueOf(String.valueOf(
+                comboTipoLiquidacion.getSelectedIndex()+1)));
+        empleado.ampliarInfoBD(indices.get(0));
+        txtNombreEmpleado.setText(empleado.getNombreApellido());
+        txtFechaIngreso.setText(
+                sismain.getControladorDate().darFormatoFechaATabla(
+                        empleado.getFechaInicioRelacionLaboral()));
+        
+        modeloTabla = (DefaultTableModel) tablaConceptosCargados.getModel();
+        Object [] fila = new Object[6];
+                for(int i = 0; i<empleado.getConceptos().size();i++){
+                    dividirImportes(empleado.getConceptos().get(i).getIdTipo(),
+                            empleado.getConceptos().get(i).getImporte());
+                    fila [0] = empleado.getConceptos().get(i).getIdConcepto();
+                    fila [1] = empleado.getConceptos().get(i).getDescripcion();
+                    fila [2] = empleado.getRelacionEmpleadoConceptos().get(i).getUnidadConcepto();
+                    fila [3] = importeRemunerativo;
+                    fila [4] = importeNoRemunerativo;
+                    fila [5] = importeRetencion;
+                    
+                    modeloTabla.addRow(fila);
+                    
+                    tablaConceptosCargados.setModel(modeloTabla);
+                    
+                }
+                empleado.getConceptos().clear();
+                empleado.getRelacionEmpleadoConceptos().clear();
+                sumar();
+        
+    }
+    
+    
+    public void dividirImportes(long tipo, double importe){
+        
+        if(tipo == 1 ){
+            importeRemunerativo = importe;
+            importeNoRemunerativo = 0.0;
+            importeRetencion = 0.0;
+        }
+        if(tipo == 3 || tipo == 4 || tipo == 5){
+            importeRemunerativo = 0.0;
+            importeNoRemunerativo = importe;
+            importeRetencion = 0.0;
+        }
+        if(tipo == 2){
+            importeRemunerativo = 0.0;
+            importeNoRemunerativo = 0.0;
+            importeRetencion = importe;
+        }
+       
+    }
+    
+    public void sumar(){
+        double sumatoria = 0, sumatoriaTotal = 0, haberesRemunerativos = 0,
+                haberesNoRemunerativos = 0, retenciones = 0;
+        totalNeto = 0;        
+        int totalRow = tablaConceptosCargados.getRowCount();
+        totalRow-=1;
+        
+        for(int i=0;i<=totalRow;i++){
+            sumatoria = Double.valueOf(String.valueOf(tablaConceptosCargados.getValueAt(i,3)));
+            sumatoriaTotal += sumatoria;
+        }
+        haberesRemunerativos = sumatoriaTotal;
+        txtHaberesRemunerativos.setText(String.valueOf(sumatoriaTotal));
+        
+        sumatoria = 0;
+        sumatoriaTotal = 0;
+        totalRow = tablaConceptosCargados.getRowCount();
+        totalRow-=1;
+        
+        for(int i=0;i<=totalRow;i++){
+            sumatoria = Double.valueOf(String.valueOf(tablaConceptosCargados.getValueAt(i,4)));
+            sumatoriaTotal += sumatoria;
+        }
+        haberesNoRemunerativos = sumatoriaTotal;
+        txtHaberesNoRemunerativos.setText(String.valueOf(sumatoriaTotal));
+        
+        sumatoria = 0;
+        sumatoriaTotal = 0;
+        totalRow = tablaConceptosCargados.getRowCount();
+        totalRow-=1;
+        
+        for(int i=0;i<=totalRow;i++){
+            sumatoria = Double.valueOf(String.valueOf(tablaConceptosCargados.getValueAt(i,5)));
+            sumatoriaTotal += sumatoria;
+        }
+        retenciones = sumatoriaTotal;
+        txtRetenciones.setText(String.valueOf(sumatoriaTotal));
+        
+        totalBruto = haberesRemunerativos + haberesNoRemunerativos;
+        lblTotalBruto.setText("Bruto a cobrar ($): "+ totalBruto);
+        totalNeto = haberesRemunerativos + haberesNoRemunerativos - retenciones;
+        lblTotalNeto.setText("Neto a cobrar ($): "+totalNeto);
+    }
+    
+    public void liquidacion(long idEmpleado, String fechaLiquidacion,
+                            String periodo, long tipoLiquidacion){
+        liquidacionIndividual = new LiquidacionIndividualSueldo();
+        liquidacionIndividual.setMotivo("LIQUIDACION INDIVIDUAL");
+        liquidacionIndividual.setFechaLiquidacion(fechaLiquidacion);
+        liquidacionIndividual.setIdEmpleado(idEmpleado);
+        liquidacionIndividual.setIdTipoLiquidacion(tipoLiquidacion);
+        liquidacionIndividual.setImporteNeto(totalNeto);
+        liquidacionIndividual.setPeriodo(periodo);
+        liquidacionIndividual.setTotalHaberesRemunerativos(importeRemunerativo);
+        liquidacionIndividual.setTotalHaberesNoRemunerativos(importeNoRemunerativo);
+        liquidacionIndividual.setTotalRetenciones(importeRetencion);
+        liquidacionIndividual.setTotalBruto(totalNeto);
+        long idLiquidacion = liquidacionIndividual.guardarBD();
+        
+        detalleLiquidacion = new DetalleLiquidacion();
+        for(int i = 0; i<tablaConceptosCargados.getRowCount(); i++){
+            detalleLiquidacion.setIdLiquidacionIndividual(idLiquidacion);
+            detalleLiquidacion.setIdConcepto(Long.valueOf(String.valueOf(
+                    tablaConceptosCargados.getValueAt(i, 0))));
+            detalleLiquidacion.setUnidadConcepto(String.valueOf(
+                    tablaConceptosCargados.getValueAt(i, 2)));
+            detalleLiquidacion.setHaberesRemunerativos(Double.valueOf(String.valueOf(
+                    tablaConceptosCargados.getValueAt(i, 3))));
+            detalleLiquidacion.setHaberesNoRemunerativos(Double.valueOf(String.valueOf(
+                    tablaConceptosCargados.getValueAt(i, 4))));
+            detalleLiquidacion.setRetenciones(Double.valueOf(String.valueOf(
+                    tablaConceptosCargados.getValueAt(i, 5))));
+            detalleLiquidacion.guardarBD();
+        }
+                
+    }
+    
+    
+    public void limpiar(){
+        comboDatoEmpleado.setSelectedIndex(0);
+        txtBuscarEmpleado.setText("");
+        txtNombreEmpleado.setText("");
+        txtFechaIngreso.setText("");
+        for(int i=modeloTabla.getRowCount(); i>0;i--){
+             modeloTabla.removeRow(i-1);
+        }
+        txtHaberesRemunerativos.setText("");
+        txtHaberesNoRemunerativos.setText("");
+        txtRetenciones.setText("");
+        lblTotalBruto.setText("Bruto a cobrar ($): ");
+        lblTotalNeto.setText("Neto a cobrar ($): ");
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,9 +308,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
-        txtDiaIngreso = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
-        txtAnioIngreso = new javax.swing.JTextField();
+        txtFechaIngreso = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         txtNombreEmpleado = new javax.swing.JTextField();
         jSeparator7 = new javax.swing.JSeparator();
@@ -80,34 +320,31 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         btnBuscarEmpleado = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         comboDatoEmpleado = new javax.swing.JComboBox();
-        txtMesIngreso = new javax.swing.JTextField();
-        jLabel21 = new javax.swing.JLabel();
         btnAmpliarInfoEmpleado = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaConceptos = new javax.swing.JTable();
+        tablaConceptosCargados = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
-        jLabel18 = new javax.swing.JLabel();
+        lblNroLiquidacion = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtRetenciones = new javax.swing.JTextField();
+        txtHaberesNoRemunerativos = new javax.swing.JTextField();
+        txtHaberesRemunerativos = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
+        lblTotalNeto = new javax.swing.JLabel();
+        lblTotalBruto = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        comboPeriodo = new javax.swing.JComboBox();
+        comboTipoLiquidacion = new javax.swing.JComboBox();
         jLabel13 = new javax.swing.JLabel();
+        comboDia = new javax.swing.JComboBox<>();
+        comboMes = new javax.swing.JComboBox<>();
+        comboAnio = new javax.swing.JComboBox<>();
         btnIniciarLiquidacion = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
 
@@ -117,7 +354,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Liquidacion Individual");
+        jLabel8.setText("Liquidación Individual");
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -129,23 +366,11 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Datos del Empleado");
 
-        txtDiaIngreso.setBackground(new java.awt.Color(0, 0, 51));
-        txtDiaIngreso.setForeground(new java.awt.Color(255, 255, 255));
-        txtDiaIngreso.addActionListener(new java.awt.event.ActionListener() {
+        txtFechaIngreso.setBackground(new java.awt.Color(0, 0, 51));
+        txtFechaIngreso.setForeground(new java.awt.Color(255, 255, 255));
+        txtFechaIngreso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDiaIngresoActionPerformed(evt);
-            }
-        });
-
-        jLabel20.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel20.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel20.setText("/");
-
-        txtAnioIngreso.setBackground(new java.awt.Color(0, 0, 51));
-        txtAnioIngreso.setForeground(new java.awt.Color(255, 255, 255));
-        txtAnioIngreso.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAnioIngresoActionPerformed(evt);
+                txtFechaIngresoActionPerformed(evt);
             }
         });
 
@@ -227,18 +452,6 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        txtMesIngreso.setBackground(new java.awt.Color(0, 0, 51));
-        txtMesIngreso.setForeground(new java.awt.Color(255, 255, 255));
-        txtMesIngreso.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtMesIngresoActionPerformed(evt);
-            }
-        });
-
-        jLabel21.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel21.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel21.setText("/");
-
         btnAmpliarInfoEmpleado.setBackground(new java.awt.Color(51, 0, 51));
         btnAmpliarInfoEmpleado.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         btnAmpliarInfoEmpleado.setForeground(new java.awt.Color(255, 255, 255));
@@ -263,7 +476,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAmpliarInfoEmpleado))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 492, Short.MAX_VALUE)
                         .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)
                         .addComponent(jLabel12)
@@ -274,15 +487,8 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                         .addGap(11, 11, 11)
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDiaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel20)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMesIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAnioIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtFechaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)))
                 .addContainerGap())
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel5Layout.createSequentialGroup()
@@ -314,11 +520,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                             .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel14)
-                        .addComponent(txtDiaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel20)
-                        .addComponent(txtAnioIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtMesIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel21))
+                        .addComponent(txtFechaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -337,7 +539,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(102, 102, 102));
 
-        tablaConceptos.setModel(new javax.swing.table.DefaultTableModel(
+        tablaConceptosCargados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -345,16 +547,16 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                 "CODIGO", "DESCRIPCION", "UNIDAD", "HABERES REMUNERATIVOS", "HABERES NO REMUNERATIVOS", "RETENCIONES"
             }
         ));
-        jScrollPane1.setViewportView(tablaConceptos);
+        jScrollPane1.setViewportView(tablaConceptosCargados);
 
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Conceptos a liquidar");
 
-        jLabel18.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel18.setText("Liquidacion Nro 0000001/2015");
+        lblNroLiquidacion.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
+        lblNroLiquidacion.setForeground(new java.awt.Color(255, 255, 255));
+        lblNroLiquidacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblNroLiquidacion.setText("Liquidacion Nro 0000001/2016");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -368,7 +570,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(668, 668, 668)
-                        .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)))
+                        .addComponent(lblNroLiquidacion, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -377,27 +579,28 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel18))
+                    .addComponent(lblNroLiquidacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel4.setBackground(new java.awt.Color(102, 102, 102));
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTextField8.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField8.setForeground(new java.awt.Color(255, 255, 255));
+        txtRetenciones.setBackground(new java.awt.Color(0, 0, 51));
+        txtRetenciones.setForeground(new java.awt.Color(255, 255, 255));
 
-        jTextField7.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField7.setForeground(new java.awt.Color(255, 255, 255));
+        txtHaberesNoRemunerativos.setBackground(new java.awt.Color(0, 0, 51));
+        txtHaberesNoRemunerativos.setForeground(new java.awt.Color(255, 255, 255));
 
-        jTextField4.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField4.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        txtHaberesRemunerativos.setBackground(new java.awt.Color(0, 0, 51));
+        txtHaberesRemunerativos.setForeground(new java.awt.Color(255, 255, 255));
+        txtHaberesRemunerativos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                txtHaberesRemunerativosActionPerformed(evt);
             }
         });
 
@@ -413,21 +616,21 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtHaberesRemunerativos, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtHaberesNoRemunerativos, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addComponent(txtRetenciones, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtHaberesRemunerativos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtHaberesNoRemunerativos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRetenciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -435,9 +638,13 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel16.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel16.setText("Neto a cobrar ($):");
+        lblTotalNeto.setFont(new java.awt.Font("Dialog", 1, 22)); // NOI18N
+        lblTotalNeto.setForeground(new java.awt.Color(255, 255, 255));
+        lblTotalNeto.setText("Neto a cobrar ($):");
+
+        lblTotalBruto.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblTotalBruto.setForeground(new java.awt.Color(255, 255, 255));
+        lblTotalBruto.setText("Bruto a cobrar ($):");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -445,14 +652,18 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel16)
-                .addGap(213, 213, 213))
+                .addComponent(lblTotalBruto, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblTotalNeto, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel16)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotalNeto)
+                    .addComponent(lblTotalBruto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -462,38 +673,41 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("FECHA:");
 
-        jTextField1.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("/");
-
-        jTextField2.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("/");
-
-        jTextField3.setBackground(new java.awt.Color(0, 0, 51));
-        jTextField3.setForeground(new java.awt.Color(255, 255, 255));
-
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("TIPO:");
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("PERIODO:");
 
-        jComboBox1.setBackground(new java.awt.Color(0, 0, 51));
-        jComboBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "08/2015", "07/2015", "06/2015", "05/2015", "04/2015", "03/2015", "02/2015", "01/2015" }));
+        comboPeriodo.setBackground(new java.awt.Color(0, 0, 51));
+        comboPeriodo.setForeground(new java.awt.Color(255, 255, 255));
+        comboPeriodo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "05/2016", "04/2016", "03/2016", "02/2016", "01/2016" }));
 
-        jComboBox2.setBackground(new java.awt.Color(0, 0, 51));
-        jComboBox2.setForeground(new java.awt.Color(255, 255, 255));
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1 PRIMERA QUINCENA", "2 SEGUNDA QUINCENA", "3 MENSUAL", "4 EXTRAORDINARIA REMUNERATIVA", "5 VACACIONES", "6 AGUINALDO", "7 EXTRAORDINARIA NO REMUNERATIVA", "8 BAJAS", "9 APORTES" }));
+        comboTipoLiquidacion.setBackground(new java.awt.Color(0, 0, 51));
+        comboTipoLiquidacion.setForeground(new java.awt.Color(255, 255, 255));
+        comboTipoLiquidacion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1 MENSUAL", "2 VACACIONES", "3 AGUINALDO", "4 BAJAS" }));
 
         jLabel13.setFont(new java.awt.Font("Dialog", 0, 22)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Datos de la Liquidación");
+
+        comboDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboDiaActionPerformed(evt);
+            }
+        });
+
+        comboMes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboMesActionPerformed(evt);
+            }
+        });
+
+        comboAnio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboAnioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -502,46 +716,39 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
-                .addGap(59, 59, 59)
+                .addGap(37, 37, 37)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox2, 0, 1, Short.MAX_VALUE)
-                .addGap(208, 208, 208))
+                .addComponent(comboTipoLiquidacion, 0, 207, Short.MAX_VALUE)
+                .addGap(151, 151, 151))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel13))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel5)
+                    .addComponent(comboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4)
+                    .addComponent(comboTipoLiquidacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         btnIniciarLiquidacion.setBackground(new java.awt.Color(0, 153, 0));
@@ -609,7 +816,7 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnIniciarLiquidacion, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -626,17 +833,13 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtDiaIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiaIngresoActionPerformed
+    private void txtFechaIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaIngresoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDiaIngresoActionPerformed
+    }//GEN-LAST:event_txtFechaIngresoActionPerformed
 
-    private void txtAnioIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAnioIngresoActionPerformed
+    private void txtHaberesRemunerativosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHaberesRemunerativosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtAnioIngresoActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_txtHaberesRemunerativosActionPerformed
 
     private void btnAmpliarInfoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmpliarInfoEmpleadoActionPerformed
         // TODO add your handling code here:
@@ -651,28 +854,8 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
 
     private void btnBuscarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarEmpleadoActionPerformed
         // TODO add your handling code here:
-        
-        ArrayList<Long> indices;
-        String dato,columnaBusqueda;
-        if(comboDatoEmpleado.getSelectedIndex()==0){
-            dato = txtBuscarEmpleado.getText();
-            columnaBusqueda = "E.CUIL";
-        }else{
-            dato = txtBuscarEmpleado.getText();
-            columnaBusqueda = "P.DNI";
-        }   
-        indices = empleado.buscarBD(
-                "'"+dato+"' AND P.ID_PERSONA = E.PERSONA_ID_PERSONA", 
-                columnaBusqueda , 'H', null);
-        empleado.ampliarInfoBD(indices.get(0));
-        txtNombreEmpleado.setText(empleado.getNombreApellido());
-        sismain.getControladorDate().darFormatoFechaAJTextFields(
-                empleado.getFechaInicioRelacionLaboral(), txtDiaIngreso, txtMesIngreso, txtAnioIngreso);
+        buscarEmpleado(txtBuscarEmpleado.getText());
     }//GEN-LAST:event_btnBuscarEmpleadoActionPerformed
-
-    private void txtMesIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMesIngresoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMesIngresoActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
@@ -681,15 +864,40 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
 
     private void btnIniciarLiquidacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarLiquidacionActionPerformed
         // TODO add your handling code here:
+        liquidacion(empleado.getIdEmpleado(),
+                sismain.getControladorDate().darFormatoStringOracle(
+                        comboDia.getSelectedItem().toString(),
+                        comboMes.getSelectedItem().toString(),
+                        comboAnio.getSelectedItem().toString()),
+                String.valueOf(comboPeriodo.getSelectedItem()),
+                Long.valueOf(String.valueOf(
+                comboTipoLiquidacion.getSelectedIndex()+1)));
+        System.out.println("LA LIQUIDACION DE CONCEPTOS SE HA REALIZADO CORRECTAMENTE");
+        
         JOptionPane.showMessageDialog(
                     null, "LA LIQUIDACION DE CONCEPTOS SE HA REALIZADO CORRECTAMENTE",
                     "Mensaje",JOptionPane.INFORMATION_MESSAGE);
-        int i = JOptionPane.showConfirmDialog(
-                null, "¿DESEA VER LA BOLETA DE SUELDO?", "Confirmacion", 0);
-        
+               
+        int j = JOptionPane.showConfirmDialog(
+                null, "¿DESEA REALIZAR UNA NUEVA LIQUIDACIÓN?", "Confirmacion", 0);
+        if(j==0){
+            limpiar();
             
-        
+        }
     }//GEN-LAST:event_btnIniciarLiquidacionActionPerformed
+
+    private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
+
+    }//GEN-LAST:event_comboDiaActionPerformed
+
+    private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboMesActionPerformed
+
+    private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
+
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
+    }//GEN-LAST:event_comboAnioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -726,21 +934,18 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarEmpleado;
     private javax.swing.JButton btnIniciarLiquidacion;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox<String> comboAnio;
     private javax.swing.JComboBox comboDatoEmpleado;
+    private javax.swing.JComboBox<String> comboDia;
+    private javax.swing.JComboBox<String> comboMes;
+    private javax.swing.JComboBox comboPeriodo;
+    private javax.swing.JComboBox comboTipoLiquidacion;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -761,17 +966,15 @@ public class LiquidacionIndividual extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator9;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTable tablaConceptos;
-    private javax.swing.JTextField txtAnioIngreso;
+    private javax.swing.JLabel lblNroLiquidacion;
+    private javax.swing.JLabel lblTotalBruto;
+    private javax.swing.JLabel lblTotalNeto;
+    private javax.swing.JTable tablaConceptosCargados;
     private javax.swing.JTextField txtBuscarEmpleado;
-    private javax.swing.JTextField txtDiaIngreso;
-    private javax.swing.JTextField txtMesIngreso;
+    private javax.swing.JTextField txtFechaIngreso;
+    private javax.swing.JTextField txtHaberesNoRemunerativos;
+    private javax.swing.JTextField txtHaberesRemunerativos;
     private javax.swing.JTextField txtNombreEmpleado;
+    private javax.swing.JTextField txtRetenciones;
     // End of variables declaration//GEN-END:variables
 }

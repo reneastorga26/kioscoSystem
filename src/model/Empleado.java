@@ -24,7 +24,10 @@ public class Empleado extends Persona{
     private String fechaInicioRelacionLaboral;
     private ArrayList<Familiar> familiares = new ArrayList<>();
     private ArrayList<ObraSocial> obrasSociales = new ArrayList<>();
-    
+    private ArrayList<ConceptoSueldo> conceptos = new ArrayList<>();
+    private ArrayList<RelacionEmpleadoConceptos> relacionEmpleadoConceptos = new ArrayList<>();
+    private String nroCuentaBanco;
+    private long idTipoLiquidacion;
     
     public Empleado(){
         super();
@@ -78,6 +81,42 @@ public class Empleado extends Persona{
     public void setObrasSociales(ArrayList<ObraSocial> obrasSociales) {
         this.obrasSociales = obrasSociales;
     }
+
+    public ArrayList<ConceptoSueldo> getConceptos() {
+        return conceptos;
+    }
+
+    public void setConceptos(ArrayList<ConceptoSueldo> conceptos) {
+        this.conceptos = conceptos;
+    }
+
+    public ArrayList<RelacionEmpleadoConceptos> getRelacionEmpleadoConceptos() {
+        return relacionEmpleadoConceptos;
+    }
+
+    public void setRelacionEmpleadoConceptos(ArrayList<RelacionEmpleadoConceptos> relacionEmpleadoConceptos) {
+        this.relacionEmpleadoConceptos = relacionEmpleadoConceptos;
+    }
+    
+    
+    
+    public String getNroCuentaBanco() {
+        return nroCuentaBanco;
+    }
+
+    public void setNroCuentaBanco(String nroCuentaBanco) {
+        this.nroCuentaBanco = nroCuentaBanco;
+    }
+
+    public long getIdTipoLiquidacion() {
+        return idTipoLiquidacion;
+    }
+
+    public void setIdTipoLiquidacion(long idTipoLiquidacion) {
+        this.idTipoLiquidacion = idTipoLiquidacion;
+    }
+
+    
 
     
     
@@ -133,7 +172,7 @@ public class Empleado extends Persona{
         columnas ="P.ID_PERSONA , P.NOMBRE_APELLIDO , P.DNI, P.SEXO, "
                 + "P.FECHA_NAC, P.OBSERVACIONES, E.CUIL, E.FECHA_INICIO_RELACION_LABORAL";
         condicion = "P.ID_PERSONA = E.PERSONA_ID_PERSONA AND "
-                + "E.ID_EMPLEADO = '"+ getIdEmpleado() + "'";
+                + "E.ID_EMPLEADO = '"+ idEmpleado + "'";
         
         
         registros = sismain.getControladorBD().extenderInfo
@@ -264,6 +303,52 @@ public class Empleado extends Persona{
         }
         
         registros.clear();
+        
+        //CONCEPTOS AUTOMATICOS
+        
+        tablas= "RELACION_EMPLEADO_CONCEPTOS R, CONCEPTO_SUELDO C";
+        columnas = "C.ID_CONCEPTO, C.DESCRIPCION, C.IMPORTE, R.UNIDAD_CONCEPTO, "
+                + "C.PORCENTAJE, C.TIPO_CONCEPTO_ID_TIPO_CONCEPTO";
+        condicion = "R.EMPLEADO_ID_EMPLEADO = '"+ idEmpleado +"' AND "
+                + "R.CONCEPTO_ID_CONCEPTO = C.ID_CONCEPTO AND "
+                + "R.TIPO_LIQ_ID_TIPO_LIQ = '"+idTipoLiquidacion+"'";
+        
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+            ConceptoSueldo concepto = new ConceptoSueldo();
+            RelacionEmpleadoConceptos relacionEmpleadoConcepto= new RelacionEmpleadoConceptos();
+            concepto.setIdConcepto(Long.parseLong(registros.get(i).get(0).toString()));
+            concepto.setDescripcion(registros.get(i).get(1).toString());
+            concepto.setImporte(Double.parseDouble(registros.get(i).get(2).toString()));
+            relacionEmpleadoConcepto.setUnidadConcepto(registros.get(i).get(3).toString());
+            concepto.setPorcentaje(Double.valueOf(registros.get(i).get(4).toString()));
+            concepto.setIdTipo(Long.valueOf(registros.get(i).get(5).toString()));
+            getConceptos().add(concepto);
+            getRelacionEmpleadoConceptos().add(relacionEmpleadoConcepto);
+        }
+        
+        registros.clear();
+        
+        //CUENTA BANCARIA
+        
+        tablas = "RELACION_EMPLEADO_BANCO R, EMPLEADO E";
+        columnas = "R.NRO_CUENTA";
+        condicion = "R.EMPLEADO_ID_EMPLEADO = E.ID_EMPLEADO AND "
+                + "R.EMPLEADO_ID_EMPLEADO = '"+idEmpleado+"'";
+        
+        registros = sismain.getControladorBD().extenderInfo
+        (columnas, tablas, condicion);
+        
+        for(int i = 0; i<registros.size();i++){
+                       
+            RelacionEmpleadoBanco relacionEmpleadoBanco = new RelacionEmpleadoBanco();
+            relacionEmpleadoBanco.setNroCuenta(registros.get(i).get(0).toString());
+            setNroCuentaBanco(registros.get(i).get(0).toString());
+        }
+        
+        registros.clear();
     }
     
     
@@ -275,14 +360,14 @@ public class Empleado extends Persona{
             if(empleado){
             tablas = "EMPLEADO E";
             set = "E.CUIL = '" + getCuil() + "',"
-            + "E.FECHA_INICIO_RELACION_LABORAL = " + fechaInicioRelacionLaboral + "";        
+            + "E.FECHA_INICIO_RELACION_LABORAL = TO_DATE(" + fechaInicioRelacionLaboral + ")";        
             condicion = "E.ID_EMPLEADO = '" + idEmpleado + "'";    
             }else{
             tablas = "PERSONA P";
             set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
             + "P.DNI = '" + getDni() + "',"
             + "P.SEXO = '" + getSexo() + "',"
-            + "P.FECHA_NAC = " +getFechaNacimiento()+ ","
+            + "P.FECHA_NAC = TO_DATE(" +getFechaNacimiento()+ "),"
             + "P.OBSERVACIONES = '"+getObservaciones()+ "'";        
             condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
             }

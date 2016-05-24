@@ -903,6 +903,8 @@ public class AEmpleado extends javax.swing.JFrame {
             
             relacionEmpleadoOs.setIdEmpleado(idPersona);
             relacionEmpleadoOs.setIdObraSocial(idObraSocial);
+            
+            relacionEmpleadoOs.guardarBD();
         }
         
         JOptionPane.showMessageDialog(null, "EL EMPLEADO SE HA REGISTRADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
@@ -985,9 +987,13 @@ public class AEmpleado extends javax.swing.JFrame {
 
     private void btnComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprobarActionPerformed
         // TODO add your handling code here:
+        ArrayList<Object> valores;
         String cadena = txtDni.getText();
-        sismain.getControladorBD().buscar("P.DNI", "PERSONA P", "DNI = '" + cadena + "'", null);
-        
+        valores = sismain.getControladorBD().buscar("P.DNI", "PERSONA P", "DNI = '" + cadena + "'", null);
+        for(int i = 0; i<valores.size(); i++)
+            JOptionPane.showMessageDialog(
+                    null, "EL DNI INGRESADO YA EXISTE EN EL SISTEMA","Mensaje",
+                    JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_btnComprobarActionPerformed
 

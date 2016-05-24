@@ -5,7 +5,8 @@
  */
 package UI;
 
-import Controller.ControladorDate;
+import javax.swing.table.DefaultTableModel;
+import sistemakiosco.sismain;
 
 /**
  *
@@ -13,15 +14,16 @@ import Controller.ControladorDate;
  */
 public class ReciboSueldoMultiples extends javax.swing.JFrame {
 
-    private ControladorDate controladorDate = new ControladorDate();
+    private DefaultTableModel modeloTabla;
     /**
      * Creates new form ReciboSueldoMultiples
      */
     public ReciboSueldoMultiples() {
         initComponents();
-        controladorDate.iniciarCombos(comboDia, comboMes, comboAnio);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setTitle("Detalles del Recibo de Sueldo");
+        modeloTabla = (DefaultTableModel) tablaLiquidacion.getModel();
     }
 
     /**
@@ -37,14 +39,13 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaLiquidacion = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
         jLabel20 = new javax.swing.JLabel();
         comboAnio = new javax.swing.JComboBox<>();
         jLabel19 = new javax.swing.JLabel();
@@ -59,29 +60,18 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 255, 0));
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Recibos de Sueldos Multiples");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaLiquidacion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "SELECCIONAR", "APELLIDO Y NOMBRE", "CUIL", "NRO RECIBO", "TIPO LIQUIDACION", "PERIODO", "TOTAL"
+                "APELLIDO Y NOMBRE", "CUIL", "TIPO LIQUIDACION", "PERIODO", "TOTAL"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
+        ));
+        jScrollPane1.setViewportView(tablaLiquidacion);
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -101,10 +91,6 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
         jComboBox2.setBackground(new java.awt.Color(0, 0, 51));
         jComboBox2.setForeground(new java.awt.Color(255, 255, 255));
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1 PRIMERA QUINCENA", "2 SEGUNDA QUINCENA", "3 MENSUAL", "4 EXTRAORDINARIA REMUNERATIVA", "5 VACACIONES", "6 AGUINALDO", "7 EXTRAORDINARIA NO REMUNERATIVA", "8 BAJAS", "9 APORTES" }));
-
-        jCheckBox2.setBackground(new java.awt.Color(102, 102, 102));
-        jCheckBox2.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox2.setText("SELECCIONAR TODO");
 
         jLabel20.setBackground(new java.awt.Color(0, 0, 0));
         jLabel20.setForeground(new java.awt.Color(255, 255, 255));
@@ -137,9 +123,7 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox2)
-                .addGap(59, 59, 59)
+                .addGap(195, 195, 195)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -165,26 +149,26 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel19)
                         .addComponent(jLabel20)
                         .addComponent(comboDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(comboAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel4)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jButton2.setBackground(new java.awt.Color(0, 153, 0));
         jButton2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jButton2.setForeground(java.awt.Color.white);
-        jButton2.setText("Imprimir Recibos");
+        jButton2.setText("Generar Recibo");
 
         jButton6.setBackground(new java.awt.Color(153, 0, 0));
         jButton6.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -206,7 +190,7 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(641, Short.MAX_VALUE)
+                .addContainerGap(691, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton6)
@@ -271,7 +255,7 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
 
     private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
 
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboAnioActionPerformed
 
     private void comboDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDiaActionPerformed
@@ -279,7 +263,7 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
     }//GEN-LAST:event_comboDiaActionPerformed
 
     private void comboMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMesActionPerformed
-        controladorDate.corregirCombos(comboDia, comboMes, comboAnio);
+        sismain.getControladorDate().corregirCombos(comboDia, comboMes, comboAnio);
     }//GEN-LAST:event_comboMesActionPerformed
 
     /**
@@ -324,7 +308,6 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
-    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -337,6 +320,6 @@ public class ReciboSueldoMultiples extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablaLiquidacion;
     // End of variables declaration//GEN-END:variables
 }

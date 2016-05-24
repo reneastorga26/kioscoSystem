@@ -106,7 +106,7 @@ public class ControladorDate {
     
     public String darFormatoStringOracle(String dia, String mes, String anio){
         String resultado;
-        resultado = "TO_DATE('"+dia +"/"+ toMesNumero(mes) +"/"+anio +"' , 'dd/mm/yyyy')";
+        resultado = "'"+dia +"/"+ toMesNumero(mes) +"/"+anio +"' , 'dd/mm/yyyy'";
         return resultado;
     }
     
@@ -265,5 +265,137 @@ public class ControladorDate {
         comboHora.addItem("22:00");
         comboHora.addItem("23:00");
         
+    }
+    
+    public void fechaActualCombos(JComboBox comboDia, JComboBox comboMes,
+                                JComboBox comboAnio){
+        String dia = Integer.toString(calendar.get(Calendar.DATE));
+        String mes = "0"+Integer.toString(calendar.get(Calendar.MONTH)+1);
+        String anio = Integer.toString(calendar.get(Calendar.YEAR));
+        
+        comboDia.setSelectedItem(dia);
+        if(mes.equals("01")){
+            comboMes.setSelectedItem("Enero");
+        }
+        if(mes.equals("02")){
+            comboMes.setSelectedItem("Febrero"); 
+        }
+        if(mes.equals("03")){
+            comboMes.setSelectedItem("Marzo");
+        }
+        if(mes.equals("04")){
+            comboMes.setSelectedItem("Abril");
+        }
+        if(mes.equals("05")){
+            comboMes.setSelectedItem("Mayo");
+        }
+        if(mes.equals("06")){
+            comboMes.setSelectedItem("Junio");
+        }
+        if(mes.equals("07")){
+            comboMes.setSelectedItem("Julio");
+        }
+        if(mes.equals("08")){
+           comboMes.setSelectedItem("Agosto");
+        }
+       if(mes.equals("09")){
+            comboMes.setSelectedItem("Septiembre"); 
+        }
+        if(mes.equals("10")){
+            comboMes.setSelectedItem("Octubre"); 
+}
+        if(mes.equals("11")){
+            comboMes.setSelectedItem("Noviembre");
+}
+        if(mes.equals("12")){
+            comboMes.setSelectedItem("Diciembre");
+        }
+        else{
+        }
+        comboAnio.setSelectedItem(anio);
+    }
+    
+    public String fechaActual(){
+        String dia = Integer.toString(calendar.get(Calendar.DATE));
+        String mes = "0"+Integer.toString(calendar.get(Calendar.MONTH)+1);
+        String anio = Integer.toString(calendar.get(Calendar.YEAR));
+        
+        String fechaActual = dia+"/"+mes+"/"+anio;
+        
+        return fechaActual;
+    }
+    
+    public String mesToTexto(String mes){
+        String mesTexto = "";
+        if(mes.equals("01")){
+            mesTexto = "Enero";
+        }
+        if(mes.equals("02")){
+            mesTexto = "Febrero"; 
+        }
+        if(mes.equals("03")){
+            mesTexto = "Marzo";
+        }
+        if(mes.equals("04")){
+            mesTexto = "Abril";
+        }
+        if(mes.equals("05")){
+            mesTexto = "Mayo";
+        }
+        if(mes.equals("06")){
+            mesTexto = "Junio";
+        }
+        if(mes.equals("07")){
+            mesTexto = "Julio";
+        }
+        if(mes.equals("08")){
+           mesTexto = "Agosto";
+        }
+       if(mes.equals("09")){
+            mesTexto = "Septiembre"; 
+        }
+        if(mes.equals("10")){
+            mesTexto = "Octubre"; 
+}
+        if(mes.equals("11")){
+            mesTexto = "Noviembre";
+}
+        if(mes.equals("12")){
+            mesTexto = "Diciembre";
+        }
+        else{
+        }
+        return mesTexto;
+    }
+    
+    public void establecerPeriodo(JComboBox comboPeriodo){
+        String fechaActual, periodo;
+                     
+        fechaActual = fechaActual();
+        String mes1 = String.valueOf(fechaActual.charAt(3));
+        String mes2 = String.valueOf(fechaActual.charAt(4));
+        
+        String anio1 = String.valueOf(fechaActual.charAt(6));
+        String anio2 = String.valueOf(fechaActual.charAt(7));
+        String anio3 = String.valueOf(fechaActual.charAt(8));
+        String anio4 = String.valueOf(fechaActual.charAt(9));
+        
+        periodo = mes1 + mes2 + "/" + anio1 + anio2 + anio3 + anio4;
+        comboPeriodo.setSelectedItem(periodo);
+    }
+    
+    public String obtenerAnio(){
+        String anioActual, anio;
+                     
+        anio = fechaActual();
+        
+        String anio1 = String.valueOf(anio.charAt(6));
+        String anio2 = String.valueOf(anio.charAt(7));
+        String anio3 = String.valueOf(anio.charAt(8));
+        String anio4 = String.valueOf(anio.charAt(9));
+        
+        anioActual = anio1 + anio2 + anio3 + anio4;
+        
+        return anioActual;
     }
 }

@@ -209,7 +209,7 @@ public class Buscar extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
 
         lblTitulo.setFont(new java.awt.Font("Dialog", 0, 23)); // NOI18N
-        lblTitulo.setForeground(new java.awt.Color(0, 255, 0));
+        lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
         lblTitulo.setText("Búsqueda de ");
 
         tablaBuscar.setModel(new javax.swing.table.DefaultTableModel(

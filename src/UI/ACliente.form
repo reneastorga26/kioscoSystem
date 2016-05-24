@@ -82,7 +82,7 @@
                       <Component id="jSeparator1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jPanel3" pref="930" max="32767" attributes="0"/>
+                              <Component id="jPanel3" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -180,11 +180,11 @@
                                                   <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                   <Group type="102" attributes="0">
                                                       <Component id="txtDni" min="-2" pref="148" max="-2" attributes="0"/>
                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                      <Component id="btnComprobar" min="-2" pref="125" max="-2" attributes="0"/>
+                                                      <Component id="btnComprobar" max="32767" attributes="0"/>
                                                   </Group>
                                                   <Component id="txtNombre" min="-2" pref="259" max="-2" attributes="0"/>
                                                   <Group type="102" attributes="0">
@@ -196,7 +196,7 @@
                                                   </Group>
                                                   <Component id="comboSexo" min="-2" pref="170" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace max="32767" attributes="0"/>
+                                              <EmptySpace pref="16" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Component id="jSeparator4" min="-2" pref="7" max="-2" attributes="0"/>

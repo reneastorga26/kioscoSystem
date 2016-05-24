@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="210" pageHeight="297" columnWidth="170" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="29add9fa-3906-4ace-8737-3008ce7c5189">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT * FROM CLIENTE]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="91" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="170" height="20" uuid="953134c8-3204-4697-bef8-f725de57c2a6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISKIOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="75" height="10" uuid="8abd4662-7d4c-4848-9411-bbdc4b96b647"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[9 DE JULIO 146]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="20" width="70" height="10" uuid="f25bb7bc-d543-4d3c-8c4c-5a3dd1597203"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[TEL: 4211286]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="170" height="10" uuid="1b38f730-f669-4051-9aad-b501b82e001d"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[C.U.I.T.: 30-50302040-4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="170" height="10" uuid="618e258c-826f-4178-898d-5196f802ea4c"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[SAN MIGUEL DE TUCUMÁN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="170" height="10" uuid="e5363eeb-6b3f-4f54-b1b3-38110cfdb56d"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[A CONSUMIDOR FINAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="170" height="10" uuid="e9e5182b-fe1b-4e4b-9504-181ca48c2c37"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[IVA RESPONSABLE INSCRIPTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="41" height="11" uuid="a870c167-d76a-49a6-bbf8-66dd032670d2"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P.V. Nro: 001]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="70" width="25" height="10" uuid="a359ae3d-20fe-4585-aa77-0f5db7626f07"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Nro. T.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="41" height="10" uuid="c2d95b61-246f-447a-b4db-92990127c7ee"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="80" width="27" height="10" uuid="2a9f1e06-592c-4b4c-abef-2b73b2ca2ba4"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="98" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="37">
+			<staticText>
+				<reportElement x="0" y="13" width="100" height="10" uuid="ffa956a3-35da-4709-a363-685b8d2104cc"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Efectivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="100" height="10" uuid="1fa5a13f-ae47-4224-baff-43d109b10c2f"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Su Vuelto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="41" height="12" uuid="692c6cb9-18c9-438e-a3c6-5fdaae0a5441"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="17" height="10" uuid="89870deb-f218-4759-b47e-977851e874c1"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Ctrl:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="0" width="19" height="10" uuid="b719f925-361f-4b17-8a18-6d4352cd2cdd"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[V: 1.0]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="170" height="12" uuid="6f78d683-981d-46bc-9d29-012bff418311"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Gracias por su compra]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

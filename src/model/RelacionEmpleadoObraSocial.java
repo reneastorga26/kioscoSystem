@@ -47,7 +47,8 @@ public class RelacionEmpleadoObraSocial {
         ArrayList<String> valores= new ArrayList<>();
         valores.add(String.valueOf(idEmpleado));
         valores.add(String.valueOf(idObraSocial));
-        idRelacionEmpleadoObraSocial = sismain.getControladorBD().aniadir(valores, "RELACION_EMPLEADO_OS",false);
+        idRelacionEmpleadoObraSocial = sismain.getControladorBD().aniadir(valores, 
+                "RELACION_EMPLEADO_OS",false);
         return idRelacionEmpleadoObraSocial;
     }
     

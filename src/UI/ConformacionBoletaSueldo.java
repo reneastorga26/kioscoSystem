@@ -4,10 +4,14 @@
  */
 package UI;
 
+import java.awt.HeadlessException;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Empleado;
+import model.RelacionEmpleadoConceptos;
 
 /**
  *
@@ -16,8 +20,16 @@ import model.Empleado;
 public class ConformacionBoletaSueldo extends javax.swing.JFrame {
 
     private Empleado empleado = new Empleado();
+    private RelacionEmpleadoConceptos relacionEmpleadoConcepto = new RelacionEmpleadoConceptos();
     private DefaultTableModel modeloTabla;
     private boolean estado = false;
+    private ArrayList<Object> auxiliarNuevosConceptos = new ArrayList<>();
+    private ArrayList<Object> auxiliarConceptosEliminados = new ArrayList<>();
+    private ArrayList<Object> auxiliarConceptosExistentes = new ArrayList<>();
+    private boolean eliminarRegistrosDeBD = false;
+    private boolean noEncontro = false;
+    private boolean confirmacion = false;
+    
     /**
      * Creates new form ConceptoAutomatico
      */
@@ -34,11 +46,172 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         this.tablaConceptosCargados.getColumnModel().getColumn(1).setPreferredWidth(45);
         this.tablaConceptosCargados.getColumnModel().getColumn(2).setPreferredWidth(190);
         this.tablaConceptosCargados.getColumnModel().getColumn(3).setPreferredWidth(60);
-        this.tablaConceptosCargados.getColumnModel().getColumn(4).setPreferredWidth(80);
-        this.tablaConceptosCargados.getColumnModel().getColumn(5).setPreferredWidth(70);
-        this.tablaConceptosCargados.getColumnModel().getColumn(6).setPreferredWidth(80);
+        this.tablaConceptosCargados.getColumnModel().getColumn(4).setPreferredWidth(70);
+        this.tablaConceptosCargados.getColumnModel().getColumn(5).setPreferredWidth(80);
+        addActions(); 
     }
 
+     
+    public void addActions()
+    {
+        final ItemListener changeClick = new ItemListener()
+        {
+            public void itemStateChanged(ItemEvent e) 
+            {
+                if(comboTipoLiquidacion.getSelectedItem().equals(e.getItem()))
+                {
+                    for(int i=modeloTabla.getRowCount(); i>0;i--){
+                        modeloTabla.removeRow(i-1);
+                    }
+                    buscarDatosEmpleado();
+                }
+            }
+        };
+        
+        comboTipoLiquidacion.addItemListener(changeClick);
+    } 
+    
+    public void leerNuevosRegistrosTablaConceptos(){
+        
+        ArrayList<Long> registros = new ArrayList<>();
+        for(int i = 0; i<auxiliarNuevosConceptos.size();i++){
+            for(int j = 0; j<auxiliarConceptosExistentes.size();j++){
+                
+                if(auxiliarNuevosConceptos.get(i) == auxiliarConceptosExistentes.get(j)){
+                    noEncontro = false;
+                    //MODIFICAR LA UNIDAD DEL CONCEPTO
+                    relacionEmpleadoConcepto.setIdEmpleado(empleado.getIdEmpleado());
+                    relacionEmpleadoConcepto.setUnidadConcepto(String.valueOf(
+                    tablaConceptosCargados.getValueAt(j, 3)));
+                    relacionEmpleadoConcepto.setIdTipoLiquidacion(
+                    comboTipoLiquidacion.getSelectedIndex()+1);
+                    relacionEmpleadoConcepto.setIdConcepto(Long.valueOf(
+                    String.valueOf(tablaConceptosCargados.getValueAt(j, 0))));
+                    relacionEmpleadoConcepto.modificarBD();
+                    break;
+                
+                }else{
+                noEncontro = true;
+                }
+            }
+            
+            if(noEncontro){
+                registros.add(Long.valueOf(String.valueOf(auxiliarNuevosConceptos.get(i))));
+            }
+            
+        }
+        
+        for(int i = 0; i<registros.size();i++){
+            System.out.println("SE GUARDO UN NUEVO CONCEPTO: "+ registros.get(i));
+            relacionEmpleadoConcepto.setIdConcepto(Long.valueOf(
+                    String.valueOf(registros.get(i))));
+            relacionEmpleadoConcepto.setIdEmpleado(empleado.getIdEmpleado());
+            relacionEmpleadoConcepto.setIdTipoLiquidacion(
+                    comboTipoLiquidacion.getSelectedIndex()+1);
+            relacionEmpleadoConcepto.setUnidadConcepto(String.valueOf(
+                    tablaConceptosCargados.getValueAt(i, 3)));
+            relacionEmpleadoConcepto.guardarBD();
+        }
+        registros.clear();
+        auxiliarNuevosConceptos.clear();
+        auxiliarConceptosExistentes.clear();
+        confirmacion = true;
+    }
+    
+    public void leerRegistrosEliminadosTablaConceptos(){
+        for(int i = 0; i<auxiliarConceptosEliminados.size();i++){
+            if(eliminarRegistrosDeBD){
+            relacionEmpleadoConcepto.setIdConcepto(Long.valueOf(String.valueOf(
+                    auxiliarConceptosEliminados.get(i))));
+            relacionEmpleadoConcepto.eliminarBD(relacionEmpleadoConcepto.getIdConcepto());
+            System.out.println("SE ELIMINO UN CONCEPTO DE BD: "+ auxiliarConceptosEliminados.get(i));
+            }
+        }
+        auxiliarConceptosEliminados.clear();
+    }
+    
+    public void verificarEliminacionBD(long idReferenciado){
+        
+            for(int i = 0;i<auxiliarConceptosExistentes.size();i++){
+                if(Long.valueOf(String.valueOf(auxiliarConceptosExistentes.get(i))) == 
+                       idReferenciado){
+                    eliminarRegistrosDeBD = true;
+                    System.out.println("SE ELIMINARA UN CONCEPTO DE LA BD");
+                    auxiliarConceptosEliminados.add(idReferenciado);
+                }else{
+                    System.out.println("SE ELIMINARA UN CONCEPTO DE LA TABLA");
+                }
+            }
+                 
+    }
+    
+    public void limpiarTabla(){
+        for(int i=modeloTabla.getRowCount(); i>0;i--){
+             modeloTabla.removeRow(i-1);
+        }
+    }
+    
+    public void limpiarTodo(){
+        txtBuscarEmpleado.setText("");
+        txtNombreEmpleado.setText("");
+        comboDatoEmpleado.setSelectedIndex(0);
+        txtUnidadConcepto.setText("");
+        limpiarTabla();
+    }
+    
+    public void buscarDatosEmpleado(){
+        ArrayList<Long> indices = new ArrayList<>();
+        String dato,columnaBusqueda;
+        limpiarTabla();
+        if(comboDatoEmpleado.getSelectedIndex()==0){
+            dato = txtBuscarEmpleado.getText();
+            columnaBusqueda = "E.CUIL";
+        }else{
+            dato = txtBuscarEmpleado.getText();
+            columnaBusqueda = "P.DNI";
+        }   
+        
+            indices = empleado.buscarBD(
+                "'"+dato+"' AND P.ID_PERSONA = E.PERSONA_ID_PERSONA", 
+                columnaBusqueda , 'H', null);
+        empleado.setIdTipoLiquidacion(comboTipoLiquidacion.getSelectedIndex()+1);
+        
+        empleado.ampliarInfoBD(indices.get(0));
+        indices.clear();
+        txtNombreEmpleado.setText(empleado.getNombreApellido());
+        txtNroCuenta.setText(empleado.getNroCuentaBanco());
+        modeloTabla = (DefaultTableModel) tablaConceptosCargados.getModel();
+        Object [] fila = new Object[6];
+                for(int i = 0; i<empleado.getConceptos().size();i++){
+                    fila [0] = empleado.getConceptos().get(i).getIdConcepto();
+                    fila [1] = empleado.getConceptos().get(i).getIdConcepto();
+                    fila [2] = empleado.getConceptos().get(i).getDescripcion();
+                    fila [3] = empleado.getRelacionEmpleadoConceptos().get(i).getUnidadConcepto();
+                    fila [4] = empleado.getConceptos().get(i).getImporte();
+                    fila [5] = empleado.getConceptos().get(i).getPorcentaje();
+                    
+                    modeloTabla.addRow(fila);
+                    auxiliarConceptosExistentes.add(
+                            empleado.getConceptos().get(i).getIdConcepto());
+                    auxiliarNuevosConceptos.add(
+                            empleado.getConceptos().get(i).getIdConcepto());
+                    tablaConceptosCargados.setModel(modeloTabla);
+                }
+                empleado.getConceptos().clear();
+                empleado.getRelacionEmpleadoConceptos().clear();
+        
+            if(auxiliarConceptosExistentes.isEmpty()){
+                eliminarRegistrosDeBD = false;
+            }else{
+                eliminarRegistrosDeBD = true;
+                System.out.println("ELIMINACION DE CONCEPTOS EN BD ACTIVADA");
+            }
+        
+    
+        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -66,28 +239,21 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         btnLimpiar = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        txtCodigo = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         buscarConceptos = new javax.swing.JButton();
-        btnAgregarConceptos = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
-        comboTipo = new javax.swing.JComboBox<>();
-        jLabel6 = new javax.swing.JLabel();
-        txtImporte = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        txtPorcentaje = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        txtUnidad = new javax.swing.JTextField();
+        comboTipoLiquidacion = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
-        txtDescripcion = new javax.swing.JTextField();
+        jSeparator6 = new javax.swing.JSeparator();
+        txtUnidadConcepto = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        btnAgregarUnidad = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        comboBanco = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtNroCuenta = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaConceptosCargados = new javax.swing.JTable();
@@ -217,7 +383,7 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
                         .addComponent(btnAmpliarInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,12 +412,6 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("DESCRIPCION:");
-
-        txtCodigo.setBackground(new java.awt.Color(0, 0, 51));
-        txtCodigo.setForeground(new java.awt.Color(255, 255, 255));
-
         jPanel6.setBackground(new java.awt.Color(0, 102, 204));
 
         buscarConceptos.setBackground(new java.awt.Color(51, 0, 51));
@@ -270,7 +430,7 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buscarConceptos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buscarConceptos, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -281,133 +441,89 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnAgregarConceptos.setBackground(new java.awt.Color(0, 153, 0));
-        btnAgregarConceptos.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        btnAgregarConceptos.setForeground(java.awt.Color.white);
-        btnAgregarConceptos.setText("Agregar Concepto al Empleado");
-        btnAgregarConceptos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarConceptosActionPerformed(evt);
-            }
-        });
-
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Datos del Concepto");
 
-        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("TIPO:");
 
-        comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "HABER", "RETENCION", "ASIGNACION", "ADICIONAL", "NO REMUNERATIVO", "APORTE", "AUXILIAR" }));
+        comboTipoLiquidacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1  MENSUAL", "2 VACACIONES", "3 AGUINALDO", "4 BAJAS" }));
 
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("IMPORTE:");
+        jLabel14.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Tipo de Liquidación");
 
-        txtImporte.setBackground(new java.awt.Color(0, 0, 51));
-        txtImporte.setForeground(new java.awt.Color(255, 255, 255));
-        txtImporte.setText("0.00");
+        jSeparator6.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("PORCENTAJE (%):");
-
-        txtPorcentaje.setBackground(new java.awt.Color(0, 0, 51));
-        txtPorcentaje.setForeground(new java.awt.Color(255, 255, 255));
-        txtPorcentaje.setText("0.00");
+        txtUnidadConcepto.setBackground(new java.awt.Color(0, 0, 51));
+        txtUnidadConcepto.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("UNIDAD:");
 
-        txtUnidad.setBackground(new java.awt.Color(0, 0, 51));
-        txtUnidad.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText("CODIGO:");
-
-        txtDescripcion.setBackground(new java.awt.Color(0, 0, 51));
-        txtDescripcion.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarUnidad.setBackground(new java.awt.Color(51, 0, 51));
+        btnAgregarUnidad.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        btnAgregarUnidad.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarUnidad.setText("Agregar");
+        btnAgregarUnidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarUnidadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnAgregarConceptos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtUnidadConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(btnAgregarUnidad)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel10))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(txtUnidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel12))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37))
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboTipoLiquidacion, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel14))
+                .addGap(121, 121, 121))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel4)
-                            .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel14)
-                            .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel12)
-                                .addComponent(txtPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3)
-                                .addComponent(txtUnidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(4, 4, 4)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAgregarConceptos, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtUnidadConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(btnAgregarUnidad))
+                                .addGap(14, 14, 14))))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(comboTipoLiquidacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel7.setBackground(new java.awt.Color(102, 102, 102));
@@ -415,10 +531,13 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("BANCO:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Banco Industrial" }));
+        comboBanco.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BANCO INDUSTRIAL" }));
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("NRO DE CUENTA:");
+
+        txtNroCuenta.setBackground(new java.awt.Color(0, 0, 51));
+        txtNroCuenta.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel11.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
@@ -431,7 +550,7 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -439,8 +558,8 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
                             .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField3)
-                            .addComponent(jComboBox2, 0, 191, Short.MAX_VALUE))))
+                            .addComponent(txtNroCuenta)
+                            .addComponent(comboBanco, 0, 191, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -451,11 +570,11 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboBanco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNroCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
@@ -464,9 +583,14 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "CODIGO", "DESCRIPCION", "UNIDAD", "TIPO", "IMPORTE", "PORCENTAJE"
+                "ID", "CODIGO", "DESCRIPCION", "UNIDAD", "IMPORTE", "PORCENTAJE"
             }
         ));
+        tablaConceptosCargados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaConceptosCargadosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaConceptosCargados);
 
         btnGuardar.setBackground(new java.awt.Color(0, 153, 0));
@@ -587,34 +711,33 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
-                                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton9))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(0, 4, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton9)))
+                .addGap(26, 26, 26))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -651,7 +774,7 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -663,8 +786,9 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
 
     private void buscarConceptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarConceptosActionPerformed
         // TODO add your handling code here:
-        BCConceptos bcmConceptos = new BCConceptos(true,modeloTabla);
-        bcmConceptos.setVisible(true);
+        BCConceptos bcConceptos = new BCConceptos(true,auxiliarNuevosConceptos,
+                (DefaultTableModel) tablaConceptosCargados.getModel());
+        bcConceptos.setVisible(true);
     }//GEN-LAST:event_buscarConceptosActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -701,7 +825,8 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
 
     private void btnBuscarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarEmpleadoActionPerformed
         // TODO add your handling code here:
-        ArrayList<Long> indices;
+        buscarDatosEmpleado();
+        /*ArrayList<Long> indices;
         String dato,columnaBusqueda;
         if(comboDatoEmpleado.getSelectedIndex()==0){
             dato = txtBuscarEmpleado.getText();
@@ -713,15 +838,44 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         indices = empleado.buscarBD(
                 "'"+dato+"' AND P.ID_PERSONA = E.PERSONA_ID_PERSONA", 
                 columnaBusqueda , 'H', null);
+        empleado.setIdTipoLiquidacion(comboTipoLiquidacion.getSelectedIndex()+1);
         empleado.ampliarInfoBD(indices.get(0));
+        
         txtNombreEmpleado.setText(empleado.getNombreApellido());
+        txtNroCuenta.setText(empleado.getNroCuentaBanco());
+        
+        modeloTabla = (DefaultTableModel) tablaConceptosCargados.getModel();
+        Object [] fila = new Object[7];
+                for(int i = 0; i<empleado.getConceptos().size();i++){
+                    fila [0] = empleado.getConceptos().get(i).getIdConcepto();
+                    fila [1] = empleado.getConceptos().get(i).getIdConcepto();
+                    fila [2] = empleado.getConceptos().get(i).getDescripcion();
+                    fila [3] = empleado.getConceptos().get(i).getUnidad();
+                    fila [4] = empleado.getConceptos().get(i).getIdTipo();
+                    fila [5] = empleado.getConceptos().get(i).getImporte();
+                    fila [6] = empleado.getConceptos().get(i).getPorcentaje();
+                    
+                    modeloTabla.addRow(fila);
+                    auxiliarConceptosExistentes.add(
+                            empleado.getConceptos().get(i).getIdConcepto());
+                    auxiliarNuevosConceptos.add(
+                            empleado.getConceptos().get(i).getIdConcepto());
+                    tablaConceptosCargados.setModel(modeloTabla);
+                }
+                empleado.getConceptos().clear();
+        
+            if(auxiliarConceptosExistentes.isEmpty()){
+                eliminarRegistrosDeBD = false;
+            }else{
+                eliminarRegistrosDeBD = true;
+                System.out.println("ELIMINACION DE CONCEPTOS EN BD ACTIVADA");
+            }
+             */   
     }//GEN-LAST:event_btnBuscarEmpleadoActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         // TODO add your handling code here:
-        txtBuscarEmpleado.setText("");
-        txtNombreEmpleado.setText("");
-        comboDatoEmpleado.setSelectedIndex(0);
+        limpiarTodo();
         
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
@@ -732,45 +886,96 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         adminEmpleado.setVisible(true);
     }//GEN-LAST:event_btnAmpliarInfoActionPerformed
 
-    private void btnAgregarConceptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarConceptosActionPerformed
-        // TODO add your handling code here:
-        
-        Object [] fila = new Object [6];
-        fila [0] = txtCodigo.getText();
-        fila [1] = txtDescripcion.getText();
-        fila [2] = comboTipo.getSelectedItem();
-        fila [3] = txtUnidad.getText();
-        fila [4] = txtImporte.getText();
-        fila [5] = txtPorcentaje.getText();
-        
-        modeloTabla.addRow(fila);
-    }//GEN-LAST:event_btnAgregarConceptosActionPerformed
-
     private void btnEliminarConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarConceptoActionPerformed
         // TODO add your handling code here:
+        long idReferenciado;
+        if(tablaConceptosCargados.getSelectedRow()==-1){
+            JOptionPane.showMessageDialog(
+                    null, "DEBE SELECCIONAR UN CONCEPTO",
+                    "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            
         int i = JOptionPane.showConfirmDialog(
                 null, "¿ESTA SEGURO DE ELIMINAR ESTE CONCEPTO?", "Confirmacion", 0);
         if(i==0){
         modeloTabla = (DefaultTableModel)tablaConceptosCargados.getModel();
+        idReferenciado = Long.valueOf(String.valueOf(modeloTabla.getValueAt(
+                        tablaConceptosCargados.getSelectedRow(),0)));
+        verificarEliminacionBD(idReferenciado);
+        int j = tablaConceptosCargados.getSelectedRow();
+        auxiliarNuevosConceptos.remove(j);
         modeloTabla.removeRow(tablaConceptosCargados.getSelectedRow());
+        
+        }
         }
     }//GEN-LAST:event_btnEliminarConceptoActionPerformed
 
     private void btnEliminarTodosConceptosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTodosConceptosActionPerformed
         // TODO add your handling code here:
+        if(tablaConceptosCargados.getSelectedRow()==-1){
+            JOptionPane.showMessageDialog(
+                    null, "DEBE SELECCIONAR UN CONCEPTO",
+                    "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        }else{
         for(int i=modeloTabla.getRowCount(); i>0;i--){
              modeloTabla.removeRow(i-1);
+             auxiliarConceptosEliminados.add(
+                Long.valueOf(String.valueOf(modeloTabla.getValueAt(i,0))));
+        }
+        
         }
     }//GEN-LAST:event_btnEliminarTodosConceptosActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
+        
+        leerNuevosRegistrosTablaConceptos();
+        leerRegistrosEliminadosTablaConceptos();
+        if(confirmacion){
         estado = true;
         
         JOptionPane.showMessageDialog(
                     null, "LOS DATOS SE HAN GUARDADO CORRECTAMENTE",
                     "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+        limpiarTodo();
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void tablaConceptosCargadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaConceptosCargadosMouseClicked
+        // TODO add your handling code here:
+            
+     int filaseleccionada = tablaConceptosCargados.getSelectedRow();
+
+     try{
+        if (filaseleccionada==-1){
+         
+             JOptionPane.showMessageDialog(null, "SELECCIONE UNA FILA");
+
+         }else{
+
+             modeloTabla=(DefaultTableModel) tablaConceptosCargados.getModel();
+           
+             txtUnidadConcepto.setText(String.valueOf(modeloTabla.getValueAt(
+                     filaseleccionada, 3)));
+          }
+
+       }catch (HeadlessException ex){
+           JOptionPane.showMessageDialog(
+                   null, "Error: "+ex+"\nInténtelo nuevamente", " .::Error En la Operacion::." ,
+                   JOptionPane.ERROR_MESSAGE);
+       }     
+        
+    }//GEN-LAST:event_tablaConceptosCargadosMouseClicked
+
+    private void btnAgregarUnidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarUnidadActionPerformed
+        // TODO add your handling code here:
+        int filaseleccionada = tablaConceptosCargados.getSelectedRow();
+        
+        modeloTabla=(DefaultTableModel) tablaConceptosCargados.getModel();
+           
+        String nuevaUnidad = txtUnidadConcepto.getText();
+        modeloTabla.setValueAt(nuevaUnidad,filaseleccionada, 3);
+    }//GEN-LAST:event_btnAgregarUnidadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -808,7 +1013,7 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregarConceptos;
+    private javax.swing.JButton btnAgregarUnidad;
     private javax.swing.JButton btnAmpliarInfo;
     private javax.swing.JButton btnBuscarEmpleado;
     private javax.swing.JButton btnEliminarConcepto;
@@ -820,14 +1025,12 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
     private javax.swing.JButton buscarConceptos;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JComboBox comboBanco;
     private javax.swing.JComboBox comboDatoEmpleado;
-    private javax.swing.JComboBox<String> comboTipo;
+    private javax.swing.JComboBox<String> comboTipoLiquidacion;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
@@ -835,7 +1038,6 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -849,16 +1051,12 @@ public class ConformacionBoletaSueldo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JTable tablaConceptosCargados;
     private javax.swing.JTextField txtBuscarEmpleado;
-    private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtDescripcion;
-    private javax.swing.JTextField txtImporte;
     private javax.swing.JTextField txtNombreEmpleado;
-    private javax.swing.JTextField txtPorcentaje;
-    private javax.swing.JTextField txtUnidad;
+    private javax.swing.JTextField txtNroCuenta;
+    private javax.swing.JTextField txtUnidadConcepto;
     // End of variables declaration//GEN-END:variables
 }

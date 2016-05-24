@@ -184,7 +184,7 @@ public class Cliente extends Persona{
             String set = "P.NOMBRE_APELLIDO = '"+ getNombreApellido()+"',"
             + "P.DNI = '"+ getDni() + "',"
             + "P.SEXO = '" + getSexo() + "',"
-            + "P.FECHA_NAC = " + getFechaNacimiento()+ ","
+            + "P.FECHA_NAC = TO_DATE(" + getFechaNacimiento()+ "),"
             + "P.OBSERVACIONES = '"+getObservaciones()+ "'";
             String condicion = "P.ID_PERSONA = '"+ getIdPersona()+"'";
             sismain.getControladorBD().modificar(tablas,set,condicion);

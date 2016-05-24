@@ -6,28 +6,17 @@
 package UI;
 
 
-import Controller.ControladorBD;
-import Controller.ControladorDate;
 import java.awt.Color;
-import java.awt.image.ImageObserver;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import model.Cliente;
 import model.CorreoElectronico;
 import model.Domicilio;
-import model.Persona;
 import model.Telefono;
 import sistemakiosco.sismain;
-import sun.swing.DefaultLookup;
 /**
  *
  * @author IgnacioMatias
@@ -46,6 +35,8 @@ public class BCMCliente extends javax.swing.JFrame {
     private ArrayList<Object> auxiliarEliminarTelefonos = new ArrayList<>();
     private ArrayList<Object> auxiliarEliminarCorreosElectronicos = new ArrayList<>();
     private ArrayList<Object> auxiliarEliminarDomicilios = new ArrayList<>();
+    private boolean nuevosRegistrosEnTablas = false;
+    private boolean eliminarRegistrosEnTablas = false;
     /**
      * Creates new form ABMProducto
      */
@@ -159,7 +150,145 @@ public class BCMCliente extends javax.swing.JFrame {
                 cliente.getCorreosElectronicos().clear();
     }
     
+    
+    public void leerNuevosRegistrosTablaTelefono(){
+        for(int i = 0; i<tablaTelefono.getModel().getRowCount();i++){
+        auxiliarNuevosTelefonos.add(tablaTelefono.getModel().getValueAt(i,0));
+        System.out.println(tablaTelefono.getModel().getValueAt(i, 0));
+            }
+        
+        for(int i = 0; i<auxiliarNuevosTelefonos.size();i++){
+            
+            if(auxiliarNuevosTelefonos.get(i)== "" && nuevosRegistrosEnTablas){
+                System.out.println("SE GUARDO NUEVO TELEFONO");
+                telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,1)));
+                System.out.println(tablaTelefono.getValueAt(i,1));
+                telefono.setMovil(
+                    String.valueOf(tablaTelefono.getValueAt(i, 2)).charAt(0));
+                System.out.println(tablaTelefono.getValueAt(i,2));
+                telefono.setIdPersona(cliente.getIdPersona());
+                System.out.println(cliente.getIdPersona());
+                telefono.setIdProveedor(0);
+                telefono.guardarBD();
+                
+            }else{
+                System.out.println("SE MODIFICO UN TELEFONO");
+                telefono.setIdTelefono(Long.valueOf(String.valueOf(tablaTelefono.getValueAt(i,0))));
+                System.out.println(tablaTelefono.getValueAt(i,0));
+                telefono.setNumero(String.valueOf(tablaTelefono.getValueAt(i,1)));
+                System.out.println(tablaTelefono.getValueAt(i,1));
+                telefono.setMovil(
+                    String.valueOf(tablaTelefono.getValueAt(i, 2)).charAt(0));
+                System.out.println(tablaTelefono.getValueAt(i,2));
+                telefono.setIdPersona(cliente.getIdPersona());
+                System.out.println(cliente.getIdPersona());
+                telefono.modificarBD(cliente.getIdPersona(),true);
+                
+            }
+            
+        }
+    }
+    
+    public void leerRegistrosEliminadosTablaTelefono(){
+        for(int i = 0; i<auxiliarEliminarTelefonos.size();i++){
+            if(eliminarRegistrosEnTablas){
+            telefono.setIdTelefono(Long.valueOf(String.valueOf(auxiliarEliminarTelefonos.get(i))));
+            telefono.eliminarBD(cliente.getIdPersona(), true);
+            System.out.println("SE ELIMINO UN TELEFONO");
+            }
+        }
+    }
+    
+    public void leerNuevosRegistrosTablaDomicilio(){
+        for(int i = 0; i<tablaDomicilio.getModel().getRowCount();i++){
+        auxiliarNuevosDomicilios.add(tablaDomicilio.getModel().getValueAt(i,0));
+        System.out.println(tablaDomicilio.getModel().getValueAt(i, 0));
+            }
+        
+        for(int i = 0; i<auxiliarNuevosDomicilios.size();i++){
+            
+            if(auxiliarNuevosDomicilios.get(i)== "" && nuevosRegistrosEnTablas){
+                System.out.println("SE GUARDO NUEVO DOMICILIO");
+                domicilio.setDireccion(
+                    String.valueOf(tablaDomicilio.getValueAt(i,1)));
+                domicilio.setLocalidad(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 2)));
+                domicilio.setProvincia(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 3)));
+                domicilio.setIdPersona(cliente.getIdPersona());
+                domicilio.setIdProveedor(0);
+                domicilio.guardarBD();
+                
+            }else{
+                System.out.println("SE MODIFICO UN DOMICILIO");
+                domicilio.setIdDomicilio(
+                    Long.valueOf(String.valueOf(tablaDomicilio.getValueAt(i,0))));
+                domicilio.setDireccion(
+                    String.valueOf(tablaDomicilio.getValueAt(i,1)));
+                domicilio.setLocalidad(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 2)));
+                domicilio.setProvincia(
+                    String.valueOf(tablaDomicilio.getValueAt(i, 3)));
+                domicilio.setIdPersona(cliente.getIdPersona());
+                domicilio.modificarBD(cliente.getIdPersona(),true);
+                
+            }
+            
+        }
+    }
+    
+    public void leerRegistrosEliminadosTablaDomicilio(){
+        for(int i = 0; i<auxiliarEliminarDomicilios.size();i++){
+            if(eliminarRegistrosEnTablas){
+            domicilio.setIdDomicilio(Long.valueOf(String.valueOf(auxiliarEliminarDomicilios.get(i))));
+            domicilio.eliminarBD(cliente.getIdPersona(), true);
+            System.out.println("SE ELIMINO UN DOMICILIO");
+        }
+        }
+    }
 
+    public void leerNuevosRegistrosTablaEmail(){
+        for(int i = 0; i<tablaCorreoElectronico.getModel().getRowCount();i++){
+        auxiliarNuevosCorreosElectronicos.add(
+                tablaCorreoElectronico.getModel().getValueAt(i,0));
+        System.out.println(tablaCorreoElectronico.getModel().getValueAt(i, 0));
+            }
+        
+        for(int i = 0; i<auxiliarNuevosCorreosElectronicos.size();i++){
+            
+            if(auxiliarNuevosCorreosElectronicos.get(i)== "" && nuevosRegistrosEnTablas){
+                System.out.println("SE GUARDO UN NUEVO EMAIL");
+                correoElectronico.setDireccion(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
+                correoElectronico.setIdPersona(cliente.getIdPersona());
+                correoElectronico.setIdProveedor(0);
+                correoElectronico.guardarBD();
+                
+            }else{
+                System.out.println("SE MODIFICO UN EMAIL");
+                correoElectronico.setIdCorreoElectronico(
+                        Long.valueOf(String.valueOf(
+                                tablaCorreoElectronico.getValueAt(i,0))));
+                correoElectronico.setDireccion(
+                    String.valueOf(tablaCorreoElectronico.getValueAt(i,1)));
+                correoElectronico.setIdPersona(cliente.getIdPersona());
+                correoElectronico.modificarBD(cliente.getIdPersona(),true);
+                
+            }
+            
+        }
+    }
+    
+    public void leerRegistrosEliminadosTablaEmail(){
+        for(int i = 0; i<auxiliarEliminarCorreosElectronicos.size();i++){
+            if(eliminarRegistrosEnTablas){
+            correoElectronico.setIdCorreoElectronico(Long.valueOf(String.valueOf(
+                    auxiliarEliminarCorreosElectronicos.get(i))));
+            correoElectronico.eliminarBD(cliente.getIdPersona(), true);
+            System.out.println("SE ELIMINO UN EMAIL");
+        }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -641,16 +770,17 @@ public class BCMCliente extends javax.swing.JFrame {
 
     private void btnEliminarDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDomicilioActionPerformed
         model = (DefaultTableModel)tablaDomicilio.getModel();
-        domicilio.setIdDomicilio(Long.valueOf(String.valueOf(model.getValueAt(tablaDomicilio.getSelectedRow(),0))));
-                
+        auxiliarEliminarDomicilios.add(Long.valueOf(String.valueOf(
+                model.getValueAt(tablaDomicilio.getSelectedRow(),0))));
         model.removeRow(tablaDomicilio.getSelectedRow());
-        domicilio.eliminarBD(cliente.getIdPersona(),true);
+        eliminarRegistrosEnTablas = true;
     }//GEN-LAST:event_btnEliminarDomicilioActionPerformed
 
     private void btnNuevoDomicilioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoDomicilioActionPerformed
         NDDomicilio dDomicilio= new NDDomicilio(this,
                 true, (DefaultTableModel) tablaDomicilio.getModel());
         dDomicilio.setVisible(true);
+        nuevosRegistrosEnTablas = true;
     }//GEN-LAST:event_btnNuevoDomicilioActionPerformed
 
     private void comboAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboAnioActionPerformed
@@ -666,30 +796,32 @@ public class BCMCliente extends javax.swing.JFrame {
         NDTelefono dTelefono= new NDTelefono(this,
                 true,(DefaultTableModel) tablaTelefono.getModel());
         dTelefono.setVisible(true);
+        nuevosRegistrosEnTablas = true;
     }//GEN-LAST:event_btnNuevoTelefonoActionPerformed
 
     private void btnNuevoCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoCorreoActionPerformed
         NDCorreoElectronico dCorreo= new NDCorreoElectronico(this,
                 true,(DefaultTableModel) tablaCorreoElectronico.getModel());
         dCorreo.setVisible(true);
+        nuevosRegistrosEnTablas = true;
     }//GEN-LAST:event_btnNuevoCorreoActionPerformed
 
     private void btnEliminarEmailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmailsActionPerformed
         model = (DefaultTableModel)tablaCorreoElectronico.getModel();
-        correoElectronico.setIdCorreoElectronico(Long.valueOf(String.valueOf(model.getValueAt(tablaCorreoElectronico.getSelectedRow(),0))));
+        auxiliarEliminarCorreosElectronicos.add(
+                Long.valueOf(String.valueOf(model.getValueAt(
+                        tablaCorreoElectronico.getSelectedRow(),0))));
                 
         model.removeRow(tablaCorreoElectronico.getSelectedRow());
-        correoElectronico.eliminarBD(cliente.getIdPersona(),true);
+        eliminarRegistrosEnTablas = true;
     }//GEN-LAST:event_btnEliminarEmailsActionPerformed
 
     private void btnEliminarTelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTelsActionPerformed
         model = (DefaultTableModel)tablaTelefono.getModel();
-        
-        telefono.setIdTelefono(Long.valueOf(String.valueOf(model.getValueAt(tablaTelefono.getSelectedRow(),0))));
-                
-                
+        auxiliarEliminarTelefonos.add(Long.valueOf(String.valueOf(
+                model.getValueAt(tablaTelefono.getSelectedRow(),0))));
         model.removeRow(tablaTelefono.getSelectedRow());
-        telefono.eliminarBD(cliente.getIdPersona(),true);
+        eliminarRegistrosEnTablas = true;
     }//GEN-LAST:event_btnEliminarTelsActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -752,6 +884,20 @@ public class BCMCliente extends javax.swing.JFrame {
         cliente.setObservaciones(txtObservaciones.getText());
         cliente.modificarBD();
         
+        leerNuevosRegistrosTablaTelefono();
+        
+        leerRegistrosEliminadosTablaTelefono();
+        
+        leerNuevosRegistrosTablaDomicilio();
+        
+        leerRegistrosEliminadosTablaDomicilio();
+        
+        leerNuevosRegistrosTablaEmail();
+        
+        leerRegistrosEliminadosTablaEmail();
+        
+        /*
+                
         for(int i = 0; i<tablaDomicilio.getRowCount();i++){
             domicilio.setIdDomicilio(
                     Long.valueOf(String.valueOf(tablaDomicilio.getValueAt(i,0))));
@@ -783,7 +929,7 @@ public class BCMCliente extends javax.swing.JFrame {
             correoElectronico.setIdPersona(cliente.getIdPersona());
             correoElectronico.modificarBD(cliente.getIdPersona(),true);
         }
-        
+        */
         
         JOptionPane.showMessageDialog(null, "EL CLIENTE SE HA MODIFICADO CORRECTAMENTE","Mensaje",JOptionPane.INFORMATION_MESSAGE);
         }

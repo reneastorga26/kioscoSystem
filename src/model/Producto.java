@@ -183,14 +183,16 @@ public class Producto {
                 case "Cerca al Punto de Pedido": resultado="B";break;
                 case "Punto de Pedido Alcanzado": resultado="C";break;
                 case "Stock Critico Minimo Alcanzado": resultado="D";break;
+                case "Agotado": resultado = "E";break; 
             }
         }
         else{
             switch(estado){
-                case "A": resultado = "Normal";
+                case "A": resultado = "Normal";break;
                 case "B": resultado = "Cerca al Punto de Pedido";break;
                 case "C": resultado = "Punto de Pedido Alcanzado";break;
                 case "D": resultado = "Stock Ciritico Minimo Alcanzado";break;
+                case "E": resultado = "Agotado";break;
             }
         }
         return resultado;

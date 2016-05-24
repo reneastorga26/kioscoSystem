@@ -83,7 +83,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -144,11 +144,8 @@
                               <Component id="jSeparator4" min="-2" pref="13" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
-                                      <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                                  </Group>
                                   <Component id="comboEstado" max="32767" attributes="0"/>
+                                  <Component id="jLabel13" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                           </Group>
@@ -181,7 +178,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="359" max="-2" attributes="0"/>
                                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <EmptySpace pref="18" max="32767" attributes="0"/>
                                       <Component id="txtUnidadesxMayor" min="-2" pref="51" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -249,9 +246,9 @@
                               </Group>
                               <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="radioMayorista" min="-2" max="-2" attributes="0"/>
-                                      <Component id="radioMinorista" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="radioMayorista" max="32767" attributes="0"/>
+                                      <Component id="radioMinorista" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -570,7 +567,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
-                <Property name="text" type="java.lang.String" value="ESTADO DE HABILITACION INICIAL: "/>
+                <Property name="text" type="java.lang.String" value="ESTADO DE HABILITACION: "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator4">
@@ -581,10 +578,7 @@
             <Component class="javax.swing.JComboBox" name="comboEstado">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Habilitado"/>
-                    <StringItem index="1" value="Deshabilitado"/>
-                  </StringArray>
+                  <StringArray count="0"/>
                 </Property>
               </Properties>
               <AuxValues>
@@ -634,8 +628,8 @@
                       <Table columnCount="5" rowCount="0">
                         <Column editable="true" title="ID" type="java.lang.Object"/>
                         <Column editable="true" title="PROVEEDOR" type="java.lang.Object"/>
-                        <Column editable="true" title="PRECIO MINORISTA" type="java.lang.Object"/>
-                        <Column editable="true" title="PRECIO MAYORISTA" type="java.lang.Object"/>
+                        <Column editable="true" title="ULTIMO PRECIO MINORISTA" type="java.lang.Object"/>
+                        <Column editable="true" title="ULTIMO PRECIO MAYORISTA" type="java.lang.Object"/>
                         <Column editable="true" title="RENDERIZADOR" type="java.lang.Object"/>
                       </Table>
                     </Property>
@@ -736,12 +730,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
               <Properties>
-                <Property name="text" type="java.lang.String" value="PRECIO DE COMPRA MINORISTA:"/>
+                <Property name="text" type="java.lang.String" value="ULTIMO PRECIO MAYORISTA:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel19">
               <Properties>
-                <Property name="text" type="java.lang.String" value="PRECIO DE COMPRA MAYORISTA:"/>
+                <Property name="text" type="java.lang.String" value="ULTIMO PRECIO MINORISTA:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="radioMinorista">

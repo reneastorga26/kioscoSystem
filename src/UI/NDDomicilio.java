@@ -168,9 +168,10 @@ public class NDDomicilio extends javax.swing.JDialog {
         String localidad = txtLocalidad.getText();
         String provincia = txtProvincia.getText();
         Object [] fila = new Object [4];
-        fila [0] = direccion;
-        fila [1] = localidad;
-        fila [2] = provincia;
+        fila [0] = "";
+        fila [1] = direccion;
+        fila [2] = localidad;
+        fila [3] = provincia;
         modeloTabla.addRow(fila);
         this.dispose();
     }//GEN-LAST:event_btnGuardarActionPerformed

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package UI;
 
 import java.awt.Color;
@@ -25,6 +21,7 @@ import model.TipoProducto;
  */
 public class AMProducto extends javax.swing.JFrame {
     
+    private ArrayList<ArrayList<Object>> registroProducto;
     private ArrayList<ArrayList<Object>> registrosProveedores;
     private ArrayList<ArrayList<Object>> registrosProveedoresFiltrados;
     private ArrayList<ArrayList<Object>> registrosPreciosAgregados
@@ -41,25 +38,45 @@ public class AMProducto extends javax.swing.JFrame {
     private TipoProducto tipoProducto = new TipoProducto();
     private Fabricante fabricante = new Fabricante();
     private Proveedor proveedor = new Proveedor();
+    private int idProducto;
     private int opcion;
     private long idForm;
     /**
      * Creates new form ABMProducto
      */
     
-    public AMProducto(Producto producto, int opcion) {
+    public AMProducto(Producto producto, int opcion, int idProducto) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.opcion=opcion;
-        long valorInteres = 0;
+        this.idProducto = idProducto;
+        iniciarInterfaz();
+        if(opcion==1){
+            setModoA();
+        }
+        else{
+            setModoM();
+            }
+        
+        radioAgregar.setSelected(true);
+        radioMayorista.setSelected(true);
+        radioMinorista.setSelected(true);
+        
+    }
+    
+    public void iniciarInterfaz(){
         comboFiltro.setSelectedIndex(0);
         registrosProveedores=proveedor.obtenerRazonSocialTodos();
         registrosTipoProducto=tipoProducto.obtenerDescripcionTodos();
         registrosFabricante=fabricante.obtenerDescripcionTodos();
         comboTipoProducto.addItem("SELECCIONE TIPO");
-        comboTipoProducto.addItem("__________________");
+        comboTipoProducto.addItem("____________________");
         comboFabricante.addItem("SELECCIONE FABRICANTE");
         comboFabricante.addItem("__________________");
+        comboEstado.addItem("SELECCIONE ESTADO");
+        comboEstado.addItem("___________________");
+        comboEstado.addItem("Habilitado");
+        comboEstado.addItem("Deshabilitado");
         for(int i=0;i<registrosTipoProducto.size();i++){
             comboTipoProducto.addItem(registrosTipoProducto.get(i)
                     .get(1).toString());
@@ -68,13 +85,14 @@ public class AMProducto extends javax.swing.JFrame {
             comboFabricante.addItem(registrosFabricante.get(i)
                     .get(1).toString());
         }
-        
+        //Falta Renderizar y desactivar editor.
         this.modeloTabla=(DefaultTableModel) tablaPreciosCompra.getModel();
         trs = new TableRowSorter<TableModel>(modeloTabla);
         tablaPreciosCompra.setRowSorter(trs);     
-        
         this.actualizarCombo(comboFiltro,false);
-        if(opcion==1){
+    }
+    
+    public void setModoA(){
             lblHeading.setText("Nuevo Producto");
             lblHeading.setForeground(new Color(0,255,0));
             btnGuardar.setText("Guardar");
@@ -82,11 +100,13 @@ public class AMProducto extends javax.swing.JFrame {
             radioAgregar.setSelected(true);
             radioModificar.setEnabled(false);
             radioEliminar.setEnabled(false);
-        }
-        else{
+    }
+    
+    public void setModoM(){
+            long valorInteres = 0;
             lblHeading.setText("Modificar Informacion de Producto");
             lblHeading.setForeground(new Color(204,204,204));
-            producto.ampliarInfoBD(opcion);
+            producto.ampliarInfoBD(idProducto);
             radioAgregar.setSelected(true);
             btnGuardar.setText("Guardar Cambios");
             btnGuardar.setBackground(new Color(51,0,51));
@@ -97,6 +117,7 @@ public class AMProducto extends javax.swing.JFrame {
             txtCodigo.setText(String.valueOf(producto.getCodigo()));
             txtDescripcion.setText(producto.getDescripcion());
             
+            //Asigno Valores a Combos en Modificar
             valorInteres=producto.getIdTipoProducto();
             for(int i = 0; i<registrosTipoProducto.size();i++){
                 if(Long.parseLong(registrosTipoProducto.get(i)
@@ -118,22 +139,16 @@ public class AMProducto extends javax.swing.JFrame {
                     producto.getEstadoStock()), false));
             
             if(producto.getEstado()=='H'){
-                comboEstado.setSelectedIndex(0);
+                comboEstado.setSelectedIndex(2);
             }
             else{
-                comboEstado.setSelectedIndex(1);
+                comboEstado.setSelectedIndex(3);
             }
             
             txtStockActual.setText(String.valueOf(producto.getStockActual()));
             txtPuntoPedido.setText(String.valueOf(producto.getPuntoPedido()));
             txtStockMinimo.setText(String.valueOf(producto
                     .getStockCriticoMinimo()));
-            }
-        
-        radioAgregar.setSelected(true);
-        radioMayorista.setSelected(true);
-        radioMinorista.setSelected(true);
-        
     }
     
     public void actualizarTabla(){
@@ -450,11 +465,9 @@ public class AMProducto extends javax.swing.JFrame {
         lblEstadoStock.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         lblEstadoStock.setText("NINGUNO");
 
-        jLabel13.setText("ESTADO DE HABILITACION INICIAL: ");
+        jLabel13.setText("ESTADO DE HABILITACION: ");
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
-
-        comboEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Habilitado", "Deshabilitado" }));
 
         comboFabricante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -473,7 +486,7 @@ public class AMProducto extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "PROVEEDOR", "PRECIO MINORISTA", "PRECIO MAYORISTA", "RENDERIZADOR"
+                "ID", "PROVEEDOR", "ULTIMO PRECIO MINORISTA", "ULTIMO PRECIO MAYORISTA", "RENDERIZADOR"
             }
         ));
         jScrollPane1.setViewportView(tablaPreciosCompra);
@@ -510,9 +523,9 @@ public class AMProducto extends javax.swing.JFrame {
 
         jLabel17.setText("SELECCIONE PROVEEDOR:");
 
-        jLabel18.setText("PRECIO DE COMPRA MINORISTA:");
+        jLabel18.setText("ULTIMO PRECIO MAYORISTA:");
 
-        jLabel19.setText("PRECIO DE COMPRA MAYORISTA:");
+        jLabel19.setText("ULTIMO PRECIO MINORISTA:");
 
         radioMinorista.setText("Compra Minorista Permitida");
 
@@ -689,10 +702,8 @@ public class AMProducto extends javax.swing.JFrame {
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(0, 10, Short.MAX_VALUE)
-                                .addComponent(jLabel13))
-                            .addComponent(comboEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(comboEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(22, 22, 22))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -718,7 +729,7 @@ public class AMProducto extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addGap(359, 359, 359)
                                 .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                                 .addComponent(txtUnidadesxMayor, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(11, 11, 11))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -773,9 +784,9 @@ public class AMProducto extends javax.swing.JFrame {
                             .addComponent(comboForm, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(lblTitulo)
                         .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(radioMayorista)
-                                .addComponent(radioMinorista))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(radioMayorista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(radioMinorista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel19)
@@ -968,7 +979,7 @@ public class AMProducto extends javax.swing.JFrame {
                         .addComponent(btnSalir)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1024,10 +1035,6 @@ public class AMProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboFabricanteActionPerformed
 
-    private void txtPrecioMayoristaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioMayoristaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPrecioMayoristaActionPerformed
-
     private void btnFormularioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFormularioActionPerformed
         int indexCombo = comboForm.getSelectedIndex();
         Object[] fila;
@@ -1080,8 +1087,8 @@ public class AMProducto extends javax.swing.JFrame {
            case 1:fila= new Object[5];
                   for(int i=0; i<nuevoRegistro.size();i++){
                   fila[i]=registrosPreciosAgregados.get(i);
-                } 
-                modeloTabla.addRow(fila);
+                  } 
+                  modeloTabla.addRow(fila);
        }
     }//GEN-LAST:event_btnFormularioActionPerformed
 
@@ -1109,6 +1116,10 @@ public class AMProducto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_checkIncluirActionPerformed
 
+    private void txtPrecioMayoristaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioMayoristaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioMayoristaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1134,6 +1145,10 @@ public class AMProducto extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AMProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
+        //</editor-fold>
+
         //</editor-fold>
 
         //</editor-fold>

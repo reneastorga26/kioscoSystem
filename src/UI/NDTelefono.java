@@ -140,9 +140,10 @@ public class NDTelefono extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         String numero = txtNumero.getText();
         String tipo = comboTipo.getSelectedItem().toString();
-        Object [] fila = new Object [2];
-        fila [0] = numero;
-        fila [1] = tipo;
+        Object [] fila = new Object [3];
+        fila [0] = "";
+        fila [1] = numero;
+        fila [2] = tipo;
         modeloTabla.addRow(fila);
         this.dispose();
     }//GEN-LAST:event_btnGuardarActionPerformed

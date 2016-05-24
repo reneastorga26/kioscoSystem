@@ -7,7 +7,6 @@ import Conexion.Conexion;
 import Controller.ControladorBD;
 import Controller.ControladorDate;
 import Watch.Reloj;
-import javax.swing.JOptionPane;
 
 public class sismain {
     

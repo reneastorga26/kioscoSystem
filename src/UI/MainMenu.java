@@ -141,9 +141,11 @@ public class MainMenu extends javax.swing.JFrame {
         jMenu9 = new javax.swing.JMenu();
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem18 = new javax.swing.JMenuItem();
+        jMenuItem29 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem20 = new javax.swing.JMenuItem();
         jMenuItem22 = new javax.swing.JMenuItem();
+        jMenuItem28 = new javax.swing.JMenuItem();
         menuProductos = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -769,7 +771,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 363, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -833,6 +835,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         jMenuBar1.add(menuPerfilSesion);
 
+        jMenu1.setForeground(new java.awt.Color(204, 204, 204));
         jMenu1.setText(" Empleados");
 
         jMenuItem21.setText("Nuevo Empleado");
@@ -852,7 +855,6 @@ public class MainMenu extends javax.swing.JFrame {
         jMenu1.add(jMenuItem4);
         jMenu1.add(jSeparator3);
 
-        menuLiquidaciones.setForeground(new java.awt.Color(204, 204, 204));
         menuLiquidaciones.setText("Liquidacion de Sueldo");
 
         jMenuItem17.setText("Conceptos");
@@ -891,6 +893,14 @@ public class MainMenu extends javax.swing.JFrame {
 
         menuLiquidaciones.add(jMenu9);
 
+        jMenuItem29.setText("Periodo de Liquidación");
+        jMenuItem29.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem29ActionPerformed(evt);
+            }
+        });
+        menuLiquidaciones.add(jMenuItem29);
+
         jMenu3.setText("Recibo de Sueldo");
 
         jMenuItem20.setText("Recibo de Sueldo Individual");
@@ -910,6 +920,14 @@ public class MainMenu extends javax.swing.JFrame {
         jMenu3.add(jMenuItem22);
 
         menuLiquidaciones.add(jMenu3);
+
+        jMenuItem28.setText("Tipo de Liquidación");
+        jMenuItem28.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem28ActionPerformed(evt);
+            }
+        });
+        menuLiquidaciones.add(jMenuItem28);
 
         jMenu1.add(menuLiquidaciones);
 
@@ -1080,7 +1098,7 @@ public class MainMenu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 625, Short.MAX_VALUE)
         );
 
         pack();
@@ -1099,7 +1117,7 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
     private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
-        BCConceptos bcmConceptos = new BCConceptos(false,null);
+        BCConceptos bcmConceptos = new BCConceptos(false,null,null);
         bcmConceptos.setVisible(true);
     }//GEN-LAST:event_jMenuItem17ActionPerformed
 
@@ -1270,6 +1288,18 @@ public class MainMenu extends javax.swing.JFrame {
         cFabricante.setVisible(true);
     }//GEN-LAST:event_jMenuItem25ActionPerformed
 
+    private void jMenuItem28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem28ActionPerformed
+        // TODO add your handling code here:
+        TipoDeLiquidaciones tipoLiquidacion = new TipoDeLiquidaciones();
+        tipoLiquidacion.setVisible(true);
+    }//GEN-LAST:event_jMenuItem28ActionPerformed
+
+    private void jMenuItem29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem29ActionPerformed
+        // TODO add your handling code here:
+        PeriodoDeLiquidaciones periodoLiquidacion = new PeriodoDeLiquidaciones();
+        periodoLiquidacion.setVisible(true);
+    }//GEN-LAST:event_jMenuItem29ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1353,6 +1383,8 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem25;
     private javax.swing.JMenuItem jMenuItem26;
     private javax.swing.JMenuItem jMenuItem27;
+    private javax.swing.JMenuItem jMenuItem28;
+    private javax.swing.JMenuItem jMenuItem29;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

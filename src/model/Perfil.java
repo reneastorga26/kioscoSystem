@@ -101,9 +101,8 @@ public class Perfil {
         sismain.getControladorBD().aniadir(valores,"PERFIL",false);
         valores.clear();
         return idPerfil;
-        
-        
     }
+        
         public int check_ampliarInfoBD(String usuario, String password){
             int resultado=2;
             ArrayList<ArrayList<Object>> registro;
@@ -154,48 +153,20 @@ public class Perfil {
         return indices;
     }
 
-    public void modificarBD(long id_referenciado){
-            
-                   
-            String tablas = "PERFIL P";
-            String set = "P.USUARIO = '" + usuario + "', P.PASSWORD = '"+ password +"', "
-                    + "P.TIPO = '" + tipo + "', ESTADO = '" + estado + "'";
-            String condicion = "P.EMPLEADO_ID_EMPLEADO = '"+  idEmpleado +"' AND "
-                    + "P.ID_PERFIL = '" + id_referenciado + "'";
+    public void modificarBD(ArrayList<String> txt, String tabla, String columna, String id){
              
-             sismain.getControladorBD().modificar(tablas,set,condicion);
-    } 
-    
-    public void eliminarBD(long id_referenciado){
-        
-                
-        String tabla = "PERFIL P";
-        String condicion = "P.EMPLEADO_ID_EMPLEADO = '"+  idEmpleado +"' AND "
-                    + "P.ID_PERFIL = '" + id_referenciado + "'";
-        
-        sismain.getControladorBD().eliminar(tabla, condicion);
-               
-    }
-    
-    public void habilitarBD(){
-        
-        
-        String tablas = "PERFIL P";
-        String set = "P.ESTADO = 'H'";
-        String condicion = "P.EMPLEADO_ID_EMPLEADO = '"+  idEmpleado + "'";
+             String set = "DNI = '" + txt.get(0) + "', NOMBRE_APELLIDO = '" + txt.get(1) + 
+                          "', FECHA_NAC = TO_DATE(" + txt.get(2) + "), SEXO = '" + txt.get(3) + 
+                        "', OBSERVACIONES = '" + txt.get(4) + "'";
+             try{
 
-        sismain.getControladorBD().modificar(tablas,set,condicion);
-        
+                 String query = "UPDATE " + tabla + " SET " + set + " WHERE " + columna + " = " + id ;
+                 System.out.println(query);
+                 sismain.getConexion().getStatement().execute(query);
+             }catch (SQLException ex) {
+            Logger.getLogger(ControladorBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     
-    public void deshabilitarBD(){
-        
-        String tablas = "PERFIL P";
-        String set = "P.ESTADO = 'D'";
-        String condicion = "P.EMPLEADO_ID_EMPLEADO = '"+  idEmpleado + "'";
-        
-        sismain.getControladorBD().modificar(tablas, set, condicion);
-
-    }
     
 }
