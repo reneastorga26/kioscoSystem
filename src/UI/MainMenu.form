@@ -55,9 +55,6 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
             <Property name="text" type="java.lang.String" value=" Empleados"/>
           </Properties>
           <SubComponents>
@@ -81,6 +78,9 @@
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="menuLiquidaciones">
               <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Liquidacion de Sueldo"/>
               </Properties>
               <SubComponents>
@@ -123,14 +123,6 @@
                     </MenuItem>
                   </SubComponents>
                 </Menu>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem29">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Periodo de Liquidaci&#xf3;n"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem29ActionPerformed"/>
-                  </Events>
-                </MenuItem>
                 <Menu class="javax.swing.JMenu" name="jMenu3">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Recibo de Sueldo"/>
@@ -156,10 +148,18 @@
                 </Menu>
                 <MenuItem class="javax.swing.JMenuItem" name="jMenuItem28">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Tipo de Liquidaci&#xf3;n"/>
+                    <Property name="text" type="java.lang.String" value="Periodo de Liquidaci&#xf3;n"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem28ActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem29">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Tipo de Liquidaci&#xf3;n"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem29ActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
@@ -1485,12 +1485,13 @@
                 <Component class="javax.swing.JComboBox" name="comboFiltro">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="5">
+                      <StringArray count="6">
                         <StringItem index="0" value="Ningun Filtro"/>
                         <StringItem index="1" value="Normal"/>
                         <StringItem index="2" value="Cerca al Punto de Pedido"/>
                         <StringItem index="3" value="Punto de Pedido Alcanzado"/>
                         <StringItem index="4" value="Stock Critico Minimo Alcanzado"/>
+                        <StringItem index="5" value="Agotado"/>
                       </StringArray>
                     </Property>
                   </Properties>
